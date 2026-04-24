@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>design-director preview</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #fafafa;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      }
+      #dd-error {
+        margin: 24px;
+        padding: 16px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        color: #991b1b;
+        font-family: ui-monospace, monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+      }
+      #dd-error.hidden { display: none; }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="dd-error" class="hidden"></div>
+    <div id="root"></div>
+
+    <script>
+      (function () {
+        const errorEl = document.getElementById("dd-error");
+        function showError(message) {
+          errorEl.textContent = "preview error\n\n" + message;
+          errorEl.classList.remove("hidden");
+        }
+
+        function parseHash() {
+          const hash = window.location.hash.replace(/^#/, "");
+          const params = new URLSearchParams(hash);
+          return {
+            project: params.get("project"),
+            variation: params.get("variation"),
+          };
+        }
+
+        const { project, variation } = parseHash();
+        if (!project || !variation) {
+          showError("project / variation hash parameters are required");
+          return;
+        }
+
+        const url =
+          "/api/preview/" +
+          encodeURIComponent(project) +
+          "/" +
+          encodeURIComponent(variation);
+
+        fetch(url)
+          .then(function (res) {
+            if (!res.ok) {
+              return res.json().then(function (body) {
+                throw new Error(body.error || "HTTP " + res.status);
+              });
+            }
+            return res.json();
+          })
+          .then(function (payload) {
+            // inject styles.css
+            if (payload.css) {
+              const styleEl = document.createElement("style");
+              styleEl.textContent = payload.css;
+              document.head.appendChild(styleEl);
+            }
+
+            // transpile + execute each jsx source in order
+            const parts = [];
+            for (const src of payload.jsxSources) {
+              try {
+                const transpiled = Babel.transform(src.source, {
+                  presets: ["react"],
+                  filename: src.path,
+                }).code;
+                parts.push(
+                  "// === " + src.path + " ===\n" + transpiled,
+                );
+              } catch (err) {
+                showError("transpile failed in " + src.path + ":\n" + err.message);
+                return;
+              }
+            }
+
+            const combined =
+              "'use strict';\n" +
+              "const React = window.React;\n" +
+              "const ReactDOM = window.ReactDOM;\n" +
+              parts.join("\n\n");
+
+            try {
+              new Function(combined)();
+            } catch (err) {
+              showError("execution failed:\n" + (err && err.stack ? err.stack : err));
+            }
+          })
+          .catch(function (err) {
+            showError(err.message || String(err));
+          });
+      })();
+    </script>
+  </body>
+</html>
