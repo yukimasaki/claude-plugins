@@ -7,10 +7,53 @@ import {
   computeHash,
   loadState,
   type RepoState,
+  REPOS,
   saveState,
   type State,
   type UpstreamFile,
 } from "./sync-upstream";
+
+describe("REPOS マッピング関数", () => {
+  it("awesome-claude-design/prompts は dir を prompt-packs に置換、名前は維持", () => {
+    const m = REPOS["awesome-claude-design"].mappings.find(
+      (x) => x.upstreamGlob === "prompts/*.md",
+    );
+    expect(m?.toLocalPath("prompts/audit-live-site.md")).toBe(
+      "prompt-packs/audit-live-site.md",
+    );
+  });
+
+  it("awesome-claude-design/design-md はそのまま保持", () => {
+    const m = REPOS["awesome-claude-design"].mappings.find(
+      (x) => x.upstreamGlob === "design-md/**/*.md",
+    );
+    expect(m?.toLocalPath("design-md/warm/mercury.md")).toBe(
+      "design-md/warm/mercury.md",
+    );
+  });
+
+  it("open-codesign/prompts は dir を変えファイル名はそのまま（.v1.txt は upstream 側の既存命名）", () => {
+    const m = REPOS["open-codesign"].mappings.find(
+      (x) => x.upstreamGlob === "packages/core/src/prompts/*.txt",
+    );
+    expect(m?.toLocalPath("packages/core/src/prompts/anti-slop.v1.txt")).toBe(
+      "prompts/anti-slop.v1.txt",
+    );
+    // 回帰防止: かつての実装は .v1. を再挿入して anti-slop.v1.v1.txt にしていた
+    expect(
+      m?.toLocalPath("packages/core/src/prompts/anti-slop.v1.txt"),
+    ).not.toContain(".v1.v1.");
+  });
+
+  it("open-codesign/design-skills は dir だけ変えて basename を維持", () => {
+    const m = REPOS["open-codesign"].mappings.find(
+      (x) => x.upstreamGlob === "packages/core/src/design-skills/*.jsx",
+    );
+    expect(
+      m?.toLocalPath("packages/core/src/design-skills/heroes.jsx"),
+    ).toBe("design-skills/heroes.jsx");
+  });
+});
 
 describe("computeHash", () => {
   it("'hello world' に対して既知の SHA256 を返す", () => {

@@ -41,7 +41,7 @@ export const REPOS: Record<UpstreamRepo, RepoConfig> = {
     mappings: [
       {
         upstreamGlob: "packages/core/src/prompts/*.txt",
-        toLocalPath: (p) => `prompts/${path.basename(p, ".txt")}.v1.txt`,
+        toLocalPath: (p) => `prompts/${path.basename(p)}`,
       },
       {
         upstreamGlob: "packages/core/src/design-skills/*.jsx",
