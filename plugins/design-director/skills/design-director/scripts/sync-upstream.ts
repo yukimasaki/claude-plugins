@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { globby } from "globby";
 import { simpleGit } from "simple-git";
+import { z } from "zod";
 
 export type UpstreamRepo = "awesome-claude-design" | "open-codesign";
 
@@ -54,13 +55,21 @@ export const REPOS: Record<UpstreamRepo, RepoConfig> = {
   },
 };
 
-export type RepoState = {
-  lastSyncedCommit: string;
-  lastSyncedAt: string;
-  files: Record<string, { upstreamPath: string; hash: string }>;
-};
+const FileRecordSchema = z.object({
+  upstreamPath: z.string(),
+  hash: z.string(),
+});
 
-export type State = Record<string, RepoState>;
+const RepoStateSchema = z.object({
+  lastSyncedCommit: z.string(),
+  lastSyncedAt: z.string(),
+  files: z.record(z.string(), FileRecordSchema),
+});
+
+export const StateSchema = z.record(z.string(), RepoStateSchema);
+
+export type RepoState = z.infer<typeof RepoStateSchema>;
+export type State = z.infer<typeof StateSchema>;
 
 export type UpstreamFile = {
   upstreamPath: string;
@@ -102,15 +111,25 @@ export function computeHash(content: Buffer | string): string {
   return crypto.createHash("sha256").update(content).digest("hex");
 }
 
-export async function loadState(_stateFile: string): Promise<State> {
-  throw new Error("loadState: not implemented ()");
+export async function loadState(stateFile: string): Promise<State> {
+  let raw: string;
+  try {
+    raw = await fs.readFile(stateFile, "utf8");
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") return {};
+    throw err;
+  }
+  const parsed = JSON.parse(raw);
+  return StateSchema.parse(parsed);
 }
 
 export async function saveState(
-  _stateFile: string,
-  _state: State,
+  stateFile: string,
+  state: State,
 ): Promise<void> {
-  throw new Error("saveState: not implemented ()");
+  StateSchema.parse(state);
+  await fs.mkdir(path.dirname(stateFile), { recursive: true });
+  await fs.writeFile(stateFile, `${JSON.stringify(state, null, 2)}\n`);
 }
 
 /**
