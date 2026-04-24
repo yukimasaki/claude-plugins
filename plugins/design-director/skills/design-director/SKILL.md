@@ -100,8 +100,104 @@ data-dense / cinematic / playful / glass / brutalist / indie）を vendored
 - `/design-director export <project>` でバンドル（React CDN + Babel で単体
   動作する HTML + JSX）を書き出せる
 
+## 参照ファイルの読み込み方針（プログレッシブ開示）
+
+`references/` 配下は open-codesign と awesome-claude-design の vendored 資産。
+全てを毎回読むとコンテキストを食い潰すため、**2 段階のプログレッシブ開示**
+で読む: (1) スキル本体が **カテゴリ単位** の大まかな採否を決める、(2) 各
+vendored ファイルの先頭 `when_to_use` コメントで **最終判断** をする。
+
+### (1) 常時読む（Layer 1）
+
+どの生成タスクでも最初に読む。スキルのベース人格・anti-slop・出力規約の
+アンカー:
+
+- `references/prompts/identity.v1.txt` — エージェントのペルソナ・価値観
+- `references/prompts/workflow.v1.txt` — open-codesign 側の 7 ステップ
+  （ディレクターとしての詳細版。本スキルの 7 ステップの粒度と相補的）
+- `references/prompts/anti-slop-digest.v1.txt` — 「generated っぽさ」回避
+  の凝縮版（フル版は `anti-slop.v1.txt`）
+- `references/prompts/pre-flight.v1.txt` — 12 項目プリフライト（ステップ 4・6
+  で silently セルフチェック）
+- `references/prompts/output-rules.v1.txt` — アーティファクトタグ・出力
+  フォーマット規約
+- `references/prompts/safety.v1.txt` + `references/prompts/safety.v1.txt`
+  — 安全制約（vendored +  追加拡張、後者で上書きしない）
+
+### (2) `type` に応じて 1 つ選ぶ（Layer 2a）
+
+成果物タイプが決まった時点で、対応する JSX テンプレートを 1 つだけ読む:
+
+| type | 読むファイル |
+|---|---|
+| `landing` | `references/design-skills/landing-page.jsx` |
+| `dashboard` | `references/design-skills/dashboard.jsx` |
+| `hero` | `references/design-skills/heroes.jsx` |
+| `pricing` | `references/design-skills/pricing.jsx` |
+| `chat-ui` | `references/design-skills/chat-ui.jsx` |
+| `data-table` | `references/design-skills/data-table.jsx` |
+| `footer` | `references/design-skills/footers.jsx` |
+| `calendar` | `references/design-skills/calendar.jsx` |
+| `editorial` / `long-form` | `references/design-skills/editorial-typography.jsx` |
+| `slide-deck` / `pitch-deck` | `references/design-skills/slide-deck.jsx` |
+| `chart` / `data-viz` | `references/design-skills/chart-svg.jsx` |
+| `glass` / `depth` | `references/design-skills/glassmorphism.jsx` |
+
+型が複合する場合は主タイプを 1 つ選ぶ（pre-flight #1 と同じ判断基準）。
+
+### (3) `aesthetic` に応じて 1 つ選ぶ（Layer 2b）
+
+ステップ 3 で決定した美学に対応する DESIGN.md を 1 つだけ読む:
+
+| 美学ファミリー | ディレクトリ | 代表例 |
+|---|---|---|
+| editorial | `references/design-md/editorial/` | linear / vercel |
+| terminal | `references/design-md/terminal/` | opencode / ollama / warp |
+| warm | `references/design-md/warm/` | claude / mercury |
+| data-dense | `references/design-md/data-dense/` | datadog / posthog / mongodb / clickhouse |
+| cinematic | `references/design-md/cinematic/` | nvidia / runway / bmw / ferrari / lamborghini / cohere / minimax / renault / tavus |
+| playful | `references/design-md/playful/` | figma / canva / toss |
+| glass | `references/design-md/glass/` | apple / arc |
+| brutalist | `references/design-md/brutalist/` | the-verge |
+| indie | `references/design-md/indie/` | granola |
+| remix | `references/design-md/remix/` | linear-x-claude / vercel-x-pitchfork 等 |
+
+### (4) 必要に応じて読む（Layer 2c）
+
+以下はタスク性質に応じて選択的に読む:
+
+- `references/builtin-skills/*.md` — より専門的な領域用
+  - `data-viz-recharts.md`: Recharts を使う可視化
+  - `frontend-design-anti-slop.md`: anti-slop の深掘り
+  - `mobile-mock.md`: デバイスフレーム付きモバイル UI
+  - `pitch-deck.md`: ピッチデッキ専用の詳細ガイド
+- `references/recipes/*.md` — 13 件の「完成までの手順書」。具体的な
+  ユースケース（Figma → DESIGN.md、ランディング 20 分完成、pitch-deck
+  from README 等）でマッチするものがあれば読む
+- `references/prompt-packs/*.md` — 6 件の「対話プロンプト部品」。美学決定
+  支援（`family-picker.md`）、ブランド抽出（`brand-to-design-md.md`）、
+  既存サイト監査（`audit-live-site.md`）、リミックス（`remix-two-brands.md`）、
+  3 デザイナー議論（`3-designer-debate.md`）、デフォルト破り
+  （`break-default-aesthetic.md`）
+
+### 最終判断はファイル冒頭のシグナルで
+
+Layer 2 で候補を絞ったあとは、各 vendored ファイルの **冒頭のシグナル** を
+読んで最終的な採否を決める。カテゴリ別の場所:
+
+- `design-skills/*.jsx`: 先頭の `// when_to_use: ...` コメント（open-codesign
+  由来の規約）
+- `builtin-skills/*.md`: YAML frontmatter の `description:` フィールド
+- `design-md/*.md`: `# 見出し` 直後の 1〜2 行のキャッチ（「〜向けの
+  リファレンス DESIGN.md」等）
+- `prompt-packs/*.md` / `recipes/*.md`: `# 見出し` 直後の 1 行サマリ
+- `prompts/*.txt`: 冒頭数行が目的と対象を述べるプレーンテキスト
+
+スキル本体の分類表と矛盾する場合はファイル側のシグナルを優先する（upstream
+の変更に追従しやすくするため）。以降は本ドキュメントでは総称として
+「`when_to_use` シグナル」と呼ぶ。
+
 ---
 
-詳細な参照ファイルの読み込み方針（プログレッシブ開示）は後続セクション
-「参照ファイルの読み込み方針」を、サブコマンド各種の挙動は「サブコマンド
-一覧」を参照する。
+サブコマンド各種（`update` / `serve` / `list` / `export` 等）の挙動は下記
+「サブコマンド一覧」を参照する。
