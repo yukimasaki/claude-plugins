@@ -1,5 +1,7 @@
+import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { simpleGit } from "simple-git";
 
 export type UpstreamRepo = "awesome-claude-design" | "open-codesign";
 
@@ -109,11 +111,45 @@ export async function saveState(
   throw new Error("saveState: not implemented ()");
 }
 
+/**
+ * `.upstream-cache/{repo}/` に upstream repo を用意する。
+ * 既存の .git があれば fetch + reset --hard origin/HEAD で強制追従、
+ * なければ新規 clone する（キャッシュは ephemeral なので履歴書き換えに
+ * 追従することを優先）。
+ */
 export async function ensureUpstreamCache(
-  _url: string,
-  _cacheDir: string,
+  url: string,
+  cacheDir: string,
 ): Promise<{ repoDir: string; headSha: string }> {
-  throw new Error("ensureUpstreamCache: not implemented ()");
+  const gitDir = path.join(cacheDir, ".git");
+  const cacheExists = await pathExists(gitDir);
+
+  try {
+    if (cacheExists) {
+      const git = simpleGit(cacheDir);
+      await git.fetch("origin");
+      await git.reset(["--hard", "origin/HEAD"]);
+    } else {
+      await fs.mkdir(path.dirname(cacheDir), { recursive: true });
+      await simpleGit().clone(url, cacheDir);
+    }
+    const headSha = (await simpleGit(cacheDir).revparse(["HEAD"])).trim();
+    return { repoDir: cacheDir, headSha };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    throw new Error(
+      `upstream ${url} のクローン/プルに失敗: ${message}`,
+    );
+  }
+}
+
+async function pathExists(p: string): Promise<boolean> {
+  try {
+    await fs.stat(p);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function enumerateUpstreamFiles(
