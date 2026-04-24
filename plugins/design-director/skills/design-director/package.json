@@ -4,6 +4,7 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^20",
+    "globby": "^14.0.2",
     "simple-git": "^3.25.0",
     "vitest": "^4.0.18"
   }

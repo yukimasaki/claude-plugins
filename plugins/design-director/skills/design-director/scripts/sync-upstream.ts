@@ -1,6 +1,8 @@
+import crypto from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { globby } from "globby";
 import { simpleGit } from "simple-git";
 
 export type UpstreamRepo = "awesome-claude-design" | "open-codesign";
@@ -96,8 +98,8 @@ export type RunSyncResult = {
   diff: DiffEntry[];
 };
 
-export function computeHash(_content: Buffer | string): string {
-  throw new Error("computeHash: not implemented ()");
+export function computeHash(content: Buffer | string): string {
+  return crypto.createHash("sha256").update(content).digest("hex");
 }
 
 export async function loadState(_stateFile: string): Promise<State> {
@@ -153,30 +155,187 @@ async function pathExists(p: string): Promise<boolean> {
 }
 
 export async function enumerateUpstreamFiles(
-  _repoDir: string,
-  _mappings: FileMapping[],
+  repoDir: string,
+  mappings: FileMapping[],
 ): Promise<UpstreamFile[]> {
-  throw new Error("enumerateUpstreamFiles: not implemented ()");
+  const seen = new Set<string>();
+  const result: UpstreamFile[] = [];
+  for (const mapping of mappings) {
+    const matches = await globby(mapping.upstreamGlob, {
+      cwd: repoDir,
+      onlyFiles: true,
+      dot: false,
+    });
+    for (const match of matches) {
+      if (seen.has(match)) continue;
+      seen.add(match);
+      const buf = await fs.readFile(path.join(repoDir, match));
+      result.push({
+        upstreamPath: match,
+        localPath: mapping.toLocalPath(match),
+        hash: computeHash(buf),
+      });
+    }
+  }
+  result.sort((a, b) => a.localPath.localeCompare(b.localPath));
+  return result;
 }
 
 export function computeDiff(
-  _prev: RepoState | undefined,
-  _current: UpstreamFile[],
+  prev: RepoState | undefined,
+  current: UpstreamFile[],
 ): DiffEntry[] {
-  throw new Error("computeDiff: not implemented ()");
+  const entries: DiffEntry[] = [];
+  const currentByLocalPath = new Map(current.map((f) => [f.localPath, f]));
+
+  for (const file of current) {
+    const prevFile = prev?.files[file.localPath];
+    if (!prevFile) {
+      entries.push({
+        kind: "new",
+        localPath: file.localPath,
+        upstreamPath: file.upstreamPath,
+        hash: file.hash,
+      });
+    } else if (prevFile.hash === file.hash) {
+      entries.push({
+        kind: "unchanged",
+        localPath: file.localPath,
+        upstreamPath: file.upstreamPath,
+        hash: file.hash,
+      });
+    } else {
+      entries.push({
+        kind: "changed",
+        localPath: file.localPath,
+        upstreamPath: file.upstreamPath,
+        prevHash: prevFile.hash,
+        hash: file.hash,
+      });
+    }
+  }
+
+  if (prev) {
+    for (const [localPath, record] of Object.entries(prev.files)) {
+      if (!currentByLocalPath.has(localPath)) {
+        entries.push({
+          kind: "deleted",
+          localPath,
+          upstreamPath: record.upstreamPath,
+          prevHash: record.hash,
+        });
+      }
+    }
+  }
+
+  entries.sort((a, b) => {
+    const order = { new: 0, changed: 1, deleted: 2, unchanged: 3 } as const;
+    if (order[a.kind] !== order[b.kind]) return order[a.kind] - order[b.kind];
+    return a.localPath.localeCompare(b.localPath);
+  });
+  return entries;
 }
 
 export function formatSummary(
-  _repo: UpstreamRepo,
-  _prevCommit: string | undefined,
-  _headSha: string,
-  _diff: DiffEntry[],
+  repo: UpstreamRepo,
+  prevCommit: string | undefined,
+  headSha: string,
+  diff: DiffEntry[],
 ): string {
-  throw new Error("formatSummary: not implemented ()");
+  const config = REPOS[repo];
+  const categories: Record<DiffEntry["kind"], DiffEntry[]> = {
+    new: [],
+    changed: [],
+    deleted: [],
+    unchanged: [],
+  };
+  for (const entry of diff) categories[entry.kind].push(entry);
+
+  const lines: string[] = [];
+  lines.push(`# upstream sync summary — ${repo}`, "");
+  lines.push(`- url: ${config.url}`);
+  lines.push(`- prev commit: ${prevCommit ?? "(初回)"}`);
+  lines.push(`- head commit: ${headSha}`);
+  lines.push(`- synced at: ${new Date().toISOString()}`, "");
+
+  lines.push(`## 新規 (${categories.new.length})`);
+  for (const e of categories.new) {
+    lines.push(
+      `- ${e.localPath} ← ${e.upstreamPath} (sha256: ${e.hash.slice(0, 12)}…)`,
+    );
+  }
+  if (categories.new.length === 0) lines.push("（なし）");
+  lines.push("");
+
+  lines.push(`## 変更 (${categories.changed.length})`);
+  for (const e of categories.changed) {
+    if (e.kind !== "changed") continue;
+    lines.push(
+      `- ${e.localPath} ← ${e.upstreamPath} (sha256: ${e.prevHash.slice(0, 12)}… → ${e.hash.slice(0, 12)}…)`,
+    );
+  }
+  if (categories.changed.length === 0) lines.push("（なし）");
+  lines.push("");
+
+  lines.push(`## 削除 (${categories.deleted.length})`);
+  for (const e of categories.deleted) {
+    lines.push(`- ${e.localPath} (upstream から消失)`);
+  }
+  if (categories.deleted.length === 0) lines.push("（なし）");
+  lines.push("");
+
+  lines.push(`## 変更なし (${categories.unchanged.length})`);
+  lines.push(
+    `（詳細省略。計 ${categories.unchanged.length} ファイルが SHA256 一致）`,
+  );
+  lines.push("");
+
+  return lines.join("\n");
 }
 
-export async function runSync(_opts: RunSyncOptions): Promise<RunSyncResult> {
-  throw new Error("runSync: not implemented ()");
+function defaultCacheDir(targetRoot: string, repo: UpstreamRepo): string {
+  return path.join(targetRoot, ".design-studio", ".upstream-cache", repo);
+}
+
+function defaultStateFile(): string {
+  const here = fileURLToPath(import.meta.url);
+  const skillRoot = path.resolve(path.dirname(here), "..");
+  return path.join(skillRoot, "references", ".upstream-state.json");
+}
+
+export async function runSync(opts: RunSyncOptions): Promise<RunSyncResult> {
+  const config = REPOS[opts.repo];
+  const targetRoot = opts.targetRoot ?? process.cwd();
+  const cacheDir =
+    opts.cacheDir ?? defaultCacheDir(targetRoot, opts.repo);
+  const stateFile = opts.stateFile ?? defaultStateFile();
+  const upstreamUrl = opts.upstreamUrl ?? config.url;
+
+  const { repoDir, headSha } = await ensureUpstreamCache(upstreamUrl, cacheDir);
+  const state = await loadState(stateFile);
+  const prev = state[opts.repo];
+  const currentFiles = await enumerateUpstreamFiles(repoDir, config.mappings);
+  const diff = computeDiff(prev, currentFiles);
+  const summaryMarkdown = formatSummary(
+    opts.repo,
+    prev?.lastSyncedCommit,
+    headSha,
+    diff,
+  );
+
+  const newRepoState: RepoState = {
+    lastSyncedCommit: headSha,
+    lastSyncedAt: new Date().toISOString(),
+    files: Object.fromEntries(
+      currentFiles.map((f) => [
+        f.localPath,
+        { upstreamPath: f.upstreamPath, hash: f.hash },
+      ]),
+    ),
+  };
+  await saveState(stateFile, { ...state, [opts.repo]: newRepoState });
+
+  return { summaryMarkdown, diff };
 }
 
 function isUpstreamRepo(value: string): value is UpstreamRepo {
