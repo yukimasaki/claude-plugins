@@ -5,6 +5,9 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   computeDiff,
   computeHash,
+  defaultStateFile,
+  enumerateUpstreamFiles,
+  findTargetRoot,
   loadState,
   type RepoState,
   REPOS,
@@ -21,6 +24,13 @@ describe("REPOS マッピング関数", () => {
     expect(m?.toLocalPath("prompts/audit-live-site.md")).toBe(
       "prompt-packs/audit-live-site.md",
     );
+  });
+
+  it("awesome-claude-design/prompts は README.md を excludePatterns で弾く", () => {
+    const m = REPOS["awesome-claude-design"].mappings.find(
+      (x) => x.upstreamGlob === "prompts/*.md",
+    );
+    expect(m?.excludePatterns).toContain("prompts/README.md");
   });
 
   it("awesome-claude-design/design-md はそのまま保持", () => {
@@ -52,6 +62,119 @@ describe("REPOS マッピング関数", () => {
     expect(
       m?.toLocalPath("packages/core/src/design-skills/heroes.jsx"),
     ).toBe("design-skills/heroes.jsx");
+  });
+});
+
+describe("defaultStateFile", () => {
+  it("targetRoot/.design-studio/.upstream-state.json を返す", () => {
+    expect(defaultStateFile("/tmp/repo")).toBe(
+      path.join("/tmp", "repo", ".design-studio", ".upstream-state.json"),
+    );
+  });
+
+  it("相対パスの targetRoot でも path.join で結合する", () => {
+    expect(defaultStateFile("./my-repo")).toBe(
+      path.join("./my-repo", ".design-studio", ".upstream-state.json"),
+    );
+  });
+});
+
+describe("findTargetRoot", () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "find-target-root-"));
+  });
+
+  afterEach(async () => {
+    await fs.rm(tmpDir, { recursive: true, force: true });
+  });
+
+  it(".design-studio/ 内から呼ばれたら親ディレクトリを返す", () => {
+    const cwd = path.join(tmpDir, "my-repo", ".design-studio");
+    expect(findTargetRoot(cwd)).toBe(path.join(tmpDir, "my-repo"));
+  });
+
+  it(".design-studio/projects/foo/ のような深い位置でも親リポジトリを返す", () => {
+    const cwd = path.join(
+      tmpDir,
+      "my-repo",
+      ".design-studio",
+      "projects",
+      "foo",
+    );
+    expect(findTargetRoot(cwd)).toBe(path.join(tmpDir, "my-repo"));
+  });
+
+  it(".git/ を持つ祖先ディレクトリをリポジトリルートとして返す", async () => {
+    const repoRoot = path.join(tmpDir, "repo");
+    await fs.mkdir(path.join(repoRoot, ".git"), { recursive: true });
+    const deeper = path.join(repoRoot, "sub", "nested");
+    await fs.mkdir(deeper, { recursive: true });
+    expect(findTargetRoot(deeper)).toBe(repoRoot);
+  });
+
+  it(".design-studio/ セグメントを .git より優先する（二重ネスト回避）", async () => {
+    // .git を持つ祖先と .design-studio の両方がある場合、.design-studio/ の親を返す
+    const repoRoot = path.join(tmpDir, "repo");
+    await fs.mkdir(path.join(repoRoot, ".git"), { recursive: true });
+    const inDesignStudio = path.join(repoRoot, ".design-studio");
+    await fs.mkdir(inDesignStudio, { recursive: true });
+    expect(findTargetRoot(inDesignStudio)).toBe(repoRoot);
+  });
+});
+
+describe("enumerateUpstreamFiles (excludePatterns)", () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "enum-excl-"));
+  });
+
+  afterEach(async () => {
+    await fs.rm(tmpDir, { recursive: true, force: true });
+  });
+
+  it("excludePatterns に該当するファイルは列挙されない", async () => {
+    await fs.mkdir(path.join(tmpDir, "prompts"), { recursive: true });
+    await fs.writeFile(
+      path.join(tmpDir, "prompts", "README.md"),
+      "# readme (should be excluded)",
+    );
+    await fs.writeFile(
+      path.join(tmpDir, "prompts", "family-picker.md"),
+      "# family picker",
+    );
+
+    const files = await enumerateUpstreamFiles(tmpDir, [
+      {
+        upstreamGlob: "prompts/*.md",
+        toLocalPath: (p) => `prompt-packs/${path.basename(p)}`,
+        excludePatterns: ["prompts/README.md"],
+      },
+    ]);
+
+    expect(files.map((f) => f.upstreamPath)).toEqual([
+      "prompts/family-picker.md",
+    ]);
+  });
+
+  it("excludePatterns 未指定なら全ファイルが列挙される", async () => {
+    await fs.mkdir(path.join(tmpDir, "prompts"), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, "prompts", "README.md"), "readme");
+    await fs.writeFile(path.join(tmpDir, "prompts", "real.md"), "real");
+
+    const files = await enumerateUpstreamFiles(tmpDir, [
+      {
+        upstreamGlob: "prompts/*.md",
+        toLocalPath: (p) => `prompt-packs/${path.basename(p)}`,
+      },
+    ]);
+
+    expect(files.map((f) => f.upstreamPath).sort()).toEqual([
+      "prompts/README.md",
+      "prompts/real.md",
+    ]);
   });
 });
 

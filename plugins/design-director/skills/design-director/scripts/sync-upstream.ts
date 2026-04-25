@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { promises as fs } from "node:fs";
+import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { globby } from "globby";
@@ -11,6 +11,11 @@ export type UpstreamRepo = "awesome-claude-design" | "open-codesign";
 export type FileMapping = {
   upstreamGlob: string;
   toLocalPath: (upstreamRelPath: string) => string;
+  /**
+   * globby の `ignore` パターン。Phase 1 で意図的に除外した
+   * upstream ファイル（例: `prompts/README.md`）を永続的に弾くために使う
+   */
+  excludePatterns?: string[];
 };
 
 export type RepoConfig = {
@@ -29,6 +34,9 @@ export const REPOS: Record<UpstreamRepo, RepoConfig> = {
       {
         upstreamGlob: "prompts/*.md",
         toLocalPath: (p) => `prompt-packs/${path.basename(p)}`,
+        // README.md は upstream の目次ページで画像参照（../assets/...）が
+        // 壊れるため Phase 1 で意図的に除外。永続的にスキップする
+        excludePatterns: ["prompts/README.md"],
       },
       {
         upstreamGlob: "recipes/*.md",
@@ -184,6 +192,7 @@ export async function enumerateUpstreamFiles(
       cwd: repoDir,
       onlyFiles: true,
       dot: false,
+      ignore: mapping.excludePatterns,
     });
     for (const match of matches) {
       if (seen.has(match)) continue;
@@ -316,18 +325,47 @@ function defaultCacheDir(targetRoot: string, repo: UpstreamRepo): string {
   return path.join(targetRoot, ".design-studio", ".upstream-cache", repo);
 }
 
-function defaultStateFile(): string {
-  const here = fileURLToPath(import.meta.url);
-  const skillRoot = path.resolve(path.dirname(here), "..");
-  return path.join(skillRoot, "references", ".upstream-state.json");
+/**
+ * state ファイルの既定配置は `.design-studio/.upstream-state.json`。
+ * `.upstream-cache/` と対になる ephemeral な runtime state として
+ * `.design-studio/` 配下（gitignored）に持つ（Q7-5）。
+ */
+export function defaultStateFile(targetRoot: string): string {
+  return path.join(targetRoot, ".design-studio", ".upstream-state.json");
+}
+
+/**
+ * 呼び出し時 cwd から skill の targetRoot（`.design-studio/` の親ディレクトリ）を
+ * 自動検出する。`.design-studio/` 配下から呼ばれた場合でも二重ネスト
+ * （`.design-studio/.design-studio/.upstream-cache/`）を防ぐ。
+ *
+ * 検出優先順:
+ * 1. cwd のパスに `.design-studio` セグメントが含まれていれば、その親を返す
+ * 2. `.git/` を含む祖先ディレクトリを返す（リポジトリルート推定）
+ * 3. どちらも見つからなければ cwd を返す（フォールバック）
+ */
+export function findTargetRoot(cwd: string): string {
+  const segments = cwd.split(path.sep);
+  const dsIdx = segments.lastIndexOf(".design-studio");
+  if (dsIdx > 0) {
+    return segments.slice(0, dsIdx).join(path.sep) || path.sep;
+  }
+  let current = cwd;
+  while (current !== path.dirname(current)) {
+    if (existsSync(path.join(current, ".git"))) {
+      return current;
+    }
+    current = path.dirname(current);
+  }
+  return cwd;
 }
 
 export async function runSync(opts: RunSyncOptions): Promise<RunSyncResult> {
   const config = REPOS[opts.repo];
-  const targetRoot = opts.targetRoot ?? process.cwd();
+  const targetRoot = opts.targetRoot ?? findTargetRoot(process.cwd());
   const cacheDir =
     opts.cacheDir ?? defaultCacheDir(targetRoot, opts.repo);
-  const stateFile = opts.stateFile ?? defaultStateFile();
+  const stateFile = opts.stateFile ?? defaultStateFile(targetRoot);
   const upstreamUrl = opts.upstreamUrl ?? config.url;
 
   const { repoDir, headSha } = await ensureUpstreamCache(upstreamUrl, cacheDir);

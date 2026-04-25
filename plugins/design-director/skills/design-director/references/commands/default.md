@@ -96,25 +96,54 @@
 
 ### 7. 納品 `[ループ]`
 
-1. `.design-studio/projects/{name}/` 配下を整える:
-   - `components/*.jsx` — 再利用コンポーネント
-   - `variations/*.jsx` — バリエーション
-   - `styles.css` — デザイントークン + 共通スタイル
-   - `manifest.json` — Q2-6 の 7 フィールド（title / createdAt /
-     aesthetic / type / variations / selectedVariation / tokenSource）
-   - `HANDOFF.md` — **プロトタイプ生成時に自動生成**（Q9-4）。統合担当に
-     渡すためのサマリー
-   - `{project}.html` — React CDN + Babel で単体動作するポータブル HTML
-2. HANDOFF.md には下記を含める（Q9-4）:
-   - プロトタイプの目的（何を解決するか）
-   - 選ばれた美学 / 方向性
-   - バリエーションの経緯（案 A-C の違い、なぜ selected を選んだか）
-   - 見るべきファイル（主要コンポーネント / デザイントークン / エントリ
-     ポイント）
-3. ユーザーに納品パスと次のアクション候補を案内:
-   - 続きを編集: `/design-director edit <project>`
-   - ブラウザで確認: `/design-director serve`
-   - バンドル書き出し: `/design-director export <project>`
+#### 7-1. ファイル成果物の生成
+
+`.design-studio/projects/{name}/` 配下に以下を **全て生成** する（列挙
+ではなく **生成アクションとして実行**）:
+
+- `components/*.jsx` — 再利用コンポーネント（Write）
+- `variations/*.jsx` — バリエーション（Write）
+- `styles.css` — デザイントークン + 共通スタイル（Write）
+- `manifest.json` — Q2-6 の 7 フィールド（title / createdAt / aesthetic /
+  type / variations / selectedVariation / tokenSource）。Write
+- `HANDOFF.md` — Write。下記を必ず含める（Q9-4）:
+  - プロトタイプの目的（何を解決するか）
+  - 選ばれた美学 / 方向性
+  - バリエーションの経緯（案 A-C の違い、なぜ selected を選んだか）
+  - 見るべきファイル（主要コンポーネント / デザイントークン / エントリ
+    ポイント）
+
+#### 7-2. `{project}.html` の生成（独立サブステップ、必須）
+
+**必ず本サブステップを実行する**。HTML は他成果物と一緒に列挙された
+「副産物」ではなく、専用の生成アクションを持つ。
+
+1. `.claude/skills/design-director/references/handoff-html-spec.md` を
+   **Read してから生成する**（DOM 構造 / escape ルール / bootstrap 正解
+   実装が定義されている）
+2. spec に沿って `{project}.html` を Write
+3. spec の **section 4「生成後の自己チェック」** を Bash で実行:
+   - `</script` 出現数 = `variation 数 + 2`
+   - `</style` outer 出現数 = 1
+   - 全 variation の `dd-{variation-id}` storage script が存在
+4. チェック失敗 → 該当箇所を特定し再生成（ステップ 7-2 を最初からやり直す）
+
+#### 7-3. ブラウザ確認への誘導
+
+納品パスを報告し、**まずブラウザ確認に誘導する**。dev server の起動状態を
+silently に確認（`ss -tlnp 2>/dev/null | grep ":3000"`）してから分岐:
+
+- **dev server 起動中**（design-studio 由来の bun dev が port 3000 を
+  占有している）: `http://localhost:3000/{project-slug}` を loud で
+  案内し、「開いて確認してください」と明示的に促す
+- **dev server 停止中**: 「ブラウザで確認するには `/design-director serve`
+  を実行してください」と **明示的に促す**。勝手に serve を起動しない
+  （port 占有の副作用があるため、ユーザー判断を経る）
+
+続いて次のアクション候補を並べる（ブラウザ確認の後に選ぶもの）:
+
+- 続きを編集・追加バリエーション: `/design-director edit <project>`
+- バンドル書き出し: `/design-director export <project>`
 
 ## Example Run
 

@@ -34,7 +34,7 @@ silently に以下を同時に取得する:
 
 #### 2b. 最終 update 日時
 
-1. `references/.upstream-state.json` を Read
+1. `.design-studio/.upstream-state.json` を Read
 2. JSON が破損している or 空 `{}` なら「未実行」
 3. 各 repo（`awesome-claude-design`, `open-codesign`）ごとに
    `lastSyncedAt` を抽出
@@ -162,14 +162,14 @@ Markdown 表で loud に出力する:
 |------|------|
 | `.design-studio/` 未作成 | 上記ケース 3 の案内で終了（副作用なし）|
 | `ss` コマンドが見つからない | `lsof -i :3000` にフォールバック。両方失敗したら「dev server 状態: 判定不可」と loud で表示 |
-| `.upstream-state.json` が壊れている（zod 失敗） | 「最終 update: 判定不可（state ファイル破損）」と loud で表示。`references/.upstream-state.json` の内容確認をユーザーに依頼 |
+| `.upstream-state.json` が壊れている（zod 失敗） | 「最終 update: 判定不可（state ファイル破損）」と loud で表示。`.design-studio/.upstream-state.json` の内容確認をユーザーに依頼 |
 | 壊れた manifest.json が projects に混在 | `list.md` 同様に skip + 件数補記（ケース 5 の例）|
 | ファイル権限不足 | `ls -la .design-studio/` の結果提示で権限確認を促す |
 
 ## 対応する decisions.md
 
 - Q1-5: `.design-studio/` の存在確認は冪等、無ければ案内のみ
-- Q7-5: `references/.upstream-state.json` の読み取り
+- Q7-5: `.design-studio/.upstream-state.json` の読み取り
 - Q8-2: サブコマンド構成のうち `status` は現在状態の診断を担当
 - Phase 3 の `lib/list-projects.ts` と同じ「壊れた manifest は skip + warn」
   方針を status でも踏襲
