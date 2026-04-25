@@ -27,6 +27,38 @@ data-dense / cinematic / playful / glass / brutalist / indie）を vendored
 `/ui-vignette`（機能紹介用イラスト）とは独立。本スキルは「Claude Design 相当
 の探索型プロトタイピング」を担う。
 
+## 運用ルール
+
+本スキル実行中は以下を守る。サブコマンド個別の記述より優先される。
+
+### メモリと永続化（Q6-3）
+
+- プロジェクト文脈・ユーザーの好み・記憶すべき制約は **すべて
+  `.design-studio/memory.md`** に自然言語で保存する
+- **Claude Code 本体の auto memory（`~/.claude/projects/.../memory/`、
+  auto memory スキル等）は使わない**。ユーザーが「覚えておいて」「記憶して」
+  「remember」等と指示した場合も、保存先は `.design-studio/memory.md` のみ。
+  auto memory が起動しようとしたら **明示的に stop し**、
+  `.design-studio/memory.md` への Write / Edit に切り替える
+- 誤って auto memory に書いてしまった場合は、該当ファイルを削除してから
+  `.design-studio/memory.md` に書き直す。ユーザーにも「auto memory ではなく
+  スキル側の memory.md に保存し直した」と loud で報告する
+- スキル外の副作用を出さない: 本スキルの対話ログ・plan ファイル・task 管理を
+  `.claude/` 配下や `~/.claude/` 配下に作らない
+
+### 対話モード
+
+- ステップ 4-7 のループ中はサブコマンドを設けず、自然言語フィードバックで
+  回す（Q3-2）
+- ユーザーの指示が曖昧ならオンボーディング（対象 / 制約 / トーン）を
+  silently 深掘りしてから先に進む（Q6-1）
+
+### 破壊的動作
+
+- `.design-studio/` を消すコマンド（`reset`）は毎回ユーザー確認を取る
+  （CLAUDE.md「Executing actions with care」）。バックアップ提案 → 最終確認
+  の 2 段階を省略しない
+
 ## 7 ステップのワークフロー
 
 スキル発動から成果物納品までの標準フロー。**ステップ 4〜7 はループ可能**
@@ -51,8 +83,8 @@ data-dense / cinematic / playful / glass / brutalist / indie）を vendored
 - 既存コードベースを自律探索（`packages/design-tokens/`、`components/`、
   既存 UI ファイル等）。見つからなければユーザーに尋ねる
 - デザイントークンの扱いを選択（既存トークン準拠 / 新規探索）
-- プロジェクトコンテキストは `.design-studio/memory.md` に自然言語で保存し、
-  次回以降活用（Claude Code 本体のメモリは使わない）
+- プロジェクトコンテキストは `.design-studio/memory.md` に自然言語で保存
+  （詳細は本ドキュメント上部「運用ルール > メモリと永続化」を参照）
 
 ### (3) 美学方向性の決定
 

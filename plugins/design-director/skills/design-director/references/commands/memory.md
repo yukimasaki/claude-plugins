@@ -5,6 +5,20 @@
 使わず自己完結」の方針に従い、このファイルだけでプロジェクト文脈を
 維持する。
 
+**重要**（`/design-director` セッション内の記憶要求全般）:
+
+ユーザーが `/design-director` のワークフロー中に「覚えておいて」「記憶して」
+「remember」等と指示した場合、保存先は **常に `.design-studio/memory.md`** で
+あって、Claude Code 本体の auto memory（`~/.claude/projects/.../memory/`、
+auto memory スキル等）ではない。
+
+- auto memory スキル（`Recalled / wrote N memories`）が起動しようとしたら
+  **即座に stop し**、代わりに `.design-studio/memory.md` を Edit / Write する
+- 既に auto memory に書いてしまった場合は、該当ファイルを削除してから
+  `.design-studio/memory.md` に書き直す。ユーザーにも「auto memory ではなく
+  スキル側の memory.md に保存し直した」と loud で報告する
+- この原則は SKILL.md 上部「運用ルール > メモリと永続化」にも記載
+
 ## 前提
 
 - 引数: なし
