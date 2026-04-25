@@ -36,11 +36,27 @@
 
 ### 3. dev server の起動
 
-1. `cd .design-studio && bun dev` を background で起動する
-   - Bash tool の `run_in_background: true` を使う
-2. PID をユーザーに伝える（停止時に `pkill -9 -f "bun dev"` または `kill -9 <pid>`）
-3. 起動確認: 10 秒以内に `curl -sI http://localhost:3000` で 200 が返ることを
-   確認。失敗時はログを Read してエラー内容をユーザーに提示
+1. **必ず `cd .design-studio && bun dev` を 1 回の Bash 呼び出しにまとめて**
+   background 実行する（Bash tool の `run_in_background: true`）。`bun dev`
+   単体で呼んではならない。呼び出し元の cwd が repo root のままだと、親
+   プロジェクトの Next.js（`sites/app` や `sites/hub` など）が起動してしまい、
+   design-studio ではなく親プロジェクトのギャラリーを公開することになる
+2. 起動直後に **起動ログを Read して cwd 妥当性を検証する**（この 1 ステップを
+   必ず挟む）:
+   - ログに `We detected multiple lockfiles and selected the directory of
+     {repo-root}/bun.lock` という Next.js の警告 **が出ていたら cwd が誤っている**。
+     即 `kill -9 <pid>` で停止し、ステップ 3-1 からやり直す
+   - ログに design-studio 配下の `.next` 作成やルーティング構築が
+     見えていれば OK（例: `Route /{project-slug}`）
+3. PID をユーザーに伝える（停止時は `pkill -9 -f "bun dev"` または
+   `kill -9 <pid>`。`bun dev` ラッパーを落とせば子の `next dev` / `next-server`
+   も連鎖停止する。`pkill -9 -f "next dev"` は Next.js 16 以降では `next-server`
+   にマッチしないので不可）
+4. 起動確認: 10 秒以内に `curl -sI http://localhost:3000` で 200 が返ることを
+   確認。さらに `curl -s http://localhost:3000 | grep -o 'design-studio[^"]*' | head -1`
+   で **配信アセットに `design-studio` プレフィックスが含まれる**ことを確認
+   （ヒットしなければ親プロジェクトのギャラリーが動いている）
+5. 失敗時はログを Read してエラー内容をユーザーに提示
 
 ### 4. ユーザーへの案内
 
@@ -98,11 +114,18 @@
 | `bun install` 未完走 | 手動で `cd .design-studio && bun install` を促す |
 | dev server が 10 秒以内に応答しない | 起動ログを Read して原因提示（typescript エラー / port 競合 / next.config の問題）|
 | ポート 3000 が別プロセス専有 | 上記ケース 3 の分岐。勝手に kill しない（ユーザー確認必須）|
-| `pkill -9 -f "bun dev"` が無関係な bun dev も止めるリスク | 停止対象を明示してユーザーに確認（`ps aux | grep "bun dev"` の結果提示）|
+| `pkill -9 -f "bun dev"` が無関係な bun dev も止めるリスク | 停止対象を明示してユーザーに確認（`ps aux \| grep "bun dev"` の結果提示）|
+| 起動ログに `multiple lockfiles` 警告 | ステップ 3-2 で検知した cwd 誤り。即 `kill -9 <pid>` で停止し、`cd .design-studio && bun dev` を 1 回の Bash 呼び出しでやり直す |
+| `curl -s` で `design-studio` プレフィックスが見つからない | 親プロジェクトの Next.js が 3000 で動作中。該当プロセスを特定してユーザーに確認（勝手に kill しない）|
 
 ## 対応する decisions.md
 
 - Q1-6: `.design-studio/` 未作成なら setup-studio を先に実行
 - Q8-2: サブコマンド構成のうち `serve` は Next.js ギャラリー起動を担当
-- memory（feedback_kill_dev_server）: 開発サーバ停止は `pkill -9` で確実に
-  （Phase 3 retrospective の学び）
+- memory（feedback_kill_dev_server）: 開発サーバ停止は `pkill -9 -f "bun dev"` で
+  確実に（Phase 3 retrospective）。`pkill -9 -f "next dev"` は Next.js 16 以降で
+  `next-server` プロセスにマッチしないため不可
+- memory（ E2E retrospective）: `cd .design-studio && bun dev` は **1 回の
+  Bash 呼び出し** にまとめる。`bun dev` 単体で呼ぶと cwd が repo root のまま
+  親プロジェクトの Next.js を誤起動する（`We detected multiple lockfiles` が
+  起動ログに出たらこのパターン）
