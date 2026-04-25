@@ -25,9 +25,21 @@ standalone、Q9-2）。
 1. `.design-studio/projects/{project}/` の存在確認
 2. `manifest.json` を Read して valid な manifest であることを確認（Q2-6
    の 7 フィールド）
-3. `{project}.html` の存在確認（欠けていたら「納品ステップまで完了して
-   いない可能性」をユーザーに提示し、`/design-director edit <project>`
-   で HANDOFF.md と html を再生成するよう案内）
+3. `{project}.html` の存在確認:
+   - **存在する** → ステップ 2 へ進む
+   - **存在しない** → **export コマンドはここで停止する**。export 中に
+     skill が silently に HTML を生成してはならない（過去に観測した
+     品質ブレの再発防止）。ユーザーに以下を loud で案内して終了:
+     ```
+     `{project}.html` がまだ生成されていません。納品ステップが
+     完了していない可能性があります。先に `/design-director edit
+     {project}` を実行して HTML を再生成してから、export を再実行
+     してください。
+     ```
+   - **例外**: ユーザーが「export 内で再生成してくれ」と **明示的に
+     指示した** 場合のみ、`references/handoff-html-spec.md` の手順に
+     従って HTML を再生成する。その際も spec の section 4 自己チェックは
+     必須。曖昧な指示で勝手に再生成しない
 
 ### 2. 出力先の対話決定
 
@@ -141,7 +153,7 @@ standalone、Q9-2）。
 |------|------|
 | 存在しない project slug | `/design-director list` で一覧を見直すよう案内 |
 | manifest.json が壊れている | Issue を伝え、`/design-director edit <project>` で修復 or 手動で manifest 確認 |
-| `{project}.html` 未生成 | 「納品ステップまで完了していない可能性。`/design-director edit <project>` で HANDOFF.md と html を再生成してください」 |
+| `{project}.html` 未生成 | export を停止し、ユーザーに `/design-director edit <project>` 実行を促して終了。silently に再生成してはならない（ステップ 1-3 参照、 で品質ブレの根本原因と判明）|
 | 出力先が既存 | 上記ケース 3 の分岐（勝手に上書きしない）|
 | コピー先のパーミッション不足 | ユーザーに書き込み権限の確認を促す |
 | 実コピー中にエラー | 中途半端に書かれた出力先を削除するか確認（途中残骸を残さない）|
