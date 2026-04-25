@@ -25,7 +25,7 @@
 | projects 数 | `.design-studio/projects/*/manifest.json` の件数（Glob） |
 | memory.md 有無 + 最終更新 | `fs.stat .design-studio/memory.md` |
 | .upstream-cache サイズ | `du -sh .design-studio/.upstream-cache/ 2>/dev/null`（無い場合は skip） |
-| 最終 update 日時 | `references/.upstream-state.json` の各 repo `lastSyncedAt` |
+| 最終 update 日時 | `.design-studio/.upstream-state.json` の各 repo `lastSyncedAt` |
 | dev server 起動状態 | `ss -tlnp 2>/dev/null | grep ":3000"` |
 
 表示例:

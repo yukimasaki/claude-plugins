@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   computeDiff,
   computeHash,
+  defaultStateFile,
   enumerateUpstreamFiles,
   findTargetRoot,
   loadState,
@@ -61,6 +62,20 @@ describe("REPOS マッピング関数", () => {
     expect(
       m?.toLocalPath("packages/core/src/design-skills/heroes.jsx"),
     ).toBe("design-skills/heroes.jsx");
+  });
+});
+
+describe("defaultStateFile", () => {
+  it("targetRoot/.design-studio/.upstream-state.json を返す", () => {
+    expect(defaultStateFile("/tmp/repo")).toBe(
+      path.join("/tmp", "repo", ".design-studio", ".upstream-state.json"),
+    );
+  });
+
+  it("相対パスの targetRoot でも path.join で結合する", () => {
+    expect(defaultStateFile("./my-repo")).toBe(
+      path.join("./my-repo", ".design-studio", ".upstream-state.json"),
+    );
   });
 });
 

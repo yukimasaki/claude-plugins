@@ -325,10 +325,13 @@ function defaultCacheDir(targetRoot: string, repo: UpstreamRepo): string {
   return path.join(targetRoot, ".design-studio", ".upstream-cache", repo);
 }
 
-function defaultStateFile(): string {
-  const here = fileURLToPath(import.meta.url);
-  const skillRoot = path.resolve(path.dirname(here), "..");
-  return path.join(skillRoot, "references", ".upstream-state.json");
+/**
+ * state ファイルの既定配置は `.design-studio/.upstream-state.json`。
+ * `.upstream-cache/` と対になる ephemeral な runtime state として
+ * `.design-studio/` 配下（gitignored）に持つ（Q7-5）。
+ */
+export function defaultStateFile(targetRoot: string): string {
+  return path.join(targetRoot, ".design-studio", ".upstream-state.json");
 }
 
 /**
@@ -362,7 +365,7 @@ export async function runSync(opts: RunSyncOptions): Promise<RunSyncResult> {
   const targetRoot = opts.targetRoot ?? findTargetRoot(process.cwd());
   const cacheDir =
     opts.cacheDir ?? defaultCacheDir(targetRoot, opts.repo);
-  const stateFile = opts.stateFile ?? defaultStateFile();
+  const stateFile = opts.stateFile ?? defaultStateFile(targetRoot);
   const upstreamUrl = opts.upstreamUrl ?? config.url;
 
   const { repoDir, headSha } = await ensureUpstreamCache(upstreamUrl, cacheDir);
