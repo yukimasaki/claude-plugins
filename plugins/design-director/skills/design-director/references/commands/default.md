@@ -111,9 +111,16 @@
    - バリエーションの経緯（案 A-C の違い、なぜ selected を選んだか）
    - 見るべきファイル（主要コンポーネント / デザイントークン / エントリ
      ポイント）
-3. ユーザーに納品パスと次のアクション候補を案内:
-   - 続きを編集: `/design-director edit <project>`
-   - ブラウザで確認: `/design-director serve`
+3. 納品パスを報告し、**まずブラウザ確認に誘導する**。dev server の起動状態を
+   silently に確認（`ss -tlnp 2>/dev/null | grep ":3000"`）してから分岐:
+   - **dev server 起動中**（design-studio 由来の bun dev が port 3000 を
+     占有している）: `http://localhost:3000/{project-slug}` を loud で
+     案内し、「開いて確認してください」と明示的に促す
+   - **dev server 停止中**: 「ブラウザで確認するには `/design-director serve`
+     を実行してください」と **明示的に促す**。勝手に serve を起動しない
+     （port 占有の副作用があるため、ユーザー判断を経る）
+4. 続いて次のアクション候補を並べる（ブラウザ確認の後に選ぶもの）:
+   - 続きを編集・追加バリエーション: `/design-director edit <project>`
    - バンドル書き出し: `/design-director export <project>`
 
 ## Example Run
