@@ -1,0 +1,19 @@
+{
+  "name": "kit",
+  "owner": {
+    "name": "Yuki Masaki",
+    "email": "97879070+yukimasaki@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Personal Claude Code plugin marketplace",
+    "version": "0.1.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "design-director",
+      "source": "./plugins/design-director",
+      "description": "デザイン駆動のプロトタイピング支援スキル。ギャラリー駆動で UI バリエーションを並列生成"
+    }
+  ]
+}

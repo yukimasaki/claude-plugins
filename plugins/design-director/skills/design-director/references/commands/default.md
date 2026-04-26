@@ -217,5 +217,5 @@ silently に確認（`ss -tlnp 2>/dev/null | grep ":3000"`）してから分岐:
 - Q6-1: 対話重視寄りの状況適応
 - Q6-2: 既存コードベースの自律探索
 - Q6-3: `.design-studio/memory.md` にコンテキスト保存
-- Q6-4: `safety.v1.txt` + `safety.v1.txt` の遵守
+- Q6-4: `safety.v1.txt` の遵守
 - Q9-4: HANDOFF.md の自動生成

@@ -172,15 +172,6 @@ skill は呼び出し元プロジェクトのルート直下に `.design-studio/
 | port 3000 が他プロセスに占有されている | `/design-director serve` がケース 3「別ポートで起動」を提案する。`PORT=3001` で別ポート起動可 |
 | `.design-studio/.upstream-cache/` が `.design-studio/.design-studio/` の中に二重ネストで作られた | （fix 済み）`scripts/sync-upstream.ts` の `findTargetRoot()` が cwd から `.design-studio/` セグメントを剥がして親リポを返す。古い二重ネスト残骸があれば手動で `rm -rf` |
 
-## 設計ドキュメント
-
-skill 設計の経緯と決定事項は `sites/app/_docs/plans/design-director-skill/`:
-
-- [`decisions.md`](../../../sites/app/_docs/plans/design-director-skill/decisions.md) — 壁打ちで確定した Q1〜Q10
-- [`implementation-order.md`](../../../sites/app/_docs/plans/design-director-skill/implementation-order.md) — Phase 1〜7 のタスク依存グラフ
-- [`verification-checklist.md`](../../../sites/app/_docs/plans/design-director-skill/verification-checklist.md) — 検証項目チェックリスト
-- [`skill-improvement-notes.md`](../../../sites/app/_docs/plans/design-director-skill/skill-improvement-notes.md) — 各 Phase の retrospective
-
 ## ライセンスと vendored 資産
 
 `references/` 配下の vendored 資産:
@@ -188,6 +179,5 @@ skill 設計の経緯と決定事項は `sites/app/_docs/plans/design-director-s
 - `prompts/`, `design-skills/`, `builtin-skills/` — [OpenCoworkAI/open-codesign](https://github.com/OpenCoworkAI/open-codesign) より
 - `design-md/`, `prompt-packs/`, `recipes/` — [rohitg00/awesome-claude-design](https://github.com/rohitg00/awesome-claude-design) より
 
-各 upstream は `/design-director update` で同期取り込みできる。 固有の
-拡張は `` 形式で分離し、vendored ファイルは無改変で保持
-（[Q6-5](../../../sites/app/_docs/plans/design-director-skill/decisions.md)）。
+各 upstream は `/design-director update` で同期取り込みできる。vendored ファイルは
+無改変で保持する。詳細な帰属表示はリポジトリルートの [ATTRIBUTIONS.md](../../../../ATTRIBUTIONS.md) を参照。

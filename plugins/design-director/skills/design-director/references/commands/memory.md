@@ -74,9 +74,8 @@ auto memory スキル等）ではない。
 
   ---
   ## プロジェクト全般
-  -  系の案件は青系パレット固定（ブランドカラー #2563eb）
+  - 主要案件は青系パレット固定（ブランドカラー #2563eb）
   - エンジニア向け UI は density 高め、caption 12px 許容
-  - 
 
   ## 2026-04 案件
   - ops-dashboard-v1: datadog 系 data-dense、運用エンジニア向け

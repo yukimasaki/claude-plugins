@@ -39,7 +39,7 @@
 1. **必ず `cd .design-studio && bun dev` を 1 回の Bash 呼び出しにまとめて**
    background 実行する（Bash tool の `run_in_background: true`）。`bun dev`
    単体で呼んではならない。呼び出し元の cwd が repo root のままだと、親
-   プロジェクトの Next.js（`sites/app` や `sites/hub` など）が起動してしまい、
+   プロジェクトの Next.js（モノレポ内の `apps/*` や `packages/*` 等）が起動してしまい、
    design-studio ではなく親プロジェクトのギャラリーを公開することになる
 2. 起動直後に **起動ログを Read して cwd 妥当性を検証する**（この 1 ステップを
    必ず挟む）:
@@ -125,7 +125,7 @@
 - memory（feedback_kill_dev_server）: 開発サーバ停止は `pkill -9 -f "bun dev"` で
   確実に（Phase 3 retrospective）。`pkill -9 -f "next dev"` は Next.js 16 以降で
   `next-server` プロセスにマッチしないため不可
-- memory（ E2E retrospective）: `cd .design-studio && bun dev` は **1 回の
+- memory（E2E retrospective）: `cd .design-studio && bun dev` は **1 回の
   Bash 呼び出し** にまとめる。`bun dev` 単体で呼ぶと cwd が repo root のまま
   親プロジェクトの Next.js を誤起動する（`We detected multiple lockfiles` が
   起動ログに出たらこのパターン）
