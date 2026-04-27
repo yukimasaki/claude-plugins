@@ -176,11 +176,12 @@ design-director の対応：
 成果物の HTML を変更したあと、PNG / WebM を再生成するには：
 
 ```bash
-cd .design-studio/render-tool
-bun .render.mjs
+cd tools/render
+bun install   # 初回のみ
+bun render.mjs ../../samples/hero/index.html --name hero
 ```
 
-→ `samples/hero/hero.png`（1280×640 静止、アニメ停止）と `samples/hero/hero.webm`（1280×640 ~6 秒アニメ）が出力される。レンダリングツール本体は `.design-studio/render-tool/`（gitignored）に Playwright で組まれている。
+→ `samples/hero/hero.png`（1280×640 静止、アニメ停止）と `samples/hero/hero.webm`（1280×640 ~6 秒アニメ）が出力される。レンダリングツール本体は [`tools/render/`](../../tools/render)（MIT、リポジトリ同梱）に Playwright で組まれている。オプション一覧は [README](../../tools/render/README.md) 参照。
 
 ---
 
