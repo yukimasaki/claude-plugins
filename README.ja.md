@@ -28,7 +28,7 @@
 ## TL;DR
 
 - **何これ**: Yuki Masaki が個人開発する Claude Code 用プラグインマーケットプレイス（`kit`）
-- **第一弾**: `design-director` — 自然言語ブリーフから UI バリエーションを並列生成 → ギャラリーで比較 → React JSX 納品まで対話で進めるデザイン駆動スキル
+- **プラグイン**: `design-director` — 自然言語ブリーフから UI バリエーションを並列生成 → ギャラリーで比較 → React JSX 納品まで対話で進めるデザイン駆動スキル
 - **ライセンス**: MIT、商用利用可
 
 <br>
@@ -64,7 +64,7 @@ Claude Code 内で以下を順に実行:
 | デザイン駆動 | 自然言語ブリーフ → 美学探索 → 3 案並列生成を対話で進行 |
 | ギャラリー駆動 | `serve` でローカルギャラリーを起動し、案を比較・深掘り |
 | 自動納品 | React JSX バリエーションと `HANDOFF.md` を自動出力 |
-| 拡張前提 | design-director を起点に、今後プラグインを追加予定 |
+| 拡張可能 | 複数プラグインを束ねるマーケットプレイス構造 |
 
 <br>
 
@@ -77,10 +77,9 @@ Claude Code 内で以下を順に実行:
 
 | 項目 | 内容 |
 |---|---|
-| バージョン | `0.1.0` |
 | インストール | `/plugin install design-director@kit` |
 | 起動 | `/design-director` |
-| サブコマンド | `default` / `update` / `serve` / `list` / `export` / `edit` / `memory` / `reset` / `status` |
+| サブコマンド | [プラグイン README](./plugins/design-director/skills/design-director/README.md) を参照 |
 | 出力 | `.design-studio/projects/{slug}/` に React JSX + HANDOFF.md |
 | ギャラリー | `/design-director serve` で `http://localhost:3000` |
 | ドキュメント | [README](./plugins/design-director/skills/design-director/README.md) |

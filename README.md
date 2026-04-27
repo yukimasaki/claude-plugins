@@ -28,7 +28,7 @@
 ## TL;DR
 
 - **What is this**: A personal Claude Code plugin marketplace (`kit`) developed by Yuki Masaki
-- **First plugin**: `design-director` — a design-driven skill that generates UI variations in parallel from a natural-language brief, lets you compare them in a local gallery, and ships React JSX through a conversational workflow
+- **Plugin**: `design-director` — a design-driven skill that generates UI variations in parallel from a natural-language brief, lets you compare them in a local gallery, and ships React JSX through a conversational workflow
 - **License**: MIT, commercial use permitted
 
 <br>
@@ -64,7 +64,7 @@ Run the following inside Claude Code:
 | Design-driven | Conversational flow: brief → aesthetic exploration → 3 parallel variations |
 | Gallery-driven | Local gallery via `serve` for side-by-side comparison and refinement |
 | Auto-delivery | Outputs React JSX variations and `HANDOFF.md` automatically |
-| Extensible | design-director is the first; more plugins planned |
+| Extensible | Multi-plugin marketplace structure |
 
 <br>
 
@@ -77,10 +77,9 @@ Run the following inside Claude Code:
 
 | Field | Value |
 |---|---|
-| Version | `0.1.0` |
 | Install | `/plugin install design-director@kit` |
 | Launch | `/design-director` |
-| Subcommands | `default` / `update` / `serve` / `list` / `export` / `edit` / `memory` / `reset` / `status` |
+| Subcommands | See [plugin README](./plugins/design-director/skills/design-director/README.md) |
 | Output | React JSX + HANDOFF.md under `.design-studio/projects/{slug}/` |
 | Gallery | `/design-director serve` at `http://localhost:3000` |
 | Docs | [README](./plugins/design-director/skills/design-director/README.md) |
