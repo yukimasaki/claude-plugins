@@ -5,40 +5,20 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   computeDiff,
   computeHash,
-  enumerateUpstreamFiles,
-  enumerateVendoredFiles,
+  enumerateUpstreamFilesGit,
+  enumerateUpstreamFilesHttp,
+  enumerateVendoredFilesGit,
+  enumerateVendoredFilesHttp,
+  type HttpFetcher,
   REPOS,
   type UpstreamFile,
 } from "./check-diff-upstream";
 
 describe("REPOS マッピング関数", () => {
-  it("awesome-claude-design/prompts は dir を prompt-packs に置換、名前は維持", () => {
-    const m = REPOS["awesome-claude-design"].mappings.find(
-      (x) => x.upstreamGlob === "prompts/*.md",
-    );
-    expect(m?.toLocalPath("prompts/audit-live-site.md")).toBe(
-      "prompt-packs/audit-live-site.md",
-    );
-  });
-
-  it("awesome-claude-design/prompts は README.md を excludePatterns で弾く", () => {
-    const m = REPOS["awesome-claude-design"].mappings.find(
-      (x) => x.upstreamGlob === "prompts/*.md",
-    );
-    expect(m?.excludePatterns).toContain("prompts/README.md");
-  });
-
-  it("awesome-claude-design/design-md はそのまま保持", () => {
-    const m = REPOS["awesome-claude-design"].mappings.find(
-      (x) => x.upstreamGlob === "design-md/**/*.md",
-    );
-    expect(m?.toLocalPath("design-md/warm/mercury.md")).toBe(
-      "design-md/warm/mercury.md",
-    );
-  });
-
   it("open-codesign/prompts は dir を変えファイル名はそのまま（.v1.txt は upstream 側の既存命名）", () => {
-    const m = REPOS["open-codesign"].mappings.find(
+    const config = REPOS["open-codesign"];
+    if (config.kind !== "git") throw new Error("expected git config");
+    const m = config.mappings.find(
       (x) => x.upstreamGlob === "packages/core/src/prompts/*.txt",
     );
     expect(m?.toLocalPath("packages/core/src/prompts/anti-slop.v1.txt")).toBe(
@@ -50,12 +30,38 @@ describe("REPOS マッピング関数", () => {
   });
 
   it("open-codesign/design-skills は dir だけ変えて basename を維持", () => {
-    const m = REPOS["open-codesign"].mappings.find(
+    const config = REPOS["open-codesign"];
+    if (config.kind !== "git") throw new Error("expected git config");
+    const m = config.mappings.find(
       (x) => x.upstreamGlob === "packages/core/src/design-skills/*.jsx",
     );
     expect(
       m?.toLocalPath("packages/core/src/design-skills/heroes.jsx"),
     ).toBe("design-skills/heroes.jsx");
+  });
+
+  it("getdesign-md は HTTP backend で 19 サイトの vendoredToUpstream を持つ", () => {
+    const config = REPOS["getdesign-md"];
+    if (config.kind !== "http") throw new Error("expected http config");
+    expect(config.baseUrl).toBe("https://getdesign.md");
+    expect(Object.keys(config.vendoredToUpstream).length).toBe(19);
+  });
+
+  it("getdesign-md は TLD 付きサイトを vendoredToUpstream で正規化", () => {
+    const config = REPOS["getdesign-md"];
+    if (config.kind !== "http") throw new Error("expected http config");
+    // linear → linear.app
+    expect(config.vendoredToUpstream["design-md/editorial/linear.md"]).toBe(
+      "design-md/linear.app/DESIGN.md",
+    );
+    // opencode → opencode.ai
+    expect(config.vendoredToUpstream["design-md/terminal/opencode.md"]).toBe(
+      "design-md/opencode.ai/DESIGN.md",
+    );
+    // runway → runwayml
+    expect(config.vendoredToUpstream["design-md/cinematic/runway.md"]).toBe(
+      "design-md/runwayml/DESIGN.md",
+    );
   });
 });
 
@@ -75,7 +81,7 @@ describe("computeHash", () => {
   });
 });
 
-describe("enumerateUpstreamFiles (excludePatterns)", () => {
+describe("enumerateUpstreamFilesGit (excludePatterns)", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -97,7 +103,7 @@ describe("enumerateUpstreamFiles (excludePatterns)", () => {
       "# family picker",
     );
 
-    const files = await enumerateUpstreamFiles(tmpDir, [
+    const files = await enumerateUpstreamFilesGit(tmpDir, [
       {
         upstreamGlob: "prompts/*.md",
         toLocalPath: (p) => `prompt-packs/${path.basename(p)}`,
@@ -115,7 +121,7 @@ describe("enumerateUpstreamFiles (excludePatterns)", () => {
     await fs.writeFile(path.join(tmpDir, "prompts", "README.md"), "readme");
     await fs.writeFile(path.join(tmpDir, "prompts", "real.md"), "real");
 
-    const files = await enumerateUpstreamFiles(tmpDir, [
+    const files = await enumerateUpstreamFilesGit(tmpDir, [
       {
         upstreamGlob: "prompts/*.md",
         toLocalPath: (p) => `prompt-packs/${path.basename(p)}`,
@@ -129,7 +135,7 @@ describe("enumerateUpstreamFiles (excludePatterns)", () => {
   });
 });
 
-describe("enumerateVendoredFiles", () => {
+describe("enumerateVendoredFilesGit", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -152,7 +158,7 @@ describe("enumerateVendoredFiles", () => {
       "# fp",
     );
 
-    const result = await enumerateVendoredFiles(tmpDir, [
+    const result = await enumerateVendoredFilesGit(tmpDir, [
       {
         upstreamGlob: "design-md/**/*.md",
         toLocalPath: (p) => p,
@@ -171,12 +177,131 @@ describe("enumerateVendoredFiles", () => {
   });
 
   it("スキャン対象のディレクトリが存在しない場合は空 Map を返す", async () => {
-    const result = await enumerateVendoredFiles(tmpDir, [
+    const result = await enumerateVendoredFilesGit(tmpDir, [
       {
         upstreamGlob: "design-md/**/*.md",
         toLocalPath: (p) => p,
       },
     ]);
+    expect(result.size).toBe(0);
+  });
+});
+
+describe("enumerateUpstreamFilesHttp", () => {
+  it("各 vendoredToUpstream エントリに対し fetch を呼び結果を UpstreamFile に変換", async () => {
+    const calls: string[] = [];
+    const fetcher: HttpFetcher = async (url) => {
+      calls.push(url);
+      return { ok: true, body: Buffer.from(`body-of-${url.split("/").pop()}`) };
+    };
+
+    const result = await enumerateUpstreamFilesHttp({
+      baseUrl: "https://example.com",
+      vendoredToUpstream: {
+        "design-md/playful/airbnb.md": "design-md/airbnb/DESIGN.md",
+        "design-md/editorial/linear.md": "design-md/linear.app/DESIGN.md",
+      },
+      fetcher,
+    });
+
+    // localPath（vendoredToUpstream のキー）の昇順で fetch される
+    expect(calls).toEqual([
+      "https://example.com/design-md/linear.app/DESIGN.md",
+      "https://example.com/design-md/airbnb/DESIGN.md",
+    ]);
+    expect(result.files.map((f) => f.localPath)).toEqual([
+      "design-md/editorial/linear.md",
+      "design-md/playful/airbnb.md",
+    ]);
+    expect(result.failures).toEqual([]);
+  });
+
+  it("baseUrl 末尾と upstreamPath 先頭のスラッシュ重複を正規化する", async () => {
+    const calls: string[] = [];
+    const fetcher: HttpFetcher = async (url) => {
+      calls.push(url);
+      return { ok: true, body: Buffer.from("ok") };
+    };
+
+    await enumerateUpstreamFilesHttp({
+      baseUrl: "https://example.com/",
+      vendoredToUpstream: { "v.md": "/up.md" },
+      fetcher,
+    });
+
+    expect(calls).toEqual(["https://example.com/up.md"]);
+  });
+
+  it("404 や network error は failures に集約され files には含まれない", async () => {
+    const fetcher: HttpFetcher = async (url) => {
+      if (url.endsWith("/missing.md")) {
+        return { ok: false, status: 404, reason: "Not Found" };
+      }
+      if (url.endsWith("/broken.md")) {
+        return { ok: false, status: 0, reason: "ECONNREFUSED" };
+      }
+      return { ok: true, body: Buffer.from("ok") };
+    };
+
+    const result = await enumerateUpstreamFilesHttp({
+      baseUrl: "https://example.com",
+      vendoredToUpstream: {
+        "good.md": "good.md",
+        "missing.md": "missing.md",
+        "broken.md": "broken.md",
+      },
+      fetcher,
+    });
+
+    expect(result.files.map((f) => f.localPath)).toEqual(["good.md"]);
+    expect(result.failures.map((f) => f.localPath).sort()).toEqual([
+      "broken.md",
+      "missing.md",
+    ]);
+    const missing = result.failures.find((f) => f.localPath === "missing.md");
+    expect(missing?.reason).toContain("404");
+  });
+});
+
+describe("enumerateVendoredFilesHttp", () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "vendored-http-"));
+  });
+
+  afterEach(async () => {
+    await fs.rm(tmpDir, { recursive: true, force: true });
+  });
+
+  it("vendoredToUpstream のキーセットだけを対象にしハッシュを返す", async () => {
+    await fs.mkdir(path.join(tmpDir, "design-md", "warm"), { recursive: true });
+    await fs.mkdir(path.join(tmpDir, "design-md", "indie"), { recursive: true });
+    await fs.writeFile(
+      path.join(tmpDir, "design-md", "warm", "claude.md"),
+      "claude content",
+    );
+    // indie/granola は claim 外なので返ってこない
+    await fs.writeFile(
+      path.join(tmpDir, "design-md", "indie", "granola.md"),
+      "granola content",
+    );
+
+    const result = await enumerateVendoredFilesHttp(tmpDir, {
+      "design-md/warm/claude.md": "design-md/claude/DESIGN.md",
+      // granola は intentional に含めない
+    });
+
+    expect([...result.keys()]).toEqual(["design-md/warm/claude.md"]);
+    expect(result.get("design-md/warm/claude.md")).toBe(
+      computeHash("claude content"),
+    );
+  });
+
+  it("対象ファイルが存在しない場合は単に skip する（throw しない）", async () => {
+    const result = await enumerateVendoredFilesHttp(tmpDir, {
+      "design-md/missing/file.md": "design-md/missing/DESIGN.md",
+    });
     expect(result.size).toBe(0);
   });
 });

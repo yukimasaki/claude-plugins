@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { globby } from "globby";
 import { simpleGit } from "simple-git";
 
-export type UpstreamRepo = "awesome-claude-design" | "open-codesign";
+export type UpstreamRepo = "getdesign-md" | "open-codesign";
 
 export type FileMapping = {
   upstreamGlob: string;
@@ -15,31 +15,58 @@ export type FileMapping = {
   excludePatterns?: string[];
 };
 
-export type RepoConfig = {
+export type GitRepoConfig = {
+  kind: "git";
   url: string;
   mappings: FileMapping[];
 };
 
+export type HttpRepoConfig = {
+  kind: "http";
+  baseUrl: string;
+  /**
+   * vendored 上の localPath → upstream の相対パスへのマッピング。
+   * このレコードのキーが「監視対象 vendored ファイル」を兼ねる。
+   * vendored 側にあってマップに無い localPath は本 upstream の関心外
+   * （別 upstream 由来 or 自前メンテ）として deletion 検出から除外する。
+   */
+  vendoredToUpstream: Record<string, string>;
+};
+
+export type RepoConfig = GitRepoConfig | HttpRepoConfig;
+
 export const REPOS: Record<UpstreamRepo, RepoConfig> = {
-  "awesome-claude-design": {
-    url: "https://github.com/rohitg00/awesome-claude-design.git",
-    mappings: [
-      {
-        upstreamGlob: "design-md/**/*.md",
-        toLocalPath: (p) => p,
-      },
-      {
-        upstreamGlob: "prompts/*.md",
-        toLocalPath: (p) => `prompt-packs/${path.basename(p)}`,
-        excludePatterns: ["prompts/README.md"],
-      },
-      {
-        upstreamGlob: "recipes/*.md",
-        toLocalPath: (p) => p,
-      },
-    ],
+  "getdesign-md": {
+    kind: "http",
+    baseUrl: "https://getdesign.md",
+    // 19 サイト: rohitg00 由来 35 サイトのうち getdesign.md カタログに存在する分。
+    // 残り 16 サイト（8 単体ブランド + 8 remix）は getdesign.md に無いため
+    // 本 PR では自前で DESIGN.md 公式仕様に手動変換し、ここでは追跡しない。
+    // 後続 PR #2-2 で 24 件追加予定（合計 43 エントリ）。
+    vendoredToUpstream: {
+      "design-md/warm/claude.md": "design-md/claude/DESIGN.md",
+      "design-md/editorial/linear.md": "design-md/linear.app/DESIGN.md",
+      "design-md/editorial/vercel.md": "design-md/vercel/DESIGN.md",
+      "design-md/data-dense/mongodb.md": "design-md/mongodb/DESIGN.md",
+      "design-md/data-dense/clickhouse.md": "design-md/clickhouse/DESIGN.md",
+      "design-md/data-dense/posthog.md": "design-md/posthog/DESIGN.md",
+      "design-md/cinematic/bmw.md": "design-md/bmw/DESIGN.md",
+      "design-md/cinematic/cohere.md": "design-md/cohere/DESIGN.md",
+      "design-md/cinematic/ferrari.md": "design-md/ferrari/DESIGN.md",
+      "design-md/cinematic/lamborghini.md": "design-md/lamborghini/DESIGN.md",
+      "design-md/cinematic/minimax.md": "design-md/minimax/DESIGN.md",
+      "design-md/cinematic/nvidia.md": "design-md/nvidia/DESIGN.md",
+      "design-md/cinematic/renault.md": "design-md/renault/DESIGN.md",
+      "design-md/cinematic/runway.md": "design-md/runwayml/DESIGN.md",
+      "design-md/playful/figma.md": "design-md/figma/DESIGN.md",
+      "design-md/glass/apple.md": "design-md/apple/DESIGN.md",
+      "design-md/terminal/ollama.md": "design-md/ollama/DESIGN.md",
+      "design-md/terminal/opencode.md": "design-md/opencode.ai/DESIGN.md",
+      "design-md/terminal/warp.md": "design-md/warp/DESIGN.md",
+    },
   },
   "open-codesign": {
+    kind: "git",
     url: "https://github.com/OpenCoworkAI/open-codesign.git",
     mappings: [
       {
@@ -92,7 +119,7 @@ export function computeHash(content: Buffer | string): string {
   return crypto.createHash("sha256").update(content).digest("hex");
 }
 
-export async function enumerateUpstreamFiles(
+export async function enumerateUpstreamFilesGit(
   repoDir: string,
   mappings: FileMapping[],
 ): Promise<UpstreamFile[]> {
@@ -120,7 +147,80 @@ export async function enumerateUpstreamFiles(
   return result;
 }
 
-export async function enumerateVendoredFiles(
+/** @deprecated 後方互換のため残置。新規コードは enumerateUpstreamFilesGit を使う */
+export const enumerateUpstreamFiles = enumerateUpstreamFilesGit;
+
+export type HttpFetcher = (url: string) => Promise<HttpFetchResult>;
+
+export type HttpFetchResult =
+  | { ok: true; body: Buffer }
+  | { ok: false; status: number; reason: string };
+
+const defaultHttpFetcher: HttpFetcher = async (url) => {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      return { ok: false, status: res.status, reason: res.statusText };
+    }
+    const arrayBuffer = await res.arrayBuffer();
+    return { ok: true, body: Buffer.from(arrayBuffer) };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { ok: false, status: 0, reason: message };
+  }
+};
+
+export type HttpEnumerateOptions = {
+  baseUrl: string;
+  vendoredToUpstream: Record<string, string>;
+  fetcher?: HttpFetcher;
+};
+
+export type HttpEnumerateResult = {
+  files: UpstreamFile[];
+  /** fetch に失敗した localPath とエラー情報（404 / network error 等） */
+  failures: { localPath: string; upstreamPath: string; reason: string }[];
+};
+
+export async function enumerateUpstreamFilesHttp(
+  opts: HttpEnumerateOptions,
+): Promise<HttpEnumerateResult> {
+  const fetcher = opts.fetcher ?? defaultHttpFetcher;
+  const files: UpstreamFile[] = [];
+  const failures: HttpEnumerateResult["failures"] = [];
+
+  const entries = Object.entries(opts.vendoredToUpstream).sort(([a], [b]) =>
+    a.localeCompare(b),
+  );
+
+  for (const [localPath, upstreamPath] of entries) {
+    const url = joinUrl(opts.baseUrl, upstreamPath);
+    const res = await fetcher(url);
+    if (!res.ok) {
+      failures.push({
+        localPath,
+        upstreamPath,
+        reason: `HTTP ${res.status} (${res.reason})`,
+      });
+      continue;
+    }
+    files.push({
+      upstreamPath,
+      localPath,
+      hash: computeHash(res.body),
+    });
+  }
+
+  return { files, failures };
+}
+
+function joinUrl(baseUrl: string, relPath: string): string {
+  const trimmedBase = baseUrl.replace(/\/+$/, "");
+  const trimmedPath = relPath.replace(/^\/+/, "");
+  return `${trimmedBase}/${trimmedPath}`;
+}
+
+export async function enumerateVendoredFilesGit(
   vendoredRoot: string,
   mappings: FileMapping[],
 ): Promise<Map<string, string>> {
@@ -154,6 +254,32 @@ export async function enumerateVendoredFiles(
       const buf = await fs.readFile(path.join(dir, match));
       result.set(localPath, computeHash(buf));
     }
+  }
+  return result;
+}
+
+/** @deprecated 後方互換のため残置。新規コードは enumerateVendoredFilesGit を使う */
+export const enumerateVendoredFiles = enumerateVendoredFilesGit;
+
+/**
+ * HTTP 版の vendored 列挙: vendoredToUpstream のキーセットだけを対象にする。
+ * これにより別 upstream 由来 / 自前メンテのファイルが deletion と誤検知されない。
+ */
+export async function enumerateVendoredFilesHttp(
+  vendoredRoot: string,
+  vendoredToUpstream: Record<string, string>,
+): Promise<Map<string, string>> {
+  const result = new Map<string, string>();
+  for (const localPath of Object.keys(vendoredToUpstream)) {
+    const full = path.join(vendoredRoot, localPath);
+    let buf: Buffer;
+    try {
+      buf = await fs.readFile(full);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code === "ENOENT") continue;
+      throw err;
+    }
+    result.set(localPath, computeHash(buf));
   }
   return result;
 }
@@ -210,12 +336,15 @@ export function computeDiff(
   return entries;
 }
 
+export type SummarySource =
+  | { kind: "git"; url: string; headSha: string }
+  | { kind: "http"; baseUrl: string; failures: HttpEnumerateResult["failures"] };
+
 export function formatSummary(
   repo: UpstreamRepo,
-  headSha: string,
+  source: SummarySource,
   diff: DiffEntry[],
 ): string {
-  const config = REPOS[repo];
   const categories: Record<DiffEntry["kind"], DiffEntry[]> = {
     new: [],
     changed: [],
@@ -226,8 +355,12 @@ export function formatSummary(
 
   const lines: string[] = [];
   lines.push(`# upstream diff — ${repo}`, "");
-  lines.push(`- url: ${config.url}`);
-  lines.push(`- head commit: ${headSha}`);
+  if (source.kind === "git") {
+    lines.push(`- url: ${source.url}`);
+    lines.push(`- head commit: ${source.headSha}`);
+  } else {
+    lines.push(`- base url: ${source.baseUrl}`);
+  }
   lines.push(`- checked at: ${new Date().toISOString()}`, "");
 
   lines.push(`## 新規 (${categories.new.length})`);
@@ -267,48 +400,98 @@ export function formatSummary(
   );
   lines.push("");
 
+  if (source.kind === "http" && source.failures.length > 0) {
+    lines.push(`## fetch 失敗 (${source.failures.length})`);
+    for (const f of source.failures) {
+      lines.push(`- ${f.localPath} ← ${f.upstreamPath} : ${f.reason}`);
+    }
+    lines.push("");
+  }
+
   return lines.join("\n");
 }
 
 export type CheckRepoOptions = {
   repo: UpstreamRepo;
-  upstreamUrl?: string;
   vendoredRoot?: string;
+  /** HTTP backend の差し替え（テスト用） */
+  fetcher?: HttpFetcher;
+  /** git backend の clone URL 上書き（テスト用） */
+  upstreamUrl?: string;
 };
 
 export type CheckRepoResult = {
   summaryMarkdown: string;
   diff: DiffEntry[];
-  headSha: string;
 };
 
 export async function checkRepo(
   opts: CheckRepoOptions,
 ): Promise<CheckRepoResult> {
   const config = REPOS[opts.repo];
-  const upstreamUrl = opts.upstreamUrl ?? config.url;
   const vendoredRoot = opts.vendoredRoot ?? VENDORED_ROOT;
 
+  if (config.kind === "git") {
+    return checkRepoGit(opts.repo, config, vendoredRoot, opts.upstreamUrl);
+  }
+  return checkRepoHttp(opts.repo, config, vendoredRoot, opts.fetcher);
+}
+
+async function checkRepoGit(
+  repo: UpstreamRepo,
+  config: GitRepoConfig,
+  vendoredRoot: string,
+  upstreamUrl: string | undefined,
+): Promise<CheckRepoResult> {
+  const url = upstreamUrl ?? config.url;
   const cloneDir = await mkdtemp(
-    path.join(tmpdir(), `claude-plugins-upstream-${opts.repo}-`),
+    path.join(tmpdir(), `claude-plugins-upstream-${repo}-`),
   );
   try {
-    await simpleGit().clone(upstreamUrl, cloneDir, ["--depth", "1"]);
+    await simpleGit().clone(url, cloneDir, ["--depth", "1"]);
     const headSha = (await simpleGit(cloneDir).revparse(["HEAD"])).trim();
 
-    const upstream = await enumerateUpstreamFiles(cloneDir, config.mappings);
-    const vendored = await enumerateVendoredFiles(vendoredRoot, config.mappings);
+    const upstream = await enumerateUpstreamFilesGit(cloneDir, config.mappings);
+    const vendored = await enumerateVendoredFilesGit(vendoredRoot, config.mappings);
     const diff = computeDiff(vendored, upstream);
-    const summaryMarkdown = formatSummary(opts.repo, headSha, diff);
+    const summaryMarkdown = formatSummary(
+      repo,
+      { kind: "git", url, headSha },
+      diff,
+    );
 
-    return { summaryMarkdown, diff, headSha };
+    return { summaryMarkdown, diff };
   } finally {
     await rm(cloneDir, { recursive: true, force: true });
   }
 }
 
+async function checkRepoHttp(
+  repo: UpstreamRepo,
+  config: HttpRepoConfig,
+  vendoredRoot: string,
+  fetcher: HttpFetcher | undefined,
+): Promise<CheckRepoResult> {
+  const { files, failures } = await enumerateUpstreamFilesHttp({
+    baseUrl: config.baseUrl,
+    vendoredToUpstream: config.vendoredToUpstream,
+    fetcher,
+  });
+  const vendored = await enumerateVendoredFilesHttp(
+    vendoredRoot,
+    config.vendoredToUpstream,
+  );
+  const diff = computeDiff(vendored, files);
+  const summaryMarkdown = formatSummary(
+    repo,
+    { kind: "http", baseUrl: config.baseUrl, failures },
+    diff,
+  );
+  return { summaryMarkdown, diff };
+}
+
 function isUpstreamRepo(value: string): value is UpstreamRepo {
-  return value === "awesome-claude-design" || value === "open-codesign";
+  return value === "getdesign-md" || value === "open-codesign";
 }
 
 function printUsage(): void {
@@ -317,8 +500,8 @@ function printUsage(): void {
       "usage: check-diff-upstream [repo]",
       "",
       "  repo (省略時は全 upstream を順に検査):",
-      "    awesome-claude-design",
-      "    open-codesign",
+      "    getdesign-md  (https://getdesign.md — DESIGN.md 公式仕様カタログ、HTTP fetch ベース)",
+      "    open-codesign (OpenCoworkAI/open-codesign — prompts / design-skills / builtin-skills、git clone ベース)",
       "",
     ].join("\n"),
   );
