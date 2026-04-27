@@ -85,6 +85,11 @@ standalone、Q9-2）。
 - ブラウザで確認: ファイルマネージャで `{output}/{project}.html` を
   開くか、`file://{absolute_path}/{project}.html` をブラウザに貼る
 - バンドルを共有: フォルダごと zip するか、git に push
+- 画像 / 動画として共有 (Slack / X / README hero / GitHub Social Preview):
+  リポジトリ同梱の `tools/render/` を呼ぶ。
+  `cd tools/render && bun render.mjs {absolute_path}/{project}.html --name {slug}`
+  で PNG / WebM が同じディレクトリに出力される。詳細は
+  `references/recipes/render-to-png-webm.md`
 - 既存コードベースへの統合: 本コマンドの責務外（Q9-3）。別の Claude Code
   セッションを起動し、HANDOFF.md を渡して「このプロトタイプを実装して」
   と依頼してください。バンドル側の `HANDOFF.md` / `variations/*.jsx` /

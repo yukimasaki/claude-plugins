@@ -145,6 +145,12 @@ data-dense / cinematic / playful / glass / brutalist / indie）を vendored
   美学、バリエーションの経緯、見るべきファイル）
 - `/design-director export <project>` でバンドル（React CDN + Babel で単体
   動作する HTML + JSX）を書き出せる
+- 配布用の **画像 / 動画**（README hero, GitHub Social Preview Image,
+  Slack / X シェア用）が必要な場合は同梱の `tools/render/` を Bash で
+  呼ぶ。`bun render.mjs <bundle.html> --name <slug>` で PNG / WebM が
+  出力される。詳細は `references/recipes/render-to-png-webm.md` /
+  `recipes/social-preview-image.md` / `recipes/github-readme-rendering.md`
+  参照
 
 ## 参照ファイルの読み込み方針（プログレッシブ開示）
 
