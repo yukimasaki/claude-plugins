@@ -17,7 +17,11 @@
   - `plugins/design-director/skills/design-director/references/prompts/`
   - `plugins/design-director/skills/design-director/references/design-skills/`
   - `plugins/design-director/skills/design-director/references/builtin-skills/`
-- **Modifications**: なし（無改変で同梱）
+- **Modifications**: 以下のファイルにローカルな追記を加えています（upstream にはまだ反映していません）:
+  - `references/prompts/anti-slop.v1.txt` — 「抽象モチーフは中身を持つ」項目を "What slop looks like" リストに追加（[Issue #12](https://github.com/yukimasaki/claude-plugins/issues/12) A-1）
+  - `references/prompts/anti-slop-digest.v1.txt` — 上記と対応する 1 行を digest にも追加（A-1）
+  - `references/prompts/output-rules.v1.txt` — 長寿命アーティファクト（README hero / SPI 等）への version 番号 / 年号 / 序数の埋め込みを禁じる「Rotting information in long-lived artifacts」セクションを追加（[Issue #12](https://github.com/yukimasaki/claude-plugins/issues/12) A-4）
+  - `references/prompts/pre-flight.v1.txt` — 項目 #8（Anti-slop guard）に abstract decorative shapes の検査を追記、新規項目 #9（Rot check, 長寿命アーティファクトのみ）を追加（A-4）
 
 ### rohitg00 / awesome-claude-design
 
@@ -29,7 +33,12 @@
   - `plugins/design-director/skills/design-director/references/design-md/`
   - `plugins/design-director/skills/design-director/references/prompt-packs/`
   - `plugins/design-director/skills/design-director/references/recipes/`
-- **Modifications**: なし（無改変で同梱）
+- **Modifications**: upstream 由来のファイルは無改変。`references/recipes/` には本リポジトリ独自の recipe を追加しています:
+  - `references/recipes/social-preview-image.md` — GitHub SPI と README hero を 1 つの hero HTML から作る手順（[Issue #12](https://github.com/yukimasaki/claude-plugins/issues/12) B-1）
+  - `references/recipes/github-readme-rendering.md` — github.com で確実に表示される画像 / 動画形式の選び方（B-2）
+  - `references/recipes/render-to-png-webm.md` — Playwright で HTML → PNG / WebM 変換する手順（同梱の `tools/render/` の使い方を含む）（B-3）
+
+  これらは upstream には存在しないファイルなので、awesome-claude-design 側のライセンスは適用されません（本リポジトリの MIT ライセンスのみ）。
 
 ## design-md/ への追加コントリビューション
 

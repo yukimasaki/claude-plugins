@@ -9,6 +9,7 @@ Silently answer before writing HTML. Do NOT print the answers.
 5. **Featured numbers** — each number → big-number block (label + source line), not inline prose.
 6. **Palette plan** — bg + surface + text + muted + accent (oklch) + secondary/success, optional gradient. Dark ≠ one black + one accent; add mid-tone surface and warm/cool tilt.
 7. **Type ladder** — four steps (display · h1 · body · caption) with weight contrast. Fraunces for editorial / case_study / report; Geist or preferred sans for landing / dashboard / pricing.
-8. **Anti-slop guard** — scan for lorem ipsum, generic icon-title-text grids, stock testimonials, single accent on flat black, default Tailwind grays, placeholder.com images. Replace before generating.
+8. **Anti-slop guard** — scan for lorem ipsum, generic icon-title-text grids, stock testimonials, single accent on flat black, default Tailwind grays, placeholder.com images, abstract decorative shapes used as filler. Replace before generating.
+9. **Rot check (long-lived artifacts only)** — if the artifact is a hero, README graphic, social preview, or other long-shelf-life surface, scan for version numbers, calendar years, ordinals (`first`, `第一弾`), and counted nouns (`9 subcommands`). Neutralize or move to a dynamic source (badge, runtime value) before generating.
 
 If any answer is "not sure" or "default", redesign it before generating.

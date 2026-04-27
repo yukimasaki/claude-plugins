@@ -79,6 +79,7 @@ Dark does not mean monotone. A dark design that is one near-black plus one accen
 - A "minimal dark" page that is `#0E0E10` end-to-end with a single purple accent and four sparse stat cards. This is the prototypical sparse-LLM output — sections feel like placeholders, the hierarchy is flat, and the only visual interest is the accent color. Always add: a hero with a real headline + subhead, at least one body / narrative section, a comparison or evidence block when numbers are involved, and a closing CTA.
 - A "case study" that is four metric cards plus a single quote — this misses the hero, the before/after, the customer profile, and the closing. See the case_study density floor in the artifact-types section.
 - A logo placeholder rendered as a soft-rounded square with a single random letter centered inside. Use a constructed monogram, a wordmark, or an explicit hatched "YOUR LOGO HERE" rectangle instead.
+- A panel of abstract decorative shapes (rounded rectangles, geometric blobs, generic dot grids) arranged as visual filler with no symbolic content. Replace each shape with a **mini diagram, a small real example, or a labeled glyph** — anything that carries information density and signals what the panel is *about*. A row of three rounded rectangles next to a tagline is a slop tell; a row of three thumbnail previews of the actual product surfaces is not.
 - Decorative emoji used as section icons unless the brief explicitly asks for emoji.
 - Lorem ipsum, "John Doe", "Acme Corp", "100%" / "1,234" round-number filler.
 

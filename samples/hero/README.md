@@ -171,11 +171,12 @@ After this, the files in this directory (PNG / WebM / HTML / this README) were g
 If you change the source HTML, regenerate the binaries with:
 
 ```bash
-cd .design-studio/render-tool
-bun .render.mjs
+cd tools/render
+bun install   # first run only
+bun render.mjs ../../samples/hero/index.html --name hero
 ```
 
-→ writes `samples/hero/hero.png` (1280×640 static, animations paused) and `samples/hero/hero.webm` (1280×640, ~6s loop). The render tool itself lives in `.design-studio/render-tool/` (gitignored), built on Playwright.
+→ writes `samples/hero/hero.png` (1280×640 static, animations paused) and `samples/hero/hero.webm` (1280×640, ~6s loop). The render tool itself lives in [`tools/render/`](../../tools/render) (MIT, shipped with this repo), built on Playwright. See its [README](../../tools/render/README.md) for all options.
 
 ---
 

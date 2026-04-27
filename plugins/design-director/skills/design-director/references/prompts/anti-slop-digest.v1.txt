@@ -7,6 +7,7 @@
 - Footer with three columns of nav links plus a social icon row.
 - "Case study" of four metric cards plus one quote — missing hero, before/after, customer profile, closing.
 - Logo as a soft-rounded square with one random letter centered. Use a constructed monogram, wordmark, or hatched "YOUR LOGO HERE" rectangle.
+- Abstract decorative shapes (rounded rectangles, geometric blobs, dot grids) as filler with no symbolic content. Replace with mini diagrams, real example thumbnails, or labeled glyphs.
 - Decorative emoji as section icons (unless brief asks).
 - Default Tailwind blue (`#3b82f6`) or default Tailwind grays as the entire neutral scale.
 - Lorem ipsum, "John Doe", "Acme Corp", "100%" / "1,234" round-number filler.

@@ -115,6 +115,20 @@ data-dense / cinematic / playful / glass / brutalist / indie）を vendored
 - ユーザーの自然言語フィードバック（「もっと余白を」「色を暖かく」等）を
   受けて、変更の最小セット を当てていく（`tweaks-protocol.v1.txt` と
   `editmode-protocol.v1.txt` に従う）
+- **修正の保存方法を毎回ユーザーに確認する**。修正指示を受けたら、変更を
+  反映する **前** に以下のどちらにするかを尋ねる:
+  1. **上書き**: 既存ファイル（例: `brutalist.html`）をそのまま書き換える
+  2. **新スナップショット**: `brutalist-v2.html` のように連番付きで新規
+     ファイルを作成し、index ページで並列比較できるようにする
+  - スナップショット運用は「あの時の v1 が良かった」と戻れる利点があり、
+    制作プロセスを後から開示する際の素材にもなる（ヒーロー制作の実例 →
+    `samples/hero/`）
+  - ユーザーが「以降はずっと上書きで」「v3 として」など方針を示したら、
+    その指示に従う。指示変更があれば即座に従う（毎回確認しないモードに
+    切り替わる）
+  - 連番は採用版 → 改修版の流れで `-v2`, `-v3` ... と単調増加。`-v1` は
+    最初の採用版で、改修して `-v2` を作った時点で `-v1` を後付けする
+    リネームでも良い
 
 ### (6) 検証 `[ループ]`
 
@@ -131,6 +145,12 @@ data-dense / cinematic / playful / glass / brutalist / indie）を vendored
   美学、バリエーションの経緯、見るべきファイル）
 - `/design-director export <project>` でバンドル（React CDN + Babel で単体
   動作する HTML + JSX）を書き出せる
+- 配布用の **画像 / 動画**（README hero, GitHub Social Preview Image,
+  Slack / X シェア用）が必要な場合は同梱の `tools/render/` を Bash で
+  呼ぶ。`bun render.mjs <bundle.html> --name <slug>` で PNG / WebM が
+  出力される。詳細は `references/recipes/render-to-png-webm.md` /
+  `recipes/social-preview-image.md` / `recipes/github-readme-rendering.md`
+  参照
 
 ## 参照ファイルの読み込み方針（プログレッシブ開示）
 

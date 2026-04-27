@@ -1,0 +1,20 @@
+{
+  "name": "claude-plugins-render-tool",
+  "version": "0.1.0",
+  "description": "Render an HTML file to PNG (static) and/or WebM (animated) via Playwright. Used to publish hero / SPI / sample assets for claude-plugins.",
+  "type": "module",
+  "private": true,
+  "main": "render.mjs",
+  "scripts": {
+    "render": "bun render.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.59.1"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yukimasaki/claude-plugins",
+    "directory": "tools/render"
+  }
+}
