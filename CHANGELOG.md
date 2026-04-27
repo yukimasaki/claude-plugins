@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2](https://github.com/yukimasaki/claude-plugins/compare/v0.1.1...v0.1.2) (2026-04-27)
+
+
+### Bug Fixes
+
+* **readme:** hero の &lt;video&gt; ソースを絶対 URL に変更（GitHub WebUI で表示されない問題の修正） ([d9a78c4](https://github.com/yukimasaki/claude-plugins/commit/d9a78c4ca7fe4db3c10635502251d5e5acc860c0))
+
 ## [0.1.1](https://github.com/yukimasaki/claude-plugins/compare/v0.1.0...v0.1.1) (2026-04-27)
 
 
