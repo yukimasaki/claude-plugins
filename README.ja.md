@@ -2,10 +2,9 @@
 
 [English](./README.md) | **日本語**
 
-<video autoplay loop muted playsinline poster="https://github.com/yukimasaki/claude-plugins/raw/main/samples/hero/hero.png" width="100%">
-  <source src="https://github.com/yukimasaki/claude-plugins/raw/main/samples/hero/hero.webm" type="video/webm">
-  <img src="https://github.com/yukimasaki/claude-plugins/raw/main/samples/hero/hero.png" alt="claude-plugins — Personal Claude Code plugin marketplace. Design-driven prototyping with design-director." width="100%">
-</video>
+https://github.com/yukimasaki/claude-plugins/raw/main/samples/hero/hero.webm
+
+![claude-plugins hero](https://raw.githubusercontent.com/yukimasaki/claude-plugins/main/samples/hero/hero.png)
 
 > このヒーロー画像は **100% [`design-director`](./plugins/design-director) で生成**されました。[制作プロセス](./samples/hero/README.ja.md)（実セッションのプロンプト全公開）も閲覧できます。
 
