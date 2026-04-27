@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0](https://github.com/yukimasaki/claude-plugins/compare/v0.1.2...v0.2.0) (2026-04-27)
+
+
+### Features
+
+* **design-director:** anti-slop に「抽象モチーフは中身を持つ」項目を追加 ([9e8fd01](https://github.com/yukimasaki/claude-plugins/commit/9e8fd01e404b8e010f9ed40e5093a3bf88530269))
+* **design-director:** Issue [#12](https://github.com/yukimasaki/claude-plugins/issues/12) — A 3 項目 + B recipe 3 本 + render tool 公開 ([331e3bf](https://github.com/yukimasaki/claude-plugins/commit/331e3bfbc789bb88ee012077d7db3436452239a2))
+* **design-director:** recipes/github-readme-rendering.md を追加 ([b0e8336](https://github.com/yukimasaki/claude-plugins/commit/b0e833626ebc5e8958656ad3aae2d59017a40dd4))
+* **design-director:** recipes/render-to-png-webm.md を追加 ([6a5b8da](https://github.com/yukimasaki/claude-plugins/commit/6a5b8daeed1949dbd2416138257d20c28329b13f))
+* **design-director:** recipes/social-preview-image.md を追加 ([9e89642](https://github.com/yukimasaki/claude-plugins/commit/9e89642d1c6c93b2c3369908eac93f0bbb3346b7))
+* **design-director:** tools/render/ を Step 7 / export.md から認識可能に ([30a6710](https://github.com/yukimasaki/claude-plugins/commit/30a67102fca3571f6ac485f7c18fef6da6372019))
+* **design-director:** 修正の保存方法を毎回確認するプロトコルを追加 ([634ce2d](https://github.com/yukimasaki/claude-plugins/commit/634ce2d2d2b259543e15bc388058416cd4c9f6d6))
+* **design-director:** 長寿命アーティファクトの腐情報チェックを追加 ([4abf449](https://github.com/yukimasaki/claude-plugins/commit/4abf449e25aa1d61d5f1028c3d8a9ab8105d72fd))
+* **tools:** tools/render/ を新設 — 汎用 PNG / WebM レンダリング CLI ([be93ce4](https://github.com/yukimasaki/claude-plugins/commit/be93ce444c0c36806cfaf1f4eb45aa1f82797e77))
+
 ## [0.1.2](https://github.com/yukimasaki/claude-plugins/compare/v0.1.1...v0.1.2) (2026-04-27)
 
 
