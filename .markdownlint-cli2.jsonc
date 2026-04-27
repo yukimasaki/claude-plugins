@@ -1,0 +1,21 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false,
+    "MD024": { "siblings_only": true },
+    "MD036": false,
+    "MD040": false,
+    "MD041": false,
+    "MD060": false
+  },
+  "globs": ["**/*.md"],
+  "ignores": [
+    "plugins/design-director/skills/design-director/references/**",
+    "plugins/design-director/skills/design-director/SKILL.md",
+    "plugins/design-director/skills/design-director/README.md",
+    ".design-studio/**",
+    "node_modules/**",
+    "docs/**"
+  ]
+}

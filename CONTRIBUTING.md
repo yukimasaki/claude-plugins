@@ -1,16 +1,17 @@
+**English** | [日本語](./CONTRIBUTING.ja.md)
+
 # Contributing to claude-plugins
 
-PR・Issue を歓迎します。このドキュメントは特に **デザイン参照ファイルの追加** に関するルールを定めます。
+PRs and Issues are welcome. This document focuses on the rules for **adding design references**.
 
-## デザイン参照ファイル（design-md/）の追加
+## Adding design references (`design-md/`)
 
-`plugins/design-director/skills/design-director/references/design-md/` には、ブランドや製品のデザインを記述した
-Markdown ファイルが、カテゴリディレクトリ単位で整理されています。
+The directory `plugins/design-director/skills/design-director/references/design-md/` contains Markdown files describing brand or product designs, organized by category.
 
 ```
 references/design-md/
-├── brutalist/   # 例: the-verge.md
-├── cinematic/   # 例: bmw.md, ferrari.md
+├── brutalist/   # e.g. the-verge.md
+├── cinematic/   # e.g. bmw.md, ferrari.md
 ├── data-dense/
 ├── editorial/
 ├── glass/
@@ -21,37 +22,42 @@ references/design-md/
 └── warm/
 ```
 
-### 追加 PR の手順
+### How to submit
 
-1. **配置先の判断**: 既存カテゴリのいずれかに合うかを検討。合わない場合は新規カテゴリの作成を提案
-2. **ファイル名**: `{brand-or-product-name}.md`（小文字、ハイフン区切り）
-3. **ファイル内容**: upstream（公開リポ・ブログ・公式デザインシステムドキュメントなど）から **無改変** で取り込む
-4. **ATTRIBUTIONS.md への追記**: PR と同時に `ATTRIBUTIONS.md` の "design-md/ への追加コントリビューション" 表に行を追加:
+1. **Choose a category**: pick the existing category that best fits. If none fits, propose a new category in your PR.
+2. **File name**: `{brand-or-product-name}.md` (lowercase, hyphen-separated).
+3. **File content**: import **verbatim** from upstream (public repo, blog, official design system docs, etc.).
+4. **Update `ATTRIBUTIONS.md`**: in the same PR, add a row to the "design-md/ contributions" table:
+
    ```markdown
    | brutalist | the-verge.md | https://example.com/source | MIT | 2026-04-26 |
    ```
-5. **ライセンス確認**: 取り込み元のライセンスが MIT 互換（MIT / BSD / Apache-2.0 など）であることを確認。GPL/AGPL 系は不可
-6. **upstream の `Source URL` を必ず記載**: トレーサビリティ確保のため
 
-### 配置の判断
+5. **License compatibility**: confirm the source license is MIT-compatible (MIT / BSD / Apache-2.0). GPL/AGPL family is not accepted.
+6. **Always include the upstream `Source URL`**: required for traceability.
 
-カテゴリ分けの判断は **コントリビューターの責務** です。明確に既存カテゴリに当てはまらない場合は、PR 内で
-新規カテゴリ提案の根拠（既存カテゴリとの差異、想定される類似ファイル群など）を説明してください。
-メンテナは PR レビューで全体整合性を確認します。
+### Categorization
 
-## バグ報告 / 機能要望
+Choosing the right category is the **contributor's responsibility**. If your reference doesn't clearly fit any existing category, explain in the PR:
 
-GitHub Issues に投稿してください。
+- How it differs from existing categories
+- What other references might join the new category
 
-## コミットメッセージ
+The maintainer reviews PRs for overall consistency.
 
-日本語の Conventional Commits 形式を推奨します（必須ではない）:
+## Bug reports / feature requests
+
+Use [GitHub Issues](https://github.com/yukimasaki/claude-plugins/issues). Templates will guide you through the required information.
+
+## Commit messages
+
+[Conventional Commits](https://www.conventionalcommits.org/) is recommended (Japanese is fine):
 
 ```
-feat(design-director): 新しい cinematic スタイルを追加
-docs(contributing): デザイン参照ファイル追加手順を更新
+feat(design-director): add new cinematic style
+docs(contributing): update design reference submission steps
 ```
 
-## ライセンス
+## License
 
-PR を投稿することで、その内容を [MIT License](./LICENSE) で公開することに同意したものとみなします。
+By submitting a PR, you agree that your contribution will be released under the [MIT License](./LICENSE).
