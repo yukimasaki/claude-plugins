@@ -1,108 +1,145 @@
 <div align="center">
 
+**English** | [日本語](./README.ja.md)
+
 # claude-plugins
 
 **Personal Claude Code plugin marketplace**
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blueviolet?style=flat-square)](https://docs.anthropic.com/en/docs/claude-code)
+Design-driven prototyping with Claude Code.
 
-<br>
-
-Yuki Masaki が個人で開発・公開している Claude Code プラグイン群。
-コミュニティへの貢献と、デザインワークフローの標準化への賛同を目的としています。
+[![License: MIT](https://img.shields.io/github/license/yukimasaki/claude-plugins?style=flat-square)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/yukimasaki/claude-plugins?style=flat-square&display_name=tag&sort=semver)](https://github.com/yukimasaki/claude-plugins/releases)
+[![Stars](https://img.shields.io/github/stars/yukimasaki/claude-plugins?style=flat-square)](https://github.com/yukimasaki/claude-plugins/stargazers)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](./CONTRIBUTING.md)
+[![Made with Claude Code](https://img.shields.io/badge/Made_with-Claude_Code-blueviolet?style=flat-square)](https://docs.anthropic.com/en/docs/claude-code)
 
 </div>
 
 <br>
 
-> **Disclaimer**: このリポジトリは Anthropic 社、Claude™、または Claude Design™ と提携・関係していません。
-> "Claude" は Anthropic 社の商標です。
+> **Disclaimer**: This repository is not affiliated with Anthropic, Claude™, or Claude Design™.
+> "Claude" is a trademark of Anthropic.
 
 <br>
 
-## 目次
+## TL;DR
 
-- [セットアップ](#セットアップ)
-- [利用可能なプラグイン](#利用可能なプラグイン)
-- [対応環境](#対応環境)
-- [開発ガイド](#開発ガイド)
-- [ライセンスとクレジット](#ライセンスとクレジット)
+- **What is this**: A personal Claude Code plugin marketplace (`kit`) developed by Yuki Masaki
+- **First plugin**: `design-director` — a design-driven skill that generates UI variations in parallel from a natural-language brief, lets you compare them in a local gallery, and ships React JSX through a conversational workflow
+- **License**: MIT, commercial use permitted
 
 <br>
 
-## セットアップ
+## Table of Contents
 
-### 1. マーケットプレイスの追加
+- [Quick Start](#quick-start)
+- [Features](#features)
+- [Plugins](#plugins)
+- [Compatibility](#compatibility)
+- [FAQ](#faq)
+- [Development](#development)
+- [License & Credits](#license--credits)
 
-Claude Code 内で以下を実行:
+<br>
+
+## Quick Start
+
+Run the following inside Claude Code:
 
 ```
 /plugin marketplace add yukimasaki/claude-plugins
-```
-
-### 2. プラグインのインストール
-
-```
 /plugin install design-director@kit
+/design-director
 ```
 
 <br>
 
-## 利用可能なプラグイン
+## Features
+
+| Feature | Description |
+|---|---|
+| Design-driven | Conversational flow: brief → aesthetic exploration → 3 parallel variations |
+| Gallery-driven | Local gallery via `serve` for side-by-side comparison and refinement |
+| Auto-delivery | Outputs React JSX variations and `HANDOFF.md` automatically |
+| Extensible | design-director is the first; more plugins planned |
+
+<br>
+
+## Plugins
 
 ### design-director
 
-デザイン駆動のプロトタイピング支援スキル。
-自然言語ブリーフから美学探索 → 3 案生成 → 深掘り → 納品までを対話で進めるエージェントスキル。
+> Design-driven prototyping skill.
+> Walks you from a natural-language brief through aesthetic exploration, three parallel variations, deep dive, and final delivery — all conversationally.
 
-| 項目 | 内容 |
+| Field | Value |
 |---|---|
-| 起動 | `/design-director` |
-| サブコマンド | `default` / `update` / `serve` / `list` / `export` / `edit` / `memory` / `reset` / `status` |
-| 出力 | `.design-studio/projects/{slug}/` に React JSX バリエーション + HANDOFF.md |
-| ギャラリー | `/design-director serve` で `http://localhost:3000` |
-
-詳細は [`plugins/design-director/skills/design-director/README.md`](./plugins/design-director/skills/design-director/README.md) を参照。
+| Version | `0.1.0` |
+| Install | `/plugin install design-director@kit` |
+| Launch | `/design-director` |
+| Subcommands | `default` / `update` / `serve` / `list` / `export` / `edit` / `memory` / `reset` / `status` |
+| Output | React JSX + HANDOFF.md under `.design-studio/projects/{slug}/` |
+| Gallery | `/design-director serve` at `http://localhost:3000` |
+| Docs | [README](./plugins/design-director/skills/design-director/README.md) |
 
 <br>
 
-## 対応環境
+## Compatibility
 
-| 環境 | 対応 | 備考 |
+| Environment | Supported | Notes |
 |:-----|:----:|:-----|
-| Claude Code CLI | ○ | マーケットプレイスから自動インストール |
-| Claude Desktop（Code タブ） | ○ | 同上 |
-| VS Code / JetBrains 拡張 | ○ | 同上 |
+| Claude Code CLI | Yes | Auto-installed via the marketplace |
+| Claude Desktop (Code tab) | Yes | Same as above |
+| VS Code / JetBrains extension | Yes | Same as above |
 
 <br>
 
-## 開発ガイド
+## FAQ
 
-### ローカルテスト
+**Q. Is this an official Anthropic plugin?**
+No. This is a third-party project developed and published by an individual. It is not affiliated with Anthropic, Claude™, or Claude Design™.
+
+**Q. Why was this built?**
+To standardize the author's own design-driven prototyping workflow on Claude Code, then share the result with the community.
+
+**Q. Can I use this commercially?**
+Yes. Use is permitted within the terms of the MIT License — see [LICENSE](./LICENSE) for details.
+
+**Q. Where do I file feature requests or bug reports?**
+Please use [Issues](https://github.com/yukimasaki/claude-plugins/issues) and Discussions (coming soon).
+
+**Q. Are contributions welcome?**
+Yes. PRs adding new design references and similar improvements are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+<br>
+
+## Development
+
+### Local testing
 
 ```bash
 claude --plugin-dir ./plugins/design-director
 ```
 
-### バリデーション
+### Validation
 
 ```bash
 claude plugin validate .
 ```
 
-### 新しいデザイン参照を追加したい
+### Adding new design references
 
-`plugins/design-director/skills/design-director/references/design-md/` 配下にファイルを追加する PR を歓迎します。
-詳細は [CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
+PRs that add files under `plugins/design-director/skills/design-director/references/design-md/` are welcome.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 <br>
 
-## ライセンスとクレジット
+## License & Credits
 
-このリポジトリは [MIT License](./LICENSE) で配布されています。
+This repository is distributed under the [MIT License](./LICENSE).
 
-vendored upstream プロジェクトのクレジット・帰属表示は [ATTRIBUTIONS.md](./ATTRIBUTIONS.md) を参照してください。
+For credits and attributions of vendored upstream projects, see [ATTRIBUTIONS.md](./ATTRIBUTIONS.md).
 
 <br>
 
