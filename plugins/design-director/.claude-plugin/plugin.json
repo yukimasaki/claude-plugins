@@ -1,7 +1,7 @@
 {
   "name": "design-director",
   "description": "デザイン駆動のプロトタイピング支援スキル。ギャラリー駆動で UI バリエーションを並列生成",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Yuki Masaki",
     "email": "97879070+yukimasaki@users.noreply.github.com"
@@ -9,5 +9,10 @@
   "homepage": "https://github.com/yukimasaki/claude-plugins/blob/main/plugins/design-director/skills/design-director/README.md",
   "repository": "https://github.com/yukimasaki/claude-plugins",
   "license": "MIT",
-  "keywords": ["design", "prototype", "ui", "gallery"]
+  "keywords": [
+    "design",
+    "prototype",
+    "ui",
+    "gallery"
+  ]
 }
