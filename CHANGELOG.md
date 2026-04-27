@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0](https://github.com/yukimasaki/claude-plugins/compare/v0.2.0...v0.3.0) (2026-04-27)
+
+
+### Features
+
+* **buzzounce:** プラグイン新設 — persona / mode / post-type 選択型の告知ツイート生成スキル ([12395b2](https://github.com/yukimasaki/claude-plugins/commit/12395b2a1acde020ad567a5ca8f63f668661041d))
+* **buzzounce:** 告知ツイート生成プラグインを新設（Phase 3.5、第 2 プラグイン追加） ([45b5fde](https://github.com/yukimasaki/claude-plugins/commit/45b5fde42ec2c6586eb1b7763dde16134c4b89b6))
+* **marketplace:** buzzounce を kit マーケットプレイスに追加 ([549dbcb](https://github.com/yukimasaki/claude-plugins/commit/549dbcb80177fdabb3a88c563664d7523ad0f2d7))
+
 ## [0.2.0](https://github.com/yukimasaki/claude-plugins/compare/v0.1.2...v0.2.0) (2026-04-27)
 
 
