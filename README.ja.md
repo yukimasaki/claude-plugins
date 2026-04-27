@@ -2,8 +2,6 @@
 
 [English](./README.md) | **日本語**
 
-https://github.com/yukimasaki/claude-plugins/raw/main/samples/hero/hero.webm
-
 ![claude-plugins hero](https://raw.githubusercontent.com/yukimasaki/claude-plugins/main/samples/hero/hero.png)
 
 > このヒーロー画像は **100% [`design-director`](./plugins/design-director) で生成**されました。[制作プロセス](./samples/hero/README.ja.md)（実セッションのプロンプト全公開）も閲覧できます。
