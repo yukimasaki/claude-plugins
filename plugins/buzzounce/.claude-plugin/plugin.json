@@ -1,0 +1,20 @@
+{
+  "name": "buzzounce",
+  "description": "OSS / AI / 個人開発の X (Twitter) 告知ツイートを persona と mode を選んで対話生成するスキル。",
+  "version": "0.1.0",
+  "author": {
+    "name": "Yuki Masaki",
+    "email": "97879070+yukimasaki@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/yukimasaki/claude-plugins/blob/main/plugins/buzzounce/skills/buzzounce/SKILL.md",
+  "repository": "https://github.com/yukimasaki/claude-plugins",
+  "license": "MIT",
+  "keywords": [
+    "x",
+    "twitter",
+    "tweet",
+    "social",
+    "announcement",
+    "japanese"
+  ]
+}

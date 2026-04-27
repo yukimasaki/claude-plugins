@@ -28,7 +28,9 @@
 ## TL;DR
 
 - **何これ**: Yuki Masaki が個人開発する Claude Code 用プラグインマーケットプレイス（`kit`）
-- **プラグイン**: `design-director` — 自然言語ブリーフから UI バリエーションを並列生成 → ギャラリーで比較 → React JSX 納品まで対話で進めるデザイン駆動スキル
+- **プラグイン**:
+  - `design-director` — 自然言語ブリーフから UI バリエーションを並列生成 → ギャラリーで比較 → React JSX 納品まで対話で進めるデザイン駆動スキル
+  - `buzzounce` — OSS / AI / 個人開発の X (Twitter) 告知ツイートを persona × mode × post-type で対話生成する日本語スキル
 - **ライセンス**: MIT、商用利用可
 
 <br>
@@ -61,10 +63,10 @@ Claude Code 内で以下を順に実行:
 
 | 機能 | 概要 |
 |---|---|
-| デザイン駆動 | 自然言語ブリーフ → 美学探索 → 3 案並列生成を対話で進行 |
-| ギャラリー駆動 | `serve` でローカルギャラリーを起動し、案を比較・深掘り |
-| 自動納品 | React JSX バリエーションと `HANDOFF.md` を自動出力 |
-| 拡張可能 | 複数プラグインを束ねるマーケットプレイス構造 |
+| 対話駆動 | ブリーフ → 複数案 → 深掘り → 納品 を全て自然言語の対話で進める |
+| 軸選択 | 起動時に美学（design-director）や persona × mode（buzzounce）を選んで方向性を決める |
+| ローカル完結 | 成果物はリポジトリ内に出力。Claude 以外の外部サービスを使わない |
+| 拡張可能 | 複数プラグインを束ねるマーケットプレイス。プログレッシブ参照で各スキルも拡張容易 |
 
 <br>
 
@@ -83,6 +85,21 @@ Claude Code 内で以下を順に実行:
 | 出力 | `.design-studio/projects/{slug}/` に React JSX + HANDOFF.md |
 | ギャラリー | `/design-director serve` で `http://localhost:3000` |
 | ドキュメント | [README](./plugins/design-director/skills/design-director/README.md) |
+
+### buzzounce
+
+> 告知ツイート生成スキル（日本語）。
+> OSS / AI / 個人開発の X (Twitter) 告知文を **persona × mode × post-type** の組み合わせで対話生成。画像 / 動画の添付を踏まえた文面調整まで責務を持つ。
+
+| 項目 | 内容 |
+|---|---|
+| インストール | `/plugin install buzzounce@kit` |
+| 起動 | `/buzzounce` |
+| ペルソナ | `understated` / `formal` / `casual` |
+| モード | `oss-dev` / `general` |
+| 投稿タイプ | `release` / `dogfood` / `tip` / `show-and-tell` / `lesson` |
+| 出力 | コピペで投稿できる日本語ツイート文（短/中/長 を併産可） |
+| ドキュメント | [README](./plugins/buzzounce/skills/buzzounce/README.md) |
 
 <br>
 

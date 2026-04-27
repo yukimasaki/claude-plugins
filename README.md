@@ -28,7 +28,9 @@
 ## TL;DR
 
 - **What is this**: A personal Claude Code plugin marketplace (`kit`) developed by Yuki Masaki
-- **Plugin**: `design-director` — a design-driven skill that generates UI variations in parallel from a natural-language brief, lets you compare them in a local gallery, and ships React JSX through a conversational workflow
+- **Plugins**:
+  - `design-director` — generates UI variations in parallel from a natural-language brief, lets you compare them in a local gallery, and ships React JSX through a conversational workflow
+  - `buzzounce` — drafts X (Twitter) announcement tweets in Japanese for OSS / AI / personal projects, with selectable persona × mode × post-type
 - **License**: MIT, commercial use permitted
 
 <br>
@@ -61,10 +63,10 @@ Run the following inside Claude Code:
 
 | Feature | Description |
 |---|---|
-| Design-driven | Conversational flow: brief → aesthetic exploration → 3 parallel variations |
-| Gallery-driven | Local gallery via `serve` for side-by-side comparison and refinement |
-| Auto-delivery | Outputs React JSX variations and `HANDOFF.md` automatically |
-| Extensible | Multi-plugin marketplace structure |
+| Conversational | Brief → multi-variation → deep-dive → delivery, all in natural-language dialogue |
+| Selectable | Pick aesthetic family (design-director) or persona × mode (buzzounce) at startup |
+| Local-first | Outputs land in your repo; no external service beyond Claude itself |
+| Extensible | Multi-plugin marketplace structure with progressive-disclosure references |
 
 <br>
 
@@ -83,6 +85,21 @@ Run the following inside Claude Code:
 | Output | React JSX + HANDOFF.md under `.design-studio/projects/{slug}/` |
 | Gallery | `/design-director serve` at `http://localhost:3000` |
 | Docs | [README](./plugins/design-director/skills/design-director/README.md) |
+
+### buzzounce
+
+> Announcement-tweet generation skill (Japanese).
+> Drafts X (Twitter) announcement posts for OSS / AI / personal projects via a conversational flow, with selectable **persona × mode × post-type** and attachment-aware composition.
+
+| Field | Value |
+|---|---|
+| Install | `/plugin install buzzounce@kit` |
+| Launch | `/buzzounce` |
+| Persona | `understated` / `formal` / `casual` |
+| Mode | `oss-dev` / `general` |
+| Post-type | `release` / `dogfood` / `tip` / `show-and-tell` / `lesson` |
+| Output | Copy-paste-ready Japanese tweet text (short / medium / long variants) |
+| Docs | [README](./plugins/buzzounce/skills/buzzounce/README.md) |
 
 <br>
 

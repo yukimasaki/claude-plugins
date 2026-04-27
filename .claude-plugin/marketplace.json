@@ -14,6 +14,11 @@
       "name": "design-director",
       "source": "./plugins/design-director",
       "description": "デザイン駆動のプロトタイピング支援スキル。ギャラリー駆動で UI バリエーションを並列生成"
+    },
+    {
+      "name": "buzzounce",
+      "source": "./plugins/buzzounce",
+      "description": "OSS / AI / 個人開発の X (Twitter) 告知ツイートを persona と mode を選んで対話生成するスキル"
     }
   ]
 }

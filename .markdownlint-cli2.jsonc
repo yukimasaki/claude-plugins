@@ -15,6 +15,8 @@
     "plugins/design-director/skills/design-director/references/**",
     "plugins/design-director/skills/design-director/SKILL.md",
     "plugins/design-director/skills/design-director/README.md",
+    "plugins/buzzounce/skills/buzzounce/references/**",
+    "plugins/buzzounce/skills/buzzounce/SKILL.md",
     ".design-studio/**",
     "**/node_modules/**",
     "docs/**",
