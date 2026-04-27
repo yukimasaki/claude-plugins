@@ -8,3 +8,6 @@ Thumbs.db
 .vscode/
 
 .claude/settings.local.json
+
+# design-director skill working directory
+.design-studio/

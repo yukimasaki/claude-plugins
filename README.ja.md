@@ -2,11 +2,16 @@
 
 [English](./README.md) | **日本語**
 
+<video autoplay loop muted playsinline poster="./samples/hero/hero.png" width="100%">
+  <source src="./samples/hero/hero.webm" type="video/webm">
+  <img src="./samples/hero/hero.png" alt="claude-plugins — Personal Claude Code plugin marketplace. Design-driven prototyping with design-director." width="100%">
+</video>
+
+> このヒーロー画像は **100% [`design-director`](./plugins/design-director) で生成**されました。[制作プロセス](./samples/hero/README.ja.md)（実セッションのプロンプト全公開）も閲覧できます。
+
 # claude-plugins
 
-**Personal Claude Code plugin marketplace**
-
-デザイン駆動のプロトタイピングを Claude Code で。
+**Personal Claude Code plugin marketplace** · デザイン駆動のプロトタイピングを [`design-director`](./plugins/design-director) で。
 
 [![License: MIT](https://img.shields.io/github/license/yukimasaki/claude-plugins?style=flat-square)](./LICENSE)
 [![Release](https://img.shields.io/github/v/release/yukimasaki/claude-plugins?style=flat-square&display_name=tag&sort=semver)](https://github.com/yukimasaki/claude-plugins/releases)
