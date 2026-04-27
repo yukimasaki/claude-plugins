@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0](https://github.com/yukimasaki/claude-plugins/compare/v0.3.0...v1.0.0) (2026-04-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **design-director:** /design-director update サブコマンドを削除した。upstream の更新はメンテナがリポルートの scripts/check-diff-upstream.ts で差分を 検出して PR で取り込む流れに変更する。
+
+### Features
+
+* **design-director:** /design-director update を削除しメンテナ用ステートレス検出器に再構成 ([#19](https://github.com/yukimasaki/claude-plugins/issues/19)) ([bccf4da](https://github.com/yukimasaki/claude-plugins/commit/bccf4da053d8480705f98032e77f62f2f14cae21)), closes [#1](https://github.com/yukimasaki/claude-plugins/issues/1)
+
 ## [0.3.0](https://github.com/yukimasaki/claude-plugins/compare/v0.2.0...v0.3.0) (2026-04-27)
 
 
