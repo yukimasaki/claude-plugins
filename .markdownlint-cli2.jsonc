@@ -16,7 +16,7 @@
     "plugins/design-director/skills/design-director/SKILL.md",
     "plugins/design-director/skills/design-director/README.md",
     ".design-studio/**",
-    "node_modules/**",
+    "**/node_modules/**",
     "docs/**",
     "CHANGELOG.md"
   ]
