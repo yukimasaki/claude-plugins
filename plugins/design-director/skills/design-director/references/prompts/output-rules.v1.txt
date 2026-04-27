@@ -79,3 +79,17 @@ Reference these in Tailwind's arbitrary-value syntax: `bg-[var(--color-accent)]`
 - No placeholder names like "John Doe" or "Company Name" — invent plausible, diverse names.
 - Numbers and dates must be realistic (not "100%" everywhere, not "Jan 1, 2020").
 - Icons: inline SVG only; use simple, recognizable symbols (no brand logos without explicit request).
+
+## Rotting information in long-lived artifacts
+
+Marketing material, README headers, hero images, social-preview images, pitch decks — anything intended to live for months or years — must not embed values that decay over time. These rot fast and force the author to re-render the artifact for every release.
+
+Forbidden in long-lived artifacts:
+
+- Concrete version numbers (`v0.1.1`, `Version 2.3`). Use a badge that reads from the source of truth instead (npm, GitHub release, package manifest), or omit entirely.
+- Calendar dates and years (`© 2026`, `Updated March 2026`). Footer years should be generated from `new Date().getFullYear()` *outside* the artifact, or omitted.
+- Ordinal claims that drift (`our first plugin`, `the only tool that ...`, `第一弾`). Replace with neutral framing — describe what the thing *is*, not its position in a timeline.
+- Quantities that change with the codebase (`9 subcommands`, `12 themes`, `24 components`). Either pull live from the source at render time, or describe the category without counting.
+- Roadmap references (`coming Q2`, `available next month`). These age the artifact the moment the date passes.
+
+When the user asks for a hero, README graphic, or any artifact destined for a public surface, run a "rot check" before delivery: scan the copy for versions, years, ordinals, and counted nouns, and either neutralize them or surface them through a badge / dynamic source. If something *must* be pinned (a launch announcement tied to a specific version), call it out explicitly so the user knows the artifact has a planned shelf life.
