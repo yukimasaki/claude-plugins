@@ -57,7 +57,10 @@ system. Prosumer readers reward craft. Warm Editorial signals editorial
 rigor without looking like every AI-era SaaS.
 
 REFERENCE 1: /design-md/warm/claude.md
+  → ファイル冒頭フロントマターの `description:` を 1 行サマリとして併記
 REFERENCE 2: /design-md/warm/substack.md
+  → 同上（[DESIGN.md 仕様](https://github.com/google-labs-code/design.md) 準拠で
+    全 vendored ファイルが `description:` を持つ）
 
 ALTERNATIVE FAMILY: Editorial Minimalism (if brand lean is more startup
 than magazine)

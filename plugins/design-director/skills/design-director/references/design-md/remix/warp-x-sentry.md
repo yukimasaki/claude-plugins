@@ -1,121 +1,204 @@
-# Warp × Sentry — Developer Dashboard With Warmth
+---
+version: alpha
+name: Warp × Sentry
+description: A pro-tool developer dashboard that fuses Warp's deep-navy terminal density with Sentry's lilac action layer and left-border alert pattern. Warp owns the surface stack, Roobert UI, JetBrains Mono numerals, and the persistent sidebar shell; Sentry replaces Warp's teal with a brighter lilac so the chromatic action color harmonizes with coral warnings instead of fighting them. Issue rows borrow Sentry's 4px left-border severity stripe, while empty-state illustrations use a lilac-grey tint reserved for art only. Mood — technical, calm, persistent, focused.
 
-Remix. Warp's mono grid + Sentry's lilac purple. Dashboards that don't read as funeral parlors.
+colors:
+  bg: "#0b0d14"
+  bg-alt: "#11141d"
+  surface: "#161a25"
+  surface-2: "#1e2331"
+  text: "#f1f1f4"
+  text-muted: "#9aa1b3"
+  text-dim: "#5f6580"
+  border: "#232838"
+  border-strong: "#2e3447"
+  accent: "#7553f6"
+  accent-hover: "#8967ff"
+  accent-soft: "#584774"
+  warning: "#ff7a59"
+  danger: "#f6827d"
+  success: "#5ee78a"
+  on-accent: "#0b0d14"
 
-## Parent DNA: Warp 60% · Sentry 40%
+typography:
+  display-xl:
+    fontFamily: "Rubik, Roobert, Inter, system-ui, sans-serif"
+    fontSize: 56px
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: -1px
+  display-lg:
+    fontFamily: "Rubik, Roobert, Inter, system-ui, sans-serif"
+    fontSize: 44px
+    fontWeight: 600
+    lineHeight: 1.1
+    letterSpacing: -0.5px
+  display-md:
+    fontFamily: "Rubik, Roobert, Inter, system-ui, sans-serif"
+    fontSize: 34px
+    fontWeight: 600
+    lineHeight: 1.15
+    letterSpacing: -0.3px
+  display-sm:
+    fontFamily: "Rubik, Roobert, Inter, system-ui, sans-serif"
+    fontSize: 26px
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Roobert, Inter, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: 0
+  title-md:
+    fontFamily: "Roobert, Inter, system-ui, sans-serif"
+    fontSize: 17px
+    fontWeight: 500
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Roobert, Inter, system-ui, sans-serif"
+    fontSize: 15px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Roobert, Inter, system-ui, sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  caption:
+    fontFamily: "Roobert, Inter, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.4
+    letterSpacing: 0
+  micro:
+    fontFamily: "Roobert, Inter, system-ui, sans-serif"
+    fontSize: 11px
+    fontWeight: 500
+    lineHeight: 1.4
+    letterSpacing: 0.2px
+  numerals-tabular:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.5
+    fontFeature: "tnum"
+  code:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
 
-## 1. Visual Theme & Atmosphere
+rounded:
+  sm: 4px
+  md: 8px
+  lg: 10px
+  pill: 999px
 
-Pro-tool density meets emotional color. Warp's deep navy surface stack stays — it's where engineers live. Sentry's lilac replaces Warp's teal at the action layer because lilac softens severity without losing technical seriousness. Coral remains as warning.
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "6": 24px
+  "8": 32px
+  "12": 48px
+---
 
-Mood: technical, calm, persistent.
+## Overview
 
-## 2. Color Palette & Roles
+Warp × Sentry is a blend of Warp's terminal-grade developer dashboard and Sentry's emotive observability palette. From Warp comes the deep-navy surface stack, Roobert UI face, JetBrains Mono numerals, persistent sidebar shell, and the dark-only discipline that makes engineers feel at home. From Sentry comes the lilac action color, the 4px left-border alert-row pattern, and the lilac-grey empty-state illustration tint that gives the product chrome an emotional register without softening its rigor.
 
-```
-/* surfaces from Warp */
---bg:              #0b0d14
---bg-alt:          #11141d
---surface:         #161a25
---surface-2:       #1e2331
---text:            #f1f1f4
---text-muted:      #9aa1b3
---text-dim:        #5f6580
---border:          #232838
---border-strong:   #2e3447
+The arbitration is decisive. Warp's teal is dropped — too cold next to Sentry's pink-coral danger state, and the two clashed at error/action proximity. Sentry lilac wins because it harmonizes with Warp's warning coral instead of fighting it. Sentry's lighter `#362d59` background loses to Warp's deeper `#0b0d14` because the terminal-feel is non-negotiable.
 
-/* accent from Sentry — replaces Warp's teal */
---accent:          #7553f6   /* Sentry-adjacent lilac, brighter for dark bg */
---accent-hover:    #8967ff
---accent-soft:     #584774   /* used for empty-state illustrations */
+Mood — technical, calm, persistent, focused.
 
-/* state */
---warning:         #ff7a59   /* Warp coral retained */
---danger:          #f6827d   /* Sentry pink-coral for alerts */
---success:         #5ee78a   /* Warp green retained */
-```
+## Colors
 
-Arbitration: Warp's teal lost — too cold next to Sentry's pink-warning state, the two clashed at error/action proximity. Sentry lilac wins because it harmonizes with Warp's coral instead of fighting it. Sentry's `#362d59` background lost to Warp's deeper `#0b0d14` for terminal-feel preservation.
+The palette anchors on Warp's four-tier surface stack — `bg` `#0b0d14` for the canvas, `bg-alt` `#11141d` for sidebars, `surface` `#161a25` for cards, and `surface-2` `#1e2331` for elevated rows or modals. Hairline `border` `#232838` and `border-strong` `#2e3447` carry depth without shadows.
 
-## 3. Typography Rules
+Lilac (`accent` `#7553f6`) is the only chromatic action color — used for primary buttons, focus rings, and selection states. `accent-soft` `#584774` is reserved for empty-state illustration tints and never for action.
 
-- **UI:** `Roobert` (from Warp).
-- **Headlines:** `Rubik` weight 600 (from Sentry) — used at 24px+ only, gives marketing pages personality without dominating dashboards.
-- **Code + numerals:** `JetBrains Mono` (Warp).
+State colors stay disciplined — `warning` `#ff7a59` (Warp coral) for cautions, `danger` `#f6827d` (Sentry pink-coral) for incidents, `success` `#5ee78a` (Warp green) for resolved. Sentry's pink-coral and Warp's coral live close on the wheel; always order danger above warning in lists so the warmer hue dominates upward visual flow.
 
-Scale: Warp's tight ramp. 11 / 12 / 13 / 15 / 17 / 20 / 26 / 34 / 44 / 56.
+## Typography
 
-Tabular numerals globally on metrics.
+- **UI** uses `Roobert` (fallback `Inter`, system-ui) — Warp's UI face. Weights 400/500.
+- **Display headlines** use `Rubik` weight 600 (Sentry's display face) — capped to 26px+ only. Below that threshold, Rubik reads rounded-soft and kills technical density.
+- **Numerals and code** use `JetBrains Mono` — tabular figures globally on metrics, counts, and timestamps.
 
-Arbitration: Sentry's Rubik would feel rounded-soft if used at small UI sizes. Cap Rubik to display-only.
+Type scale ladder — 11 / 12 / 13 / 15 / 17 / 20 / 26 / 34 / 44 / 56 px.
 
-## 4. Component Stylings
+## Layout
+
+- App shell — full-width with persistent 240px sidebar, fluid main content
+- Marketing pages — 1180px max width, 24px gutter, 12-column grid (Sentry's narrower marketing rhythm)
+- Spacing scale rooted on 4px — 4 / 8 / 12 / 16 / 24 / 32 / 48
+- Sidebar collapses to icon rail at 1024px; full overlay at 768px
+- Issue rows stack severity-icon + title at 640px with the count moving to row two
+
+Marketing hero scales 56 → 34 → 26 across breakpoints.
+
+## Elevation & Depth
+
+The dashboard is **flat by default**. Depth comes from Warp's tonal surface stack — `bg → surface → surface-2 → modal` — not from drop shadows. The only place shadow appears is on **modals** (`0 24px 48px rgba(0, 0, 0, 0.55)`). Cards never lift; both parents rejected card shadows and that consensus holds.
+
+## Shapes
+
+- **Buttons** — 8px radius
+- **Cards** — 10px radius, 1px hairline border, no shadow
+- **Inputs** — 8px radius, 1px `border-strong`, 2px lilac focus ring
+- **Issue rows** — 4px left border in `warning` or `danger`, otherwise sharp-edged on the row itself
+
+The geometry is unapologetically rectilinear — pill shapes are reserved for status badges and tags only.
+
+## Components
 
 **Buttons**
-- Primary: `--accent` (lilac) fill, `#0b0d14` text, radius 8, padding 8/14, weight 500.
-- Secondary: `--surface-2` fill, `--text` color, `--border-strong` outline.
-- Destructive: `--danger` fill, `#0b0d14` text.
+- Primary — lilac fill (`accent` `#7553f6`), `#0b0d14` text, 8px radius, padding 8/14, weight 500
+- Secondary — `surface-2` fill, `text` color, 1px `border-strong` outline
+- Destructive — `danger` fill, `#0b0d14` text
 
 **Cards / blocks**
-- Warp pattern preserved: `--surface` fill, 1px `--border`, radius 10.
-- Empty states use `--accent-soft` (Sentry lilac-grey) illustration tint — Sentry's signature move.
+- `surface` fill, 1px `border`, 10px radius
+- Empty states use `accent-soft` lilac-grey illustration tint — Sentry's signature move
 
 **Inputs**
-- Warp geometry: `--bg-alt` fill, 1px `--border-strong`, radius 8.
-- Focus: 2px `--accent` lilac ring.
+- `bg-alt` fill, 1px `border-strong`, 8px radius
+- Focus state — 2px `accent` lilac ring
 
 **Alert / issue rows**
-- Borrow Sentry's pattern: 4px left border in `--warning` or `--danger`, `--surface` fill.
-- Severity icon left, title middle, count right (mono, tabular).
+- 4px left border in `warning` or `danger` (Sentry's pattern), `surface` fill
+- Severity icon left, title middle, count right (JetBrains Mono, tabular)
 
-## 5. Layout Principles
+**Sidebar**
+- 240px wide, `bg-alt` fill, hairline divider on the right edge
+- Collapses to icon rail at 1024px, full overlay at 768px
 
-Warp's full-width app shell with persistent sidebar wins — Sentry's narrower 1280 marketing layout reserved for landing page only.
-
-- App: full-width, sidebar 240px, main content fluid.
-- Marketing: 1280 max, 24px gutter, 12-col.
-- 4px base. 4/8/12/16/24/32/48 scale.
-
-## 6. Depth & Elevation
-
-Warp's layered surfaces stay. `bg → surface → surface-2 → modal`. Modals add `0 24px 48px rgba(0,0,0,0.55)`.
-
-No conflict with Sentry — both rejected drop shadows on cards.
-
-## 7. Do's and Don'ts
+## Do's and Don'ts
 
 **Do**
-- Use lilac as the only chromatic action color.
-- Use Sentry's left-border alert-row pattern wherever a list of issues/incidents appears.
-- Render numbers in JetBrains Mono tabular.
+- Use lilac as the only chromatic action color
+- Apply Sentry's left-border alert-row pattern wherever a list of issues, incidents, or anomalies appears
+- Render numbers in JetBrains Mono tabular on every metric surface
+- Order danger above warning in stacked lists so the pinker hue flows upward
 
 **Don't**
-- Re-introduce Warp's teal. Lilac won; honor it.
-- Use Rubik below 24px — kills technical density.
-- Add a third chromatic accent.
-- Use `--accent-soft` for action — it's reserved for illustration/empty-state only.
+- Re-introduce Warp's teal accent — lilac won; honor it
+- Use Rubik below 26px — it kills technical density and reads rounded-soft
+- Add a third chromatic accent for "info" or "highlight" — use the muted-text ramp instead
+- Use `accent-soft` for action — it's reserved for illustration and empty-state tints only
+- Add card shadows; depth comes from the surface stack
 
-## 8. Responsive Behavior
+## Agent Prompt Guide
 
-- Sidebar collapses to icon rail at 1024px, full overlay at 768px.
-- Issue rows stack severity-icon + title at 640px, count moves to row two.
-- Marketing hero scales 56 → 34 → 26.
+**Bias toward** — Warp's deep-navy surface stack, Sentry lilac for action only, Rubik display at 26px+, JetBrains Mono tabular numerals on metrics, left-border alert rows, persistent sidebar, dark-only theme.
 
-## 9. Agent Prompt Guide
-
-Bias: Warp navy surface stack, Sentry lilac for action only, Rubik display 24px+, JetBrains Mono tabular numerals, left-border alert pattern, no teal anywhere.
-
-Reject: Warp's teal accent, Rubik in UI controls, drop shadows, light themes, mixing lilac with a second chromatic accent.
-
-## Creative Tensions (documented for team)
-
-- **Action-color identity loss.** Warp users associate the brand with teal. Removing it for lilac is a real cost — the dashboard no longer reads "Warp." Net: marketing pages should still use Warp teal in hero illustration so brand recognition survives; product chrome stays lilac.
-- **Severity adjacency.** Sentry's pink-coral danger and Warp's coral warning sit close on the wheel. Always order danger > warning in lists so the warmer hue dominates upward visual flow.
-
-## Parent-brand DNA
-
-Tokens traced:
-- From Warp: 28 (surface stack, Roobert, JetBrains Mono, button geometry, kbd, sidebar layout, dark-only discipline, tabular numerals)
-- From Sentry: 18 (lilac accent, Rubik display, alert-row left-border pattern, lilac-grey empty-state illustration tint, pink-coral danger, marketing 1280 max-width)
-
-Net DNA: Warp 60% · Sentry 40%.
+**Reject** — Warp's teal accent, Rubik in UI controls, drop-shadowed cards, light-mode variants, mixing lilac with a second chromatic accent, lilac-grey on action surfaces.

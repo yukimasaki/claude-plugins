@@ -1,133 +1,200 @@
-# Vercel × Pitchfork — Editorial Docs With An Opinion
+---
+version: alpha
+name: Vercel × Pitchfork
+description: A remix that blends Vercel's grayscale-only restraint with Pitchfork's editorial confidence. Vercel holds the chrome — single grayscale ramp, Geist Sans everywhere, sharp grid, flat depth — while Pitchfork contributes the soul — oversized review-style serif headlines, an editorial orange accent, pull-quote rules, and section markers. The result reads like a Pitchfork feature about a Vercel deploy: cold neutrals, hot opinion, technical credibility intact. Mood — opinionated, calm, technically literate, considered.
 
-Remix. Vercel's grayscale-only restraint + Pitchfork's `#ff5d1f` orange and editorial serif. For docs, changelogs, and developer-marketing pages that want to read like a magazine review without losing technical credibility.
+colors:
+  bg: "#ffffff"
+  bg-alt: "#fafafa"
+  surface: "#f4f4f5"
+  text: "#000000"
+  text-muted: "#52525b"
+  text-dim: "#a1a1aa"
+  border: "#e4e4e7"
+  border-strong: "#d4d4d8"
+  accent: "#ff5d1f"
+  accent-hover: "#e64a0e"
+  accent-soft: "#ffead9"
+  bg-dark: "#000000"
+  bg-dark-alt: "#0a0a0a"
+  surface-dark: "#18181b"
+  text-dark: "#ffffff"
+  text-dark-muted: "#a1a1aa"
+  border-dark: "#27272a"
 
-## Parent DNA: Vercel 60% · Pitchfork 40%
+typography:
+  display-xxl:
+    fontFamily: "Tiempos Headline, Iowan Old Style, Georgia, serif"
+    fontSize: 88px
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: -0.88px
+  display-xl:
+    fontFamily: "Tiempos Headline, Iowan Old Style, Georgia, serif"
+    fontSize: 64px
+    fontWeight: 600
+    lineHeight: 1.1
+    letterSpacing: -0.64px
+  display-lg:
+    fontFamily: "Tiempos Headline, Iowan Old Style, Georgia, serif"
+    fontSize: 48px
+    fontWeight: 600
+    lineHeight: 1.15
+    letterSpacing: -0.48px
+  title-lg:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 32px
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: -0.32px
+  title-md:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: -0.12px
+  title-sm:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: 0
+  body-lg:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  caption:
+    fontFamily: "Geist Sans, Inter, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.4
+    letterSpacing: 0.12px
+  pull-quote:
+    fontFamily: "Tiempos Headline, Iowan Old Style, Georgia, serif"
+    fontSize: 28px
+    fontWeight: 500
+    lineHeight: 1.35
+    letterSpacing: -0.14px
+  code:
+    fontFamily: "Geist Mono, ui-monospace, monospace"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
 
-## 1. Visual Theme & Atmosphere
+rounded:
+  sm: 4px
+  md: 6px
+  lg: 8px
 
-Vercel's chrome holds the page — single grayscale ramp, Geist everywhere, sharp grid. Pitchfork's contribution is editorial confidence: oversized review-style headlines, an orange that punctuates pull-quotes and section markers, and a willingness to let a paragraph run.
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "6": 24px
+  "8": 32px
+  "12": 48px
+  "16": 64px
+  "24": 96px
+---
 
-The result reads like a Pitchfork feature about a Vercel deploy. Cold neutrals, hot opinion.
+## Overview
 
-Mood: opinionated, calm, technically literate.
+Vercel × Pitchfork is a blend of Vercel's grayscale-only restraint with Pitchfork's editorial confidence. Vercel contributes the chrome — a single grayscale ramp, Geist Sans for all UI and body, a sharp grid, flat border-based depth. Pitchfork contributes the editorial voice — oversized serif review headlines, a single orange accent, pull-quote rules, and small-caps section markers like "REVIEW" or "BENCHMARK".
 
-## 2. Color Palette & Roles
+The result reads like a Pitchfork feature about a Vercel deploy. Cold neutrals, hot opinion. Built for docs, changelogs, and developer-marketing pages that want to read like a magazine without losing technical credibility.
 
-```
-/* grayscale ramp from Vercel — single source */
---bg:              #ffffff
---bg-alt:          #fafafa
---surface:         #f4f4f5
---text:            #000000
---text-muted:      #52525b
---text-dim:        #a1a1aa
---border:          #e4e4e7
---border-strong:   #d4d4d8
+Mood words — opinionated, calm, technically literate, considered.
 
-/* dark mirror */
---bg-dark:         #000000
---bg-dark-alt:     #0a0a0a
---surface-dark:    #18181b
---text-dark:       #ffffff
---text-dark-muted: #a1a1aa
---border-dark:     #27272a
+## Colors
 
-/* sole accent from Pitchfork */
---accent:          #ff5d1f
---accent-hover:    #e64a0e
---accent-soft:     #ffead9
-```
+The grayscale ramp is Vercel's, used as a single source for both light and dark. Light mode runs `bg` `#ffffff`, `bg-alt` `#fafafa`, `surface` `#f4f4f5`, with pure-black ink (`text` `#000000`) and a graduated text scale (`text-muted` `#52525b`, `text-dim` `#a1a1aa`). Dark mode mirrors it on pure black.
 
-Arbitration: Vercel's monochrome wins everything except the single accent slot. Pitchfork orange replaces every place Vercel would otherwise reach for a blue / green / purple hint — section markers, link hover, pull-quote rule, code-fence caption. One color, used with restraint.
+The single accent is Pitchfork's — `accent` `#ff5d1f`, hover `#e64a0e`, soft `#ffead9`. Orange replaces every place Vercel would otherwise reach for a blue, green, or purple hint: section markers, link hover, pull-quote rules, code-fence captions. **One color, used with restraint.** Orange never appears as a button fill — it stays editorial.
 
-## 3. Typography Rules
+## Typography
 
-- **Display / h1 / review-style heads:** Tiempos Headline (Pitchfork-adjacent serif) at 56px+, weight 600.
-- **h2–h6 + body + UI:** Geist Sans (Vercel), weights 400 / 500 / 600.
-- **Code + numerals:** Geist Mono (Vercel).
+- **Display headlines** use `Tiempos Headline` (fallback `Iowan Old Style`, `Georgia`) at weight 600. The serif fires only at 48px and above — the legibility floor is hard.
+- **Sub-headings, UI, and body** use `Geist Sans` (fallback `Inter`, system-ui) at weights 400 / 500 / 600. Geist holds for docs density.
+- **Pull-quotes and review callouts** use Tiempos at 28px, weight 500, italic optional, with a 4px `accent` left rule.
+- **Code and numerals** use `Geist Mono`.
 
-Scale: Vercel's tight ramp extended at the top for editorial heads. 12 / 14 / 16 / 18 / 20 / 24 / 32 / 48 / 64 / 88.
+Type scale ladder — 12 / 14 / 16 / 18 / 20 / 24 / 32 / 48 / 64 / 88 px. Vercel's tight ramp extended at the top for editorial heads.
 
-Serif fires above 48px only. Below that, Geist holds — docs density requires it.
+## Layout
 
-Arbitration: Pitchfork's all-serif body would collapse code-block legibility. Geist body wins. Pitchfork serif gets the marquee slot — h1 and review-style callouts only.
+- **Marketing / changelog** — 1180px max, 24px gutter, 12-column.
+- **Long-form article** — 720px reading column, centered.
+- **Docs** — Vercel's 256px sidebar + 720px article + 240px on-this-page rail.
+- 4px base spacing — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96.
 
-## 4. Component Stylings
+The signature magazine move: every long-form page opens with a full-width title block — section marker, serif h1, dek paragraph, byline rule — then drops back into Vercel's docs grid. The transition is the layout's voice.
 
-**Button (primary)**
-- Vercel geometry: radius 6, padding 8/14, weight 500.
-- Fill `--text` (black), text `--bg` (white). Pitchfork orange reserved for links, not CTAs.
+Below 768px, padding-only on the reading column. Docs sidebar collapses to drawer at 1024px; the on-this-page rail hides at 1280px.
 
-**Button (secondary)**
-- Transparent fill, 1px `--border`, `--text` color.
+## Elevation & Depth
 
-**Card**
-- Vercel pattern: `--bg-alt` fill, 1px `--border`, radius 8, no shadow.
-- Hover: border to `--border-strong`. Never a colored border on hover.
+Flat. Border-based depth on light, alpha-border on dark. Shadows reserved for popovers only — `0 2px 8px rgba(0, 0, 0, 0.04)` light, `0 12px 32px rgba(0, 0, 0, 0.6)` dark. Both parents agree here. Print-flat editorial meets developer-tool minimalism. No conflict to arbitrate.
 
-**Input**
-- Vercel: 1px border, radius 6, padding 8/12.
-- Focus: 2px `--accent` ring, 2px offset.
+## Shapes
+
+- **Buttons** — 6px radius, padding 8/14, weight 500.
+- **Cards** — 8px radius, 1px border, no shadow.
+- **Inputs** — 6px radius, 1px border, padding 8/12. Focus shifts to a 2px orange ring with 2px offset.
+
+Sharp Vercel geometry holds throughout. Curvature is not part of the editorial voice — the serif and the orange carry it.
+
+## Components
+
+**Buttons**
+- Primary — `text` (black) fill, `bg` (white) text. Pitchfork orange is reserved for links, never CTA fills.
+- Secondary — transparent fill, 1px `border`, `text` color.
+
+**Cards**
+- `bg-alt` fill, 1px `border`, 8px radius, no shadow. Hover transitions border to `border-strong` — never a colored border on hover.
+
+**Inputs**
+- 1px `border`, 6px radius, 8/12 padding. Focus ring is 2px `accent` with 2px offset.
 
 **Pull-quote / review callout**
-- Tiempos at 28px, weight 500, italic optional.
-- 4px left rule in `--accent`. 24px left padding. Quote sits in its own 8/16 grid cell.
+- Tiempos at 28px, weight 500, italic optional. 4px left rule in `accent`. 24px left padding. The quote sits in its own 8/16 grid cell.
 
 **Section marker**
-- Small caps, 12px Geist, `--accent` color, 1px tracking. Pitchfork-style "REVIEW", "BENCHMARK", "CHANGELOG" labels above each section heading.
+- Small caps, 12px Geist, `accent` color, tracked +0.12px. Pitchfork-style "REVIEW", "BENCHMARK", "CHANGELOG" labels above each section heading.
 
-## 5. Layout Principles
-
-- Marketing / changelog: 1180px max, 24px gutter, 12-column.
-- Long-form article: 720px reading column, centered.
-- Docs: Vercel's 256px sidebar + 720px article + 240px on-this-page rail.
-- 4px base. 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96.
-
-Magazine move: every long-form page opens with a full-width title block — section marker, serif h1, dek paragraph, byline rule — then drops back into Vercel's docs grid.
-
-## 6. Depth & Elevation
-
-Flat. Border-based depth on light, alpha-border on dark. Shadows only on popovers (`0 2px 8px rgba(0,0,0,0.04)` light, `0 12px 32px rgba(0,0,0,0.6)` dark).
-
-Both parents agree — print-flat editorial meets developer-tool minimalism. No conflict.
-
-## 7. Do's and Don'ts
+## Do's and Don'ts
 
 **Do**
-- Use Tiempos at 48px+ only.
+- Use Tiempos at 48px and above only.
 - Reserve orange for links, section markers, and pull-quote rules.
-- Open every long-form page with a full-width title block.
+- Open every long-form page with a full-width title block — section marker, serif h1, dek, byline rule.
 - Keep all body and UI in Geist for density.
 
 **Don't**
 - Use orange as a button fill.
 - Add a second accent color.
 - Drop serif into UI controls or table cells.
-- Add drop shadows on cards.
+- Add drop shadows on cards or colored hover borders.
+- Abandon the docs grid for full-bleed art on technical pages.
 
-## 8. Responsive Behavior
+## Agent Prompt Guide
 
-- Serif h1 scales 88 → 56 → 40.
-- Reading column stays 720px until viewport < 768px, then padding-only.
-- Docs sidebar collapses to drawer at 1024px; on-this-page rail hides at 1280px.
-- Section markers stay 12px at all breakpoints — hierarchy comes from the serif, not the marker.
+**Bias toward** — single grayscale ramp, Geist Sans + Geist Mono everywhere, Tiempos serif at 48px and above for editorial heads, `#ff5d1f` orange used only for links / section markers / pull-quote rules, full-width article title blocks, Vercel docs grid below the fold, flat border-based depth.
 
-## 9. Agent Prompt Guide
-
-Bias: single grayscale ramp + Geist UI everywhere, Tiempos serif at 48px+ for editorial heads, `#ff5d1f` orange used only for links / section markers / pull-quote rules, full-width article title blocks, Vercel docs grid below the fold.
-
-Reject: orange button fills, second accent colors, serif in body or UI, drop shadows, colored hover borders on cards, abandoning the docs grid for full-bleed art on technical pages.
-
-## Creative Tensions (documented for team)
-
-- **Editorial heat vs technical cool.** Pitchfork orange wants to dominate; Vercel restraint wants to bury it. Resolution: orange appears at most twice per viewport, and never on a CTA.
-- **Serif legibility floor.** Below 48px the serif reads decorative against Geist body. Enforce a hard size floor in tokens — no exceptions, even for h2.
-
-## Parent-brand DNA
-
-Tokens traced:
-- From Vercel: 26 (grayscale ramp light + dark, Geist Sans + Mono, button geometry, card pattern, input pattern, docs grid, 4px base scale, flat depth, focus ring geometry, sidebar shell)
-- From Pitchfork: 17 (orange accent, Tiempos display, pull-quote rule, section markers, full-width title block, dek paragraph pattern, byline rule, italic pull-quote treatment)
-
-Net DNA: Vercel 60% · Pitchfork 40%.
+**Reject** — orange button fills, second accent colors, serif in body or UI, drop shadows on cards, colored hover borders, abandoning the docs grid for full-bleed art, serif below the 48px floor.

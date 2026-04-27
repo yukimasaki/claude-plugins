@@ -45,11 +45,15 @@
 ### 3. 美学方向性の決定
 
 1. ユーザーが美学を明示している（「warm editorial で」「terminal-like に」）
-   → 対応する `references/design-md/{family}/` を確認し、代表ファイルを Read
+   → 対応する `references/design-md/{family}/` を列挙し、代表ファイルの
+   フロントマター（`name:` / `description:`）を読んで候補を選ぶ
 2. 不明瞭なら `references/prompt-packs/family-picker.md` の 3 問フォーマット
    を踏襲して質問を投げる（本質問は **silently ではなく loud** に出す）
-3. 決定後、選ばれた `design-md/{family}/*.md` を Read して以降のトーン・
-   レイアウト・タイポ基準にする
+3. 決定後、選ばれた `design-md/{family}/*.md` を Read して、フロントマター
+   の `colors:` / `typography:` / `rounded:` / `spacing:` をトークン基本値に
+   採用、Markdown 本文の `## Colors` / `## Typography` / `## Components` 等
+   を適用ニュアンスの参照として使う（[DESIGN.md 公式仕様](https://github.com/google-labs-code/design.md)
+   準拠）
 4. `manifest.json` に `aesthetic` / `family` フィールドを書き込む準備をする
 
 ### 4. バリエーション生成 `[ループ]`
@@ -62,7 +66,9 @@
 2. 各案は `.design-studio/projects/{name}/variations/{variation}.jsx`
    として保存（React 18 UMD + Babel standalone で動く JSX）
 3. `references/design-skills/{type}.jsx` を参照して骨格を写し、`design-md/
-   {family}/*.md` でトーンを合わせる
+   {family}/*.md` の **frontmatter `colors:` を CSS 変数として展開**、
+   **frontmatter `typography:` を font 設定として展開**。Markdown 本文の
+   `## Layout` / `## Components` 等は構造ヒントとして必要時参照
 4. 生成前に `references/prompts/pre-flight.v1.txt` の 12 項目を **silently**
    セルフチェック（artifact type / 感情トーン / 密度 / 比較 / 注目数値 /
    パレット / タイポラダー / anti-slop ガード 等）

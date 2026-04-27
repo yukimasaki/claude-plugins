@@ -1,151 +1,222 @@
-# Notion × Duolingo — Friendly Education SaaS
+---
+version: alpha
+name: Notion × Duolingo
+description: A learning-platform interface that fuses Notion's warm-white document surface with Duolingo's saturated leaf-green progress and tactile button geometry. Notion sets the writing rhythm — warm white canvas, charcoal text, generous reading column, restrained chrome — while Duolingo brings the encouragement layer of leaf-green CTAs, rounded radius, and the signature `0 4px 0 0` bottom-shadow that makes interactive controls feel pressable. Streak orange, danger red, and XP blue are confined to their signal contexts; the body remains a Notion document. Mood — focused, warm, encouraging, study-grade.
 
-Remix. Notion's warm neutral document surface + Duolingo's saturated greens, rounded corners, and tactile feedback. For learning platforms, courses, and education tools that want to feel like a serious workspace and a friendly tutor at once.
+colors:
+  bg: "#ffffff"
+  bg-alt: "#fbfaf8"
+  surface: "#f1efea"
+  text: "#37352f"
+  text-muted: "#6f6b62"
+  text-dim: "#a09c92"
+  border: "#e9e7e2"
+  border-strong: "#d6d3cc"
+  accent: "#58cc02"
+  accent-hover: "#4cad00"
+  accent-deep: "#3d8a00"
+  accent-soft: "#e8f8d8"
+  streak: "#ff9600"
+  danger: "#ff4b4b"
+  xp: "#1cb0f6"
+  bg-dark: "#25241f"
+  surface-dark: "#322f29"
+  text-dark: "#f1efea"
+  border-dark: "#3e3a32"
+  on-accent: "#ffffff"
 
-## Parent DNA: Notion 55% · Duolingo 45%
+typography:
+  display-xl:
+    fontFamily: "Inter Display, Inter, system-ui, sans-serif"
+    fontSize: 56px
+    fontWeight: 700
+    lineHeight: 1.05
+    letterSpacing: -1.2px
+  display-lg:
+    fontFamily: "Inter Display, Inter, system-ui, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: -0.6px
+  display-md:
+    fontFamily: "Inter Display, Inter, system-ui, sans-serif"
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 1.15
+    letterSpacing: -0.4px
+  title-lg:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.25
+    letterSpacing: -0.2px
+  title-md:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: 0
+  title-sm:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.625
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.55
+    letterSpacing: 0
+  button:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: 0
+  numerals-score:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 800
+    lineHeight: 1.2
+    fontFeature: "tnum"
 
-## 1. Visual Theme & Atmosphere
+rounded:
+  sm: 8px
+  md: 12px
+  lg: 16px
+  pill: 999px
 
-Notion sets the writing surface — warm white, charcoal text, generous reading column, restrained chrome. Duolingo brings encouragement — saturated leaf green for progress and CTAs, rounded geometry, tactile button affordances, streak / XP / progress affordances that gamify without infantilizing.
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "6": 24px
+  "8": 32px
+  "12": 48px
+  "16": 64px
+  "24": 96px
+---
 
-The result is a study app that feels like a Notion doc you can high-five.
+## Overview
 
-Mood: focused, warm, encouraging.
+Notion × Duolingo is a blend of Notion's document-grade workspace and Duolingo's encouragement-driven learning surface. From Notion comes the warm-white reading canvas, the charcoal text ramp, the 720px reading column, the document callout pattern, and the discipline of border-only depth on document surfaces. From Duolingo comes the leaf-green CTA, the radius-16 tactile button with its signature `0 4px 0 0` bottom-shadow, weight-700 button typography, the progress bar pattern, and the streak / XP / danger signal palette confined to its semantic contexts.
 
-## 2. Color Palette & Roles
+The arbitration is clear. Notion's warm white wins all reading and document surfaces — Duolingo's pure white reads too cold for prolonged study. Duolingo's leaf green replaces Notion's blue for progress and CTAs because that's the entire point of the blend. Both parents agreed sans-serif body wins; Notion's Lyon serif felt too literary for a learning context. Duolingo's owl mascot and full categorical color palette are explicitly out — borrow the affordances, not the IP.
 
-```
-/* document base from Notion */
---bg:              #ffffff
---bg-alt:          #fbfaf8
---surface:         #f1efea
---text:            #37352f
---text-muted:      #6f6b62
---text-dim:        #a09c92
---border:          #e9e7e2
---border-strong:   #d6d3cc
+Mood — focused, warm, encouraging, study-grade.
 
-/* progress + CTA from Duolingo */
---accent:          #58cc02
---accent-hover:    #4cad00
---accent-deep:     #3d8a00
---accent-soft:     #e8f8d8
+## Colors
 
-/* secondary signals from Duolingo */
---streak:          #ff9600
---danger:          #ff4b4b
---xp:              #1cb0f6
+The document base is Notion's warm-white ramp — `bg` `#ffffff`, `bg-alt` `#fbfaf8` for callouts, `surface` `#f1efea` for hover states, with charcoal `text` `#37352f` and the soft border palette (`border` `#e9e7e2`, `border-strong` `#d6d3cc`).
 
-/* dark mode — softer than Notion's pitch dark */
---bg-dark:         #25241f
---surface-dark:    #322f29
---text-dark:       #f1efea
---border-dark:     #3e3a32
-```
+Leaf green (`accent` `#58cc02`) is the **only chromatic action color** — used for primary CTAs, progress fills, and focus rings. `accent-deep` `#3d8a00` powers the tactile bottom-shadow under buttons, and `accent-soft` `#e8f8d8` is reserved for success-toast tints.
 
-Arbitration: Notion's warm white wins all reading and document surfaces — Duolingo's white is too cold. Duolingo's leaf green replaces Notion's blue for progress and CTAs. Duolingo's orange / red / blue stay confined to streak, danger, and XP signals — never general UI.
+Three signal-only colors carry Duolingo's gamification — `streak` `#ff9600` for streak badges, `danger` `#ff4b4b` for wrong answers, and `xp` `#1cb0f6` for XP indicators. These never bleed into general UI.
 
-## 3. Typography Rules
+Dark mode mirrors Notion's softer-than-pitch dark — `bg-dark` `#25241f` (warm not black) with matching surface and border ladders.
 
-- **Display / h1:** Inter Display, weight 700, 40px+. Friendlier than Notion's Lyon serif default.
-- **h2–h4:** Inter, weight 600 / 700.
-- **Body:** Inter, weight 400, 16/26. Document-feel, not chat-feel.
-- **UI labels + buttons + numerals:** Inter, weight 600. Never thin weights on CTAs.
-- **XP / streak / score numerals:** Inter, weight 800, tabular.
+## Typography
 
-Scale: Notion's reading ramp + Duolingo's heavier display weights. 12 / 14 / 16 / 18 / 20 / 24 / 32 / 40 / 56.
+- **Display headlines** use `Inter Display` (fallback `Inter`, system-ui) at weight 700, 32px+. Friendlier than Notion's Lyon serif default.
+- **Titles** use `Inter` at weight 600/700.
+- **Body** uses `Inter` at weight 400, 16/26 — document-feel, not chat-feel.
+- **Buttons** are always weight 700, 16px — never thin weights on CTAs.
+- **XP / streak / score numerals** use `Inter` at weight 800, tabular.
 
-No serif. Both parents agreed sans wins — Notion's Lyon serif felt too literary for a learning context.
+Type scale ladder — 12 / 14 / 16 / 18 / 20 / 24 / 32 / 40 / 56 px. No serif anywhere; both parents agreed sans wins for the learning context.
 
-## 4. Component Stylings
+## Layout
+
+The page operates in two zones.
+
+- **Reading / lesson content** — Notion's 720px max column, centered, 16px body
+- **Practice / exercise / dashboard** — Duolingo's 480px centered card stack on desktop, full-width on mobile, 32px+ padding inside cards
+- **App shell** — 1180px max width, 240px nav rail, 8px base scale (8 / 16 / 24 / 32 / 48 / 64 / 96)
+
+Reading column padding-only below 768px. Practice card stack goes full-width with 16px gutter on mobile. Nav rail collapses to a bottom tab bar at 768px. Tactile button bottom-shadow scales to `0 3px 0 0` below 480px so the press affordance survives compact viewports.
+
+## Elevation & Depth
+
+Two depth modes coexist.
+
+- **Document surfaces** — flat and border-only, following Notion's discipline. Cards never lift.
+- **Interactive controls** — buttons and exercise tiles use Duolingo's signature tactile bottom-shadow (`0 4px 0 0 var(--accent-deep)`). On press, the shadow collapses to `0 0 0 0` and the button translates 2px down — the iconic Duolingo pressable affordance.
+
+Modals use a softer drop — `0 20px 48px rgba(55, 53, 47, 0.18)`. No glass, no blur, no card shadows — applying tactile shadow to cards would kill the document feel and is forbidden.
+
+## Shapes
+
+- **Buttons** — 16px radius (Duolingo geometry)
+- **Cards / lesson tiles** — 12px radius (Notion geometry), 1px `border`
+- **Inputs** — 8px radius, 1px `border`
+- **Progress bars** — 999px pill, 12px height
+- **Streak / XP badges** — 999px pill, padding 6/12
+
+Radius below 12 on interactive elements is forbidden — it breaks the encouragement register.
+
+## Components
 
 **Button (primary CTA)**
-- Duolingo geometry: radius 16, padding 14/24, weight 700.
-- Fill `--accent`, text `#ffffff`, weight 700.
-- Tactile bottom shadow: `0 4px 0 0 var(--accent-deep)`. Pressed state shifts to `0 0 0 0` and translateY(2px). Duolingo signature.
+- Duolingo geometry — 16px radius, padding 14/24, weight 700
+- Fill `accent`, text `#ffffff`
+- Tactile bottom shadow — `0 4px 0 0 var(--accent-deep)`. Pressed state shifts to `0 0 0 0` with translateY(2px)
 
 **Button (secondary)**
-- Same geometry. Transparent fill, 2px `--border-strong`, `--text` color, weight 700.
-- Bottom shadow: `0 4px 0 0 var(--border-strong)`. Same pressed behavior.
+- Same geometry as primary. Transparent fill, 2px `border-strong`, `text` color, weight 700
+- Bottom shadow — `0 4px 0 0 var(--border-strong)` with the same pressed behavior
 
 **Card / lesson tile**
-- Notion pattern: `--bg-alt` fill, 1px `--border`, radius 12.
-- Hover: `--surface` fill, 1px `--border-strong`. No tactile shadow on cards — only on buttons.
+- Notion pattern — `bg-alt` fill, 1px `border`, 12px radius
+- Hover state — `surface` fill with 1px `border-strong`. No tactile shadow on cards — only on buttons.
 
 **Input**
-- Notion: 1px `--border`, radius 8, padding 10/14.
-- Focus: 2px `--accent` ring, 2px offset.
+- 1px `border`, 8px radius, padding 10/14
+- Focus state — 2px `accent` ring with 2px offset
 
 **Progress bar**
-- Track: `--surface`, height 12, radius 999.
-- Fill: `--accent`, radius 999. Inner highlight `rgba(255,255,255,0.32)` top 4px.
+- Track — `surface` fill, 12px height, 999px radius
+- Fill — `accent`, 999px radius. Inner highlight `rgba(255, 255, 255, 0.32)` on the top 4px.
 
 **Streak / XP badge**
-- Pill, radius 999, padding 6/12, weight 700, mono numeral.
-- Streak: `--streak` fill, white text. XP: `--xp` fill, white text.
+- 999px pill, padding 6/12, weight 700, tabular numeral
+- Streak — `streak` fill, white text. XP — `xp` fill, white text.
 
 **Document surface**
-- Notion's reading column — 720px, 16px body, 1.6 line-height, callouts in `--bg-alt` with 1px `--border`.
+- Notion's reading column — 720px, 16px body, 1.625 line-height
+- Callouts — `bg-alt` fill with 1px `border`
 
-## 5. Layout Principles
-
-Two zones per page.
-
-**Reading / lesson content**
-- Notion: 720px max, centered, 16px body.
-
-**Practice / exercise / dashboard**
-- Duolingo: 480px centered card stack on desktop, full-width on mobile, generous 32px+ padding inside cards.
-
-App shell: 1180px max, 240px nav rail, 8px base scale (8 / 16 / 24 / 32 / 48 / 64 / 96).
-
-## 6. Depth & Elevation
-
-Two depth modes.
-
-- Document surfaces: flat, border-only. Notion discipline.
-- Interactive controls (buttons, exercise tiles): tactile bottom-shadow depth. Duolingo's `0 4px 0 0` move.
-
-Cards stay flat. Modals: `0 20px 48px rgba(55,53,47,0.18)`. No glass, no blur.
-
-## 7. Do's and Don'ts
+## Do's and Don'ts
 
 **Do**
-- Reserve tactile bottom-shadow for buttons and exercise tiles only.
-- Use leaf green for CTAs and progress, never decoration.
-- Keep streak / XP / danger colors confined to their signal contexts.
-- Body in Inter 16px, document-style line-height 1.6.
+- Reserve the tactile bottom-shadow for buttons and exercise tiles only
+- Use leaf green for CTAs and progress fills, never decoration
+- Keep streak / XP / danger colors confined to their signal contexts
+- Body in Inter 16px with document-style line-height 1.625
 
 **Don't**
-- Apply tactile shadow to cards — kills the document feel.
-- Use Duolingo's owl mascot literally. Borrow the affordances, not the IP.
-- Drop multiple categorical colors into general UI.
-- Use serif body — broke the learning context.
+- Apply tactile shadow to cards — it kills the document feel
+- Use Duolingo's owl mascot literally — borrow the affordances, not the IP
+- Drop multiple categorical colors into general UI
+- Use serif body — it breaks the learning context
+- Set button radius below 12, or use thin font weights on CTAs
 
-## 8. Responsive Behavior
+## Agent Prompt Guide
 
-- Reading column padding-only below 768px.
-- Practice card stack: full-width with 16px gutter on mobile.
-- Nav rail collapses to bottom tab bar at 768px.
-- Tactile button shadow scales to `0 3px 0 0` at < 480px.
-- Streak / XP badges stay pill-shaped, shrink to 11px font.
+**Bias toward** — warm-white document base, Inter throughout, leaf green for CTAs and progress only, tactile bottom-shadow on buttons (`0 4px 0 0` style), 720px reading column for lessons, 480px card stack for practice, streak / XP / danger colors confined to signal context, rounded radius 12–16 on interactive elements.
 
-## 9. Agent Prompt Guide
-
-Bias: warm white document base, Inter throughout, leaf green for CTAs and progress only, tactile bottom-shadow on buttons (`0 4px 0 0` style), 720px reading column for lessons, 480px card stack for practice, streak / XP / danger colors confined to signal context, rounded radius 12–16 on interactive elements.
-
-Reject: serif body, tactile shadows on cards, mascot illustrations of any kind, multi-color decoration, Notion's cold-white surfaces, button radius < 12, thin font weights on CTAs, glass / blur / drop shadows on cards.
-
-## Creative Tensions (documented for team)
-
-- **Friendly vs serious.** Duolingo can read as childish if pushed too far; Notion can read as cold if held too rigid. Resolution: Notion owns documents, Duolingo owns interactions — never mix on the same surface.
-- **Tactile button on a Notion card.** Tempting and wrong. The tactile move is for things you press / answer / commit. Cards are for reading.
-- **Color discipline.** Duolingo's full palette is loud. Confine to: green for go, orange for streak, red for wrong, blue for XP. Anything else is a regression.
-
-## Parent-brand DNA
-
-Tokens traced:
-- From Notion: 22 (warm white surface palette, charcoal text ramp, 720px reading column, document callout pattern, 1px border depth, card radius 12, nav-rail shell, dark mode warm-not-pitch, soft border palette, generous reading line-height)
-- From Duolingo: 18 (leaf green accent, tactile bottom-shadow buttons, button radius 16, weight 700 CTAs, progress bar pattern, streak / XP / danger signal colors, pill badges, exercise card stack, full-width mobile practice surface)
-
-Net DNA: Notion 55% · Duolingo 45%.
+**Reject** — serif body, tactile shadows on cards, mascot illustrations of any kind, multi-color decoration, Notion's cold-white surfaces, button radius below 12, thin font weights on CTAs, glass / blur / drop shadows on cards.

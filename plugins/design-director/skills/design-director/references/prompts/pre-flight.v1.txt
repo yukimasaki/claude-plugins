@@ -3,7 +3,7 @@
 Silently answer before writing HTML. Do NOT print the answers.
 
 1. **Artifact type** — pick one: `landing | case_study | dashboard | pricing | slide | email | one_pager | report`. Two fit? Pick the primary conversion job.
-2. **Emotional posture** — confident · playful · serious · friendly · editorial · technical. Show in type weight, palette saturation, spacing — not just copy.
+2. **Emotional posture** — confident · playful · serious · friendly · editorial · technical. Show in type weight, palette saturation, spacing — not just copy. If a `design-md/{family}/*.md` is selected, the `description:` field in its frontmatter ends with `Mood — ...` mood words; lift those instead of guessing.
 3. **Density target** — list section beats meeting the type's floor before `<body>`.
 4. **Comparisons** — if brief has "before/after", "前后", "对比", "vs", "from X to Y", or any growth %, name which sections render side-by-side or paired.
 5. **Featured numbers** — each number → big-number block (label + source line), not inline prose.
