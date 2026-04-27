@@ -1,8 +1,8 @@
 # /design-director status
 
 `.design-studio/` 周辺の **現在の状態** を一覧表示する診断コマンド。
-dev server 起動状態・最終 update 日時・プロジェクト数・memory.md 有無を
-Markdown 表で返す。副作用なし（Read only）。
+dev server 起動状態・プロジェクト数・memory.md 有無を Markdown 表で
+返す。副作用なし（Read only）。
 
 ## 前提
 
@@ -19,7 +19,7 @@ Markdown 表で返す。副作用なし（Read only）。
    loud 案内で終了（`/design-director` で初回セットアップが始まる旨を添える）
 2. 存在すれば次へ
 
-### 2. 4 つの状態を並列取得
+### 2. 3 つの状態を並列取得
 
 silently に以下を同時に取得する:
 
@@ -32,21 +32,13 @@ silently に以下を同時に取得する:
    別プロセスなら「他プロセスが占有中（PID N、コマンド: …）」、
    無ければ「停止中」
 
-#### 2b. 最終 update 日時
-
-1. `.design-studio/.upstream-state.json` を Read
-2. JSON が破損している or 空 `{}` なら「未実行」
-3. 各 repo（`awesome-claude-design`, `open-codesign`）ごとに
-   `lastSyncedAt` を抽出
-4. 未登録の repo は「未実行」と表示
-
-#### 2c. プロジェクト数
+#### 2b. プロジェクト数
 
 1. `.design-studio/projects/*/manifest.json` の Glob で件数を数える
 2. `list.md` と同じ方針で、壊れた manifest は skip（「N 件表示中
    (M 件は壊れているので skip)」のように件数補記）
 
-#### 2d. memory.md 有無と最終更新
+#### 2c. memory.md 有無と最終更新
 
 1. `fs.stat .design-studio/memory.md`（存在確認 + mtime 取得）
 2. 存在 → 「あり（最終更新 YYYY-MM-DD）」
@@ -60,7 +52,6 @@ Markdown 表で loud に出力する:
 | 項目 | 状態 |
 |------|------|
 | dev server | 起動中（PID 12345） |
-| 最終 update | awesome-claude-design: 2026-04-23 / open-codesign: 未実行 |
 | プロジェクト数 | 3 件 |
 | memory.md | あり（最終更新 2026-04-24） |
 ```
@@ -72,8 +63,6 @@ Markdown 表で loud に出力する:
 - projects 0 件 → 「`/design-director` で新規プロトタイプを作れる」
 - dev server 停止中 + projects ≥ 1 → 「`/design-director serve` で
   ギャラリーを起動できる」
-- 最終 update が 7 日以上前 → 「`/design-director update` で upstream 差分を
-  取り込める」
 - memory.md なし → 案内不要（初回 `/design-director` 実行時に自動生成される）
 
 ## Example Run
@@ -87,12 +76,11 @@ Markdown 表で loud に出力する:
   | 項目 | 状態 |
   |------|------|
   | dev server | 起動中（PID 12345） |
-  | 最終 update | awesome-claude-design: 2026-04-23 / open-codesign: 2026-04-22 |
   | プロジェクト数 | 3 件 |
   | memory.md | あり（最終更新 2026-04-24） |
 
-  直近で upstream 更新してないので、気になる差分があれば
-  `/design-director update` で取り込めます。
+  全部稼働中です。新しいプロトタイプを作るなら `/design-director`、
+  既存を編集するなら `/design-director edit {slug}` から。
 ```
 
 ### ケース 2: セットアップ直後
@@ -104,7 +92,6 @@ Markdown 表で loud に出力する:
   | 項目 | 状態 |
   |------|------|
   | dev server | 停止中 |
-  | 最終 update | awesome-claude-design: 未実行 / open-codesign: 未実行 |
   | プロジェクト数 | 0 件 |
   | memory.md | なし |
 
@@ -130,7 +117,6 @@ Markdown 表で loud に出力する:
   | 項目 | 状態 |
   |------|------|
   | dev server | 他プロセスが占有中（PID 22345、next dev from /home/user/other-project） |
-  | 最終 update | awesome-claude-design: 2026-04-23 / open-codesign: 未実行 |
   | プロジェクト数 | 2 件 |
   | memory.md | あり（最終更新 2026-04-20） |
 
@@ -148,7 +134,6 @@ Markdown 表で loud に出力する:
   | 項目 | 状態 |
   |------|------|
   | dev server | 停止中 |
-  | 最終 update | awesome-claude-design: 2026-04-23 / open-codesign: 2026-04-22 |
   | プロジェクト数 | 2 件（1 件は manifest.json が壊れているので skip） |
   | memory.md | あり（最終更新 2026-04-24） |
 
@@ -162,14 +147,12 @@ Markdown 表で loud に出力する:
 |------|------|
 | `.design-studio/` 未作成 | 上記ケース 3 の案内で終了（副作用なし）|
 | `ss` コマンドが見つからない | `lsof -i :3000` にフォールバック。両方失敗したら「dev server 状態: 判定不可」と loud で表示 |
-| `.upstream-state.json` が壊れている（zod 失敗） | 「最終 update: 判定不可（state ファイル破損）」と loud で表示。`.design-studio/.upstream-state.json` の内容確認をユーザーに依頼 |
 | 壊れた manifest.json が projects に混在 | `list.md` 同様に skip + 件数補記（ケース 5 の例）|
 | ファイル権限不足 | `ls -la .design-studio/` の結果提示で権限確認を促す |
 
 ## 対応する decisions.md
 
 - Q1-5: `.design-studio/` の存在確認は冪等、無ければ案内のみ
-- Q7-5: `.design-studio/.upstream-state.json` の読み取り
 - Q8-2: サブコマンド構成のうち `status` は現在状態の診断を担当
 - Phase 3 の `lib/list-projects.ts` と同じ「壊れた manifest は skip + warn」
   方針を status でも踏襲

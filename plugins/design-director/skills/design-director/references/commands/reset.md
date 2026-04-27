@@ -24,8 +24,6 @@
 |------|---------|
 | projects 数 | `.design-studio/projects/*/manifest.json` の件数（Glob） |
 | memory.md 有無 + 最終更新 | `fs.stat .design-studio/memory.md` |
-| .upstream-cache サイズ | `du -sh .design-studio/.upstream-cache/ 2>/dev/null`（無い場合は skip） |
-| 最終 update 日時 | `.design-studio/.upstream-state.json` の各 repo `lastSyncedAt` |
 | dev server 起動状態 | `ss -tlnp 2>/dev/null | grep ":3000"` |
 
 表示例:
@@ -34,8 +32,6 @@
 .design-studio/ の中身:
   - projects: 3 件（ops-dashboard-v1, fintech-landing, onboarding-slides）
   - memory.md: あり（最終更新 2026-04-24）
-  - .upstream-cache: 24 MB
-  - 最終 update: awesome-claude-design 2026-04-23 / open-codesign 未実行
   - dev server: 起動中（PID 12345、/design-director serve 由来）
 ```
 
@@ -72,9 +68,7 @@ dev server が起動中です（PID 12345）。
 
 1. `fs.cp` 相当で `.design-studio/` 全体を `./design-studio-backup-{timestamp}/`
    に再帰コピー
-2. `.upstream-cache` はサイズが大きくなりがちなので、`du` の結果から
-   想定所要時間を loud で提示（「24 MB なら数秒で完了する見込み」等）
-3. コピー完了を報告してからステップ 5 へ
+2. コピー完了を報告してからステップ 5 へ
 
 ### 5. 削除実行
 
@@ -104,8 +98,6 @@ dev server が起動中です（PID 12345）。
 > Claude: .design-studio/ の中身:
   - projects: 3 件（ops-dashboard-v1, fintech-landing, onboarding-slides）
   - memory.md: あり（最終更新 2026-04-24）
-  - .upstream-cache: 24 MB
-  - 最終 update: awesome-claude-design 2026-04-23 / open-codesign 未実行
   - dev server: 停止中
 
   projects 3 件あるので、削除前にバックアップ提案します。
@@ -115,8 +107,7 @@ dev server が起動中です（PID 12345）。
 
 > User: 1
 
-> Claude:（fs.cp で ./design-studio-backup-20260425-103012/ に再帰コピー、
-  24 MB 相当を数秒で完了）
+> Claude:（fs.cp で ./design-studio-backup-20260425-103012/ に再帰コピー）
   バックアップ完了。続いて削除を実行します。よろしいですか？ (y / N)
 
 > User: y
@@ -137,7 +128,6 @@ dev server が起動中です（PID 12345）。
 > Claude: .design-studio/ の中身:
   - projects: 0 件
   - memory.md: なし
-  - .upstream-cache: 0 MB（未作成）
   - dev server: 停止中
 
   projects も memory.md もありません。バックアップは不要に見えます。
@@ -180,7 +170,6 @@ dev server が起動中です（PID 12345）。
 |------|------|
 | `.design-studio/` 未作成 | 上記ケース 4 の案内で終了（副作用なし）|
 | バックアップコピー失敗（ディスク容量不足、権限） | 失敗箇所を loud で提示し、削除は実行しない（復元可能な状態を保つ） |
-| `.upstream-cache` が大きすぎて長時間かかる | サイズと想定所要時間を事前に提示し、ユーザーに「時間を許容 / バックアップせず削除」を選ばせる |
 | 削除権限不足（`EACCES`） | `ls -la .design-studio/` の結果を提示し、権限確認を促す |
 | dev server が動作中で削除に失敗 | `pkill -9 -f "bun dev"` で停止してからリトライする旨を案内 |
 | バックアップ dir の衝突（同秒内で再実行） | サフィックス `-2` を付けて回避（export.md と同じ方針）|

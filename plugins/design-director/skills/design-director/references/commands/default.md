@@ -206,7 +206,7 @@ silently に確認（`ss -tlnp 2>/dev/null | grep ":3000"`）してから分岐:
 | setup-studio が network で落ちる | `bun install` のリトライをユーザーに促す。3 回目失敗ならメッセージを添えて停止 |
 | setup-studio が permission で落ちる | cwd の書き込み権限を確認する旨をユーザーに伝える（`ls -la` で権限チェック） |
 | プリフライト 12 項目中 6 項目以上 NG | ステップ 4 に強制的に戻り、案を組み直す旨をユーザーに伝える |
-| `design-md/{family}/*.md` の Read 失敗 | `/design-director update` の実行を提案（vendored ファイル欠損の可能性） |
+| `design-md/{family}/*.md` の Read 失敗 | vendored ファイル欠損の可能性。`git status` でリポの状態を確認し、必要なら `git checkout` で再取得するようユーザーに案内する |
 | プロジェクト名の衝突（既存 slug） | ユーザーに新しい slug を提案（`-v2` サフィックス等）、または `/design-director edit` に誘導 |
 
 ## 対応する decisions.md

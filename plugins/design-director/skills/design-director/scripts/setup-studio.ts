@@ -30,9 +30,7 @@ export async function setupStudio(opts: SetupOptions): Promise<SetupResult> {
   const templateDir = opts.templateDir ?? defaultTemplateDir();
   await fs.cp(templateDir, studioDir, { recursive: true });
 
-  // 生成物と upstream キャッシュの器を先に作っておく
   await fs.mkdir(path.join(studioDir, "projects"), { recursive: true });
-  await fs.mkdir(path.join(studioDir, ".upstream-cache"), { recursive: true });
 
   if (opts.install !== false) {
     const res = spawnSync("bun", ["install"], {
