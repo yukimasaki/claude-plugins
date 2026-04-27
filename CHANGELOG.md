@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1](https://github.com/yukimasaki/claude-plugins/compare/v0.1.0...v0.1.1) (2026-04-27)
+
+
+### Bug Fixes
+
+* **release-please:** include-component-in-tag: false を追加（既存 v0.1.0 タグ形式と整合） ([26cd1ed](https://github.com/yukimasaki/claude-plugins/commit/26cd1edff99005703b5c5988270a7253c64cbb58))
+
 ## [Unreleased]
 
 ## [0.1.0] - 2026-04-27
