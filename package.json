@@ -1,0 +1,16 @@
+{
+  "name": "claude-plugins-maintainer",
+  "private": true,
+  "type": "module",
+  "description": "メンテナ用ツーリングと共通スクリプトの依存をホストするためのトップレベル package.json。プラグイン本体の依存は plugins/*/skills/*/package.json で管理する。",
+  "scripts": {
+    "check-diff-upstream": "bun scripts/check-diff-upstream.ts",
+    "test": "vitest run scripts"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "globby": "^14.0.2",
+    "simple-git": "^3.25.0",
+    "vitest": "^4.0.18"
+  }
+}

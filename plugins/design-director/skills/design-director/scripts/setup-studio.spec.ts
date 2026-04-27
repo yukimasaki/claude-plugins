@@ -15,7 +15,7 @@ describe("setupStudio", () => {
     await fs.rm(tmpRoot, { recursive: true, force: true });
   });
 
-  it("初回実行でテンプレートがコピーされ projects / .upstream-cache が作られる", async () => {
+  it("初回実行でテンプレートがコピーされ projects/ が作られる", async () => {
     const result = await setupStudio({ targetRoot: tmpRoot, install: false });
 
     expect(result.skipped).toBe(false);
@@ -28,7 +28,6 @@ describe("setupStudio", () => {
     await expectExists(path.join(result.studioDir, "lib", "list-projects.ts"));
     await expectExists(path.join(result.studioDir, "public", "runtime", "preview.html"));
     await expectExists(path.join(result.studioDir, "projects"));
-    await expectExists(path.join(result.studioDir, ".upstream-cache"));
   });
 
   it(".design-studio/ が既に存在する場合はスキップする", async () => {
