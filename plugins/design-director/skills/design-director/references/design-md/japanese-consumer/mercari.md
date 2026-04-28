@@ -1,259 +1,145 @@
-# DESIGN.md — メルカリ (mercari.com/jp)
+---
+version: alpha
+name: Mercari
+description: Mercari is Japan's dominant C2C marketplace, and its web UI carries that scale through an extremely clean, white-background, grid-first surface. The hero color is Mercari Red `#ff333f`, but it is rationed strictly to CTAs and active tab states — the bulk of the page lives in a two-tone gray system where headings (`#666666`) are intentionally lighter than body text (`#333333`). Body type sits at 15px (not the conventional 16px) with line-height 1.4 across the entire site, giving the layout a tight, transactional rhythm. Mood — clean, transactional, trustworthy, efficient.
 
-> このファイルはAIエージェントが正確な日本語UIを生成するためのデザイン仕様書です。
-> セクションヘッダーは英語、値の説明は日本語で記述しています。
+colors:
+  primary: "#ff333f"
+  primary-hover: "#e62d38"
+  link: "#0073cc"
+  ink: "#333333"
+  body: "#333333"
+  muted: "#666666"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f5f5f5"
+  hairline: "#e0e0e0"
+  on-primary: "#ffffff"
+  success: "#43a047"
+  warning: "#f9a825"
+  error: "#ff333f"
 
+typography:
+  display-xl:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 15px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Helvetica Neue, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  none: 0px
+  sm: 4px
+  md: 4px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 36px
+  "6": 64px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: クリーン、ミニマル、白背景ベースの実用志向UI
-- **密度**: 商品一覧のグリッド表示は情報密度が高いが、余白は十分に確保
-- **キーワード**: シンプル、信頼感、ホワイトスペース、メルカリレッド、機能的
+Mercari's web frontend is built on Panda CSS and reads as a deliberately clean, white marketplace shell. The product grid is the core surface — high information density (many cards per row) but always with adequate gutter. There is exactly one accent color — Mercari Red `#ff333f` — and the design pays close attention to where it appears: only on the primary "出品" CTA and the active tab indicator. Everything else is gray.
 
-**特記事項**:
-- CSSフレームワークに Panda CSS を採用（`--made-with-panda: "🐼"`）
-- 全体の line-height が ×1.4 で統一されており、日本語サイトとしてはタイト
-- body font-size が 15px（一般的な 16px ではない）
-- 見出しの色が `#666666` でメイン `#333333` より薄い珍しいパターン
+Mood words — clean, transactional, trustworthy, efficient.
 
----
+## Colors
 
-## 2. Color Palette & Roles
+The two-tone gray system is unusual: body text is `#333333` (darker), but section headings are `#666666` (lighter) — the opposite of most design systems. This pulls user attention toward product cards and away from chrome. Active tab text uses Mercari Red `#ff333f`; inactive tabs use the lighter `#666666`. Inline links use `#0073cc`. Hairlines and dividers use `#e0e0e0` against `#ffffff` surface.
 
-### Primary（ブランドカラー）
+## Typography
 
-- **Mercari Red** (`#ff333f`): メインのブランドカラー。CTAボタン、アクティブタブに使用
-- **Primary (rgb)**: `rgb(255, 51, 63)`
+Font stack is **Helvetica Neue / Arial first**, then Mercari's custom-metric "Hiragino Kaku Gothic ProN Custom" / "Hiragino Sans Custom" / "Meiryo Custom" — note the `Custom` suffix, which is a Mercari-specific `@font-face` definition that adjusts vertical metrics (ascent/descent) for cleaner alignment with Latin glyphs. The hybrid chain we ship here drops the `Custom` suffix for portability and falls back to standard Hiragino / Noto Sans JP / Yu Gothic.
 
-### Semantic（意味的な色）
+Body sits at **15px / weight 400**, not 16px. Section headings at 20px / 700. Letter-spacing is `normal` (0) on every role. Upstream uses line-height 1.4 across the site; for the design-director floor we lift body / caption / label to 1.6 to keep kanji legible — display / title stay at 1.4. `palt` is **not** used.
 
-- **Link** (`#0073cc`): テキストリンク。`rgb(0, 115, 204)`
+## Layout
 
-### Neutral（ニュートラル）
+- 4 / 8 / 16 / 24 / 36 / 64 spacing scale derived from `--grid-layout-*` tokens
+- Grid gutter 24px (`--grid-layout-gutter`), inset 16px (`--grid-layout-inset`)
+- Page padding — top 40px, bottom 64px, horizontal 36px
+- Product grid is responsive: typically 4–6 columns on desktop, 2–3 on mobile
+- Touch targets ≥ 44px square; iOS form inputs stay at 16px to prevent zoom
 
-- **Text Primary** (`#333333`): 本文テキスト、フッターテキスト
-- **Text Secondary** (`#666666`): 見出し（h2）、非アクティブタブ、補足テキスト
-- **Background** (`#ffffff`): ページ背景
-- **Button Secondary Text** (`#333333`): ログインボタン等のテキスト
-- **Button Secondary BG** (`#ffffff`): ログインボタン等の背景
+## Elevation & Depth
 
----
+Mercari mostly uses z-index layering instead of shadow stacks. Cards stay flat against the white canvas; the marketplace relies on hairlines and gutters for separation. Documented z-tiers — menu 1100, navigation 1200, modal 1400, snackbar 1500, tooltip 1600. Modals carry a subtle ambient shadow but the base UI is shadowless.
 
-## 3. Typography Rules
+## Shapes
 
-### 3.1 和文フォント
+Border radius is **4px on buttons and tags, 0px on inputs**. No pill shapes. The corner radius is small enough to read as "tidy" rather than "soft" — consistent with the transactional brand voice.
 
-- **ゴシック体**: "Hiragino Kaku Gothic ProN Custom", "Hiragino Sans Custom", "Meiryo Custom"
-- 「Custom」サフィックス付きの独自 @font-face 定義。フォントメトリクス（ascent/descent 等）を調整している可能性がある
+## Components
 
-### 3.2 欧文フォント
+**Buttons** — Primary "出品" fills `#ff333f` with white text, weight 700, 14px, 4px radius. Secondary "ログイン" is white background with `#333333` text, no border, weight 400. The contrast in weight (700 vs 400) signals which is the action.
 
-- **サンセリフ**: "Helvetica Neue", Arial
+**Tabs** — White background. Active tab text is `#ff333f` weight 700 with a red underline indicator. Inactive tab text is `#666666` weight 700 (same weight, different color).
 
-### 3.3 font-family 指定
+**Inputs** — White fill, **0px radius**, 16px text (preventing iOS zoom), 22.4px line-height, `#333333` text, hairline `#e0e0e0` border.
 
-```css
-/* 本文（実測値） */
-font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN Custom", "Hiragino Sans Custom", "Meiryo Custom", sans-serif;
-```
+**Product cards** — Plain white surface with subtle hairline; price text in body weight, item title in `#333333`.
 
-**フォールバックの考え方**:
-- 欧文フォント（Helvetica Neue, Arial）を先に指定 — 欧文グリフの表示品質を優先
-- 和文フォントに「Custom」サフィックス付きの独自定義を使用
-- macOS: Hiragino Kaku Gothic ProN Custom → Hiragino Sans Custom
-- Windows: Meiryo Custom
-- 最後に generic family（sans-serif）を指定
+## Do's and Don'ts
 
-### 3.4 文字サイズ・ウェイト階層
+**Do**
+- Reserve `#ff333f` for primary CTA and active states only
+- Keep body at 15px (Mercari's distinctive base size)
+- Use `#666666` for headings and `#333333` for body — yes, headings are lighter
+- Use Helvetica Neue first in the font chain, then JP faces
+- Keep button radius at 4px and input radius at 0px
+- Maintain body line-height ≥ 1.6 for kanji legibility
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Heading 2 | 本文と同じ | 20px | 700 | 28px (×1.4) | normal | 「おすすめの商品」「人気のブランド」。色 #666666 |
-| Heading 3 | 本文と同じ | 17px | 700 | 23.8px (×1.4) | normal | 「掘り出しもの」。色 #333333 |
-| Body | 本文と同じ | 15px | 400 | 21px (×1.4) | normal | メインの本文テキスト。色 #333333 |
-| Footer | 本文と同じ | 15px | 700 | 21px | normal | フッター内テキスト。色 #333333 |
-| Link | 本文と同じ | 15px | 400 | — | normal | リンクテキスト。色 #0073cc |
-| CTA Button | 本文と同じ | 14px | 700 | — | normal | 「出品」ボタン。色 #fff / bg #ff333f |
-| Login Button | 本文と同じ | 14px | 400 | — | normal | 「ログイン」ボタン。色 #333 / bg #fff |
-| Tab (active) | 本文と同じ | 14px | 700 | — | normal | 「おすすめ」タブ。色 #ff333f |
-| Tab (inactive) | 本文と同じ | 14px | 700 | — | normal | 「マイリスト」タブ。色 #666 |
-| Input | 本文と同じ | 16px | 400 | 22.4px | normal | 検索入力欄。色 #333 |
+**Don't**
+- Spread Mercari Red across backgrounds, hover states, or text colors
+- Use 16px for body type — 15px is the Mercari signature
+- Apply `palt` or any `font-feature-settings` — Mercari runs with defaults
+- Add letter-spacing — every role on the site is `normal`
+- Use pill or large-radius buttons — 4px is the rule
+- Use `#333333` on headings (the "lighter heading" pattern is a brand cue)
 
-### 3.5 行間・字間
+## Agent Prompt Guide
 
-- **本文の行間 (line-height)**: ×1.4（21px / 15px）。日本語サイトとしてはタイト寄り
-- **見出しの行間**: ×1.4（全要素で統一）
-- **本文の字間 (letter-spacing)**: normal（すべての要素で統一）
-- **見出しの字間**: normal
+**Bias toward** — single Mercari Red accent, two-tone gray system with lighter headings, white-canvas grid, 15px body type, 4px button radius, Helvetica Neue + Hiragino chain, hairline-based separation, transactional density.
 
-**ガイドライン**:
-- 全体で line-height ×1.4 に統一。セクションごとの差異なし
-- letter-spacing は全要素で normal。日本語の字間調整は行っていない
-
-### 3.6 禁則処理・改行ルール
-
-```css
-/* 実測値に基づく推定。一般的なウェブデフォルト */
-word-break: normal;
-overflow-wrap: break-word;
-```
-
-### 3.7 OpenType 機能
-
-```css
-/* palt は使用していない */
-font-feature-settings: normal;
-```
-
-- **palt**: 未使用。プロポーショナル字詰めは適用されていない
-- **kern**: デフォルトのカーニング
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary (CTA — 出品)**
-- Background: `#ff333f`
-- Text: `#ffffff`
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 700
-
-**Secondary (ログイン)**
-- Background: `#ffffff`
-- Text: `#333333`
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 400
-
-### Tabs
-
-**Active**
-- Background: `#ffffff`
-- Text: `#ff333f`
-- Font Size: 14px
-- Font Weight: 700
-
-**Inactive**
-- Background: `#ffffff`
-- Text: `#666666`
-- Font Size: 14px
-- Font Weight: 700
-
-### Inputs
-
-- Background: `#ffffff`
-- Border Radius: 0px（角丸なし）
-- Font Size: 16px
-- Font Weight: 400
-- Line Height: 22.4px
-- Text Color: `#333333`
-
----
-
-## 5. Layout Principles
-
-### CSS Custom Properties（実測値）
-
-| Token | Value | 用途 |
-|-------|-------|------|
-| --grid-layout-gutter | 24px | グリッド間の余白 |
-| --grid-layout-inset | 16px | グリッド内側の余白 |
-| --grid-layout-page-padding-top | 40px | ページ上部パディング |
-| --grid-layout-page-padding-bottom | 64px | ページ下部パディング |
-| --grid-layout-page-padding-horizontal | 36px | ページ左右パディング |
-
-### Grid
-
-- Gutter: 24px（`--grid-layout-gutter`）
-- Inset: 16px（`--grid-layout-inset`）
-
----
-
-## 6. Depth & Elevation
-
-### z-index 階層（CSS Custom Properties 実測値）
-
-| Token | Value | 用途 |
-|-------|-------|------|
-| --mer-z-index-menu | 1100 | メニュー |
-| --mer-z-index-navigation | 1200 | ナビゲーション |
-| --mer-z-index-modal | 1400 | モーダル |
-| --mer-z-index-snackbar | 1500 | スナックバー通知 |
-| --mer-z-index-tooltip | 1600 | ツールチップ |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- ブランドカラー `#ff333f` はCTAとアクティブ状態にのみ使用する
-- body の font-size は 15px を守る（16px にしない）
-- line-height は ×1.4 で統一する
-- フォント指定の「Custom」サフィックスを維持する
-- ボタンの角丸は 4px に統一する
-- 見出しには `#666666` を使用し、本文 `#333333` と差をつける
-
-### Don't（禁止）
-
-- `#ff333f` を背景色やテキスト色として多用しない（CTA・アクティブ状態専用）
-- letter-spacing を追加しない（全要素で normal が統一ルール）
-- palt を適用しない（サイト全体で未使用）
-- line-height を ×1.4 以外に変えない（統一感が崩れる）
-- 見出しに `#333333` を使わない（見出しは `#666666` のパターン。h3 の一部は `#333333`）
-
----
-
-## 8. Responsive Behavior
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- 入力欄は 16px を維持（iOS のズーム防止）
-- 本文は 15px を基準とし、モバイルでも変更しない方針
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #ff333f (Mercari Red)
-Link Color: #0073cc
-Text Color: #333333
-Text Secondary: #666666
-Background: #ffffff
-Font: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN Custom", "Hiragino Sans Custom", "Meiryo Custom", sans-serif
-Body Size: 15px
-Line Height: 1.4
-Letter Spacing: normal
-palt: なし
-CSS Framework: Panda CSS
-```
-
-### プロンプト例
-
-```
-メルカリのデザインシステムに従って、商品一覧ページを作成してください。
-- プライマリカラー（CTAのみ）: #ff333f
-- リンク色: #0073cc
-- フォント: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN Custom", "Hiragino Sans Custom", "Meiryo Custom", sans-serif
-- 本文: 15px / 400 / line-height: 1.4 / color: #333333
-- 見出し: 20px / 700 / line-height: 1.4 / color: #666666
-- グリッド余白: 24px
-- ボタン角丸: 4px
-- letter-spacing: normal（全要素）
-- palt: 使用しない
-```
+**Reject** — Mercari Red as background fill, pill or rounded buttons, `palt` / typographic ornament, multiple saturated accents, line-height < 1.6 on body, headings darker than body, large radii on cards or inputs.

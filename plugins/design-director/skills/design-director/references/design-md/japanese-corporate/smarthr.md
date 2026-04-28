@@ -1,288 +1,153 @@
-# DESIGN.md — SmartHR
+---
+version: alpha
+name: SmartHR
+description: A Japanese B2B SaaS work UI that builds trust through restraint. Warm-gray (Stone scale) neutrals replace pure black-and-white, a single saturated blue (`#0077c7`) carries every primary action, and the brand teal (`#00c4cc`) is reserved for illustrations and charts where it cannot collapse against text. Information density is high — tables, forms, employee records — so the type system runs at 16px body with line-height 1.6 and Yu Gothic / Noto Sans JP for legible kanji. Mood — trustworthy, accessible, neutral, efficient.
 
-> SmartHR（https://smarthr.jp/）のデザイン仕様書。
-> SmartHR Design System（https://smarthr.design/）の公式デザイントークンに基づく。
+colors:
+  primary: "#0077c7"
+  primary-hover: "#005ea6"
+  brand: "#00c4cc"
+  link: "#0071c1"
+  accent: "#ff9900"
+  ink: "#23221e"
+  body: "#4e4c49"
+  muted: "#706d65"
+  disabled: "#c1bdb7"
+  canvas: "#f8f7f6"
+  surface: "#ffffff"
+  surface-soft: "#f2f1f0"
+  surface-strong: "#edebe8"
+  hairline: "#d6d3d0"
+  hairline-strong: "#aaa69f"
+  on-primary: "#ffffff"
+  success: "#4bb47d"
+  warning: "#ffcc17"
+  error: "#e01e5a"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 19.2px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 13.7px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, AdjustedYuGothic, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 10.7px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0.1em
+
+rounded:
+  none: 0px
+  sm: 4px
+  md: 6px
+  lg: 8px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 40px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: クリーンで信頼感のある業務UI。装飾を排し、コンテンツと操作性を優先するミニマルなデザイン
-- **密度**: 情報密度が高い業務アプリケーション向け。余白はあるが、コンパクトに情報を表示
-- **キーワード**: 信頼性、明快、効率的、アクセシブル、ニュートラル
-- **特徴**: ウォームグレー（Stone系）を基調とした柔らかいニュートラルカラー。純粋なグレーではなく暖色寄りのトーン
+SmartHR is a Japanese B2B SaaS for HR / labor administration. The UI must carry dense data — employees, payroll, mynumber records, leave balances — without ever feeling cold or hostile. The visual posture is "trustworthy office tool, not consumer SaaS." Stone-scale warm grays replace neutral grays, the canvas (`#f8f7f6`) is just-off-white, and ink (`#23221e`) is just-off-black. Pure black and pure gray are explicitly avoided.
 
----
+Mood words — trustworthy, accessible, neutral, efficient.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+Two blues do different jobs and must not be confused. **Brand teal `#00c4cc`** is for the SmartHR logo, illustrations, and chart fills only — it fails contrast on white text and is banned from UI controls. **Product blue `#0077c7`** carries every primary button, focus ring, and active tab. **Link blue `#0071c1`** is reserved for inline text links so they read as "link" not "button."
 
-- **SmartHR Blue** (`#00c4cc`): ブランドアイデンティティカラー。ロゴ、イラスト、チャート等に使用。テキストやUI要素には非推奨（白背景でのコントラスト不足）
-- **Product Main** (`#0077c7`): プロダクトUIのプライマリカラー。ボタン、アクティブ状態、フォーカスリングに使用
+The Stone scale (`#f8f7f6` / `#edebe8` / `#aaa69f` / `#4e4c49`) is the entire neutral palette. Status colors are dialed-down rather than neon: error `#e01e5a`, warning `#ffcc17`, success `#4bb47d`. Charts use a fixed 9-color rotation starting from `#00c4cc`.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#e01e5a`): エラー、削除操作、バリデーションエラー
-- **Warning** (`#ffcc17`): 警告、注意喚起
-
-### Interactive（インタラクティブ）
-
-- **Text Link** (`#0071c1`): テキストリンクの色
-- **Orange Accent** (`#ff9900`): アクセントカラー、注目を引く要素
-
-### Neutral — Stone Scale（ウォームグレー）
-
-- **Text Black** (`#23221e`): 本文テキスト、見出し
-- **Text Grey** (`#706d65`): 補足テキスト、セカンダリラベル
-- **Text Disabled** (`#c1bdb7`): 無効状態のテキスト
-- **Stone 01** (`#f8f7f6`): ページ背景（COLUMN トークン）
-- **Stone 02** (`#edebe8`): テーブルヘッダー背景（HEAD トークン）
-- **Stone 03** (`#aaa69f`): 補助的なボーダー、アイコン
-- **Stone 04** (`#4e4c49`): 濃いグレーテキスト
-
-### Surface & Borders
-
-- **White** (`#ffffff`): コンポーネントのベース背景
-- **Border** (`#d6d3d0`): 区切り線、入力欄の枠
-- **Over Background** (`#f2f1f0`): BACKGROUND 上のグルーピング面
-- **Action Background** (`#d6d3d0`): テーブル一括操作エリアの背景
-
-### Chart Colors
-
-- `#00c4cc`, `#ffcd00`, `#ff9100`, `#e65537`, `#2d4b9b`, `#2d7df0`, `#69d7ff`, `#4bb47d`, `#05878c`
-
----
-
-## 3. Typography Rules
-
-### 3.1 和文フォント
-
-- **ゴシック体**: 游ゴシック（Yu Gothic / YuGothic）を公式推奨
-- Windows での表示品質を確保するため、`@font-face` で Medium ウェイトを通常ウェイトにマッピング
+The Japanese face is **Yu Gothic** (游ゴシック), wrapped in an `AdjustedYuGothic` `@font-face` so Windows can map Medium → 400 (otherwise Windows renders it spider-thin):
 
 ```css
-@font-face {
-  font-family: AdjustedYuGothic;
-  font-weight: 400;
-  src: local("Yu Gothic Medium");
-}
-
-@font-face {
-  font-family: AdjustedYuGothic;
-  font-weight: 700;
-  src: local("Yu Gothic Bold");
-}
+@font-face { font-family: AdjustedYuGothic; font-weight: 400; src: local("Yu Gothic Medium"); }
+@font-face { font-family: AdjustedYuGothic; font-weight: 700; src: local("Yu Gothic Bold"); }
 ```
 
-### 3.2 欧文フォント
+The `font-family` chain is **latin face → AdjustedYuGothic → Yu Gothic → Noto Sans JP → Hiragino Sans → system-ui**. Body line-height is 1.6 (the brand spec says 1.5 but kanji at that ratio reads cramped — JP design-director floor lifts to 1.6). letter-spacing is 0 throughout; never negative, since negative spacing fuses kanji.
 
-- 游ゴシック内蔵の欧文グリフをそのまま使用（別途欧文フォントの指定なし）
-- デザインシステムサイトは `system-ui` を使用
+Type ladder — 10.7 / 12 / 13.7 / 16 / 19.2 / 24 / 32 px. The 16px body is the rem anchor.
 
-### 3.3 font-family 指定
+## Layout
 
-```css
-/* 公式推奨（コーポレートサイト） */
-font-family: AdjustedYuGothic, "Yu Gothic", YuGothic, "Hiragino Sans", sans-serif;
+- 8px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 40
+- Product UI is full-width with a left sidebar; corporate site uses a max-width container
+- Touch targets ≥ 44px square
+- Breakpoints — SP ≤ 599px, Tablet 600–959px, Desktop ≥ 960px
 
-/* デザインシステムサイト */
-font-family: system-ui, sans-serif;
-```
+## Elevation & Depth
 
-**フォールバックの考え方**:
-- `AdjustedYuGothic` → Windows での游ゴシック Medium マッピング
-- `Yu Gothic` → Windows ネイティブ
-- `YuGothic` → macOS ネイティブ（引用符なし）
-- `Hiragino Sans` → macOS フォールバック
-- `sans-serif` → 最終フォールバック
+Mostly flat. Cards and dropdowns use a level-1 shadow (`0 2px 4px rgba(0,0,0,0.10)`); modals and dialogs use level-2 (`0 4px 8px rgba(0,0,0,0.15)`). The base UI relies on hairline borders (`#d6d3d0`) for separation rather than shadow stacks.
 
-### 3.4 文字サイズ・ウェイト階層
+## Shapes
 
-ベースサイズ: `16px`（1rem）。スケール係数: `scaleFactor / (scaleFactor + diff)` rem（scaleFactor = 6）
+Border radius is 6px on buttons and inputs, 4px on tags / badges, 0px on tables. No pill shapes — SmartHR avoids consumer-app curvature.
 
-| Role | Token | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|-------|------|--------|-------------|----------------|------|
-| Display | XXL | 2rem (32px) | 700 | 1.25 | 0 | ページタイトル |
-| Heading 1 | XL | 1.5rem (24px) | 700 | 1.25 | 0 | セクション見出し |
-| Heading 2 | L | 1.2rem (19.2px) | 700 | 1.5 | 0 | サブ見出し |
-| Body | M | 1rem (16px) | 400 | 1.5 | 0 | 本文（標準） |
-| Small | S | 0.857rem (13.7px) | 400 | 1.5 | 0 | 補足テキスト |
-| Caption | XS | 0.75rem (12px) | 400 | 1.5 | 0 | キャプション、注釈 |
-| Smallest | XXS | 0.667rem (10.7px) | 400 | 1.5 | 0 | バッジ、ラベル |
+## Components
 
-### 3.5 行間・字間
+**Buttons** — Primary fills `#0077c7` with white text, weight 700, 6px radius, 8/16 padding. Secondary is transparent fill with 1px `#0077c7` border + `#0077c7` text. Danger fills `#e01e5a`.
 
-- **本文の行間 (line-height)**: `1.5`（NORMAL トークン）
-- **見出しの行間**: `1.25`（TIGHT トークン）
-- **リラックスした行間**: `1.75`（RELAXED トークン。コードブロック等に使用）
-- **字間 (letter-spacing)**: `0`（デフォルト）。ナビゲーションやラベルで `0.1rem` を使用する場合あり
+**Inputs** — White fill, 1px `#d6d3d0` border, 6px radius, 16px text, 8/12 padding. Focus ring is 2px `#0077c7` (border thickens, no outer ring).
 
-**ガイドライン**:
-- SmartHR は業務UIのため、情報密度を優先して `line-height: 1.5` を標準としている
-- 長文の読み物コンテンツには `1.75`（RELAXED）を推奨
+**Tables** — Header row on `#edebe8`, body rows on `#ffffff`, alternating rows on `#f8f7f6` (COLUMN token). Bulk-action toolbar fills `#d6d3d0`. Borders are 1px `#d6d3d0` between rows.
 
-### 3.6 禁則処理・改行ルール
+## Do's and Don'ts
 
-```css
-overflow-wrap: break-word;
-```
+**Do**
+- Use `AdjustedYuGothic` `@font-face` shim on Windows or the type will render too light
+- Use Stone-scale warm grays — never `#808080` or pure-gray neutrals
+- Reserve `#00c4cc` for brand surfaces (logo, hero illustration, chart fills) only
+- Keep body line-height at 1.6 minimum for kanji legibility
 
-- 業務アプリケーションのため、長いテキストや URL の折り返しに対応
-- 特別な禁則処理の指定はデザイントークンに含まれていない（ブラウザデフォルトに依存）
+**Don't**
+- Use brand teal `#00c4cc` on text or small UI controls (fails contrast on white)
+- Mix `#0077c7` and `#0071c1` interchangeably — `#0077c7` is for actions, `#0071c1` is for inline links
+- Use pill-shaped buttons or heavy drop shadows
+- Set `font-weight: 400` on Yu Gothic without the `AdjustedYuGothic` mapping
 
-### 3.7 OpenType 機能
+## Agent Prompt Guide
 
-- デザイントークンに OpenType 機能の指定なし
-- 游ゴシックのデフォルトカーニングをそのまま使用
+**Bias toward** — Stone-scale warm grays, single product-blue accent, 6px radius, hairline borders, dense tables, sidebar shell, 16px / line-height 1.6 body, Yu Gothic + Noto Sans JP fallback chain.
 
-### 3.8 縦書き
-
-- 該当なし。SmartHR は横書きのみ
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary**
-- Background: `#0077c7`
-- Text: `#ffffff`
-- Border Radius: 6px
-- Font Size: 1rem (16px)
-- Font Weight: 700
-- Padding: 8px 16px
-
-**Secondary**
-- Background: `transparent`
-- Text: `#0077c7`
-- Border: 1px solid `#0077c7`
-- Border Radius: 6px
-
-**Danger**
-- Background: `#e01e5a`
-- Text: `#ffffff`
-- Border Radius: 6px
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#d6d3d0`
-- Border (focus): 2px solid `#0077c7`
-- Border Radius: 6px
-- Font Size: 1rem (16px)
-- Padding: 8px 12px
-
-### Tables
-
-- Header Background: `#edebe8`（HEAD トークン）
-- Row Background: `#ffffff`
-- Row Background (alternate): `#f8f7f6`（COLUMN トークン）
-- Border: 1px solid `#d6d3d0`
-- Action Background: `#d6d3d0`（一括操作エリア）
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-SmartHR Design System は 8px ベースのスペーシングスケールを使用。
-
-| Token | Value |
-|-------|-------|
-| XS | 4px (0.25rem) |
-| S | 8px (0.5rem) |
-| M | 16px (1rem) |
-| L | 24px (1.5rem) |
-| XL | 32px (2rem) |
-| XXL | 40px (2.5rem) |
-
-### Container
-
-- プロダクトUI: 全幅（サイドバー + メインコンテンツ構成）
-- コーポレートサイト: max-width を使用
-
----
-
-## 6. Depth & Elevation
-
-SmartHR Design System にはシャドウトークンが定義されている（`/products/design-tokens/shadow`）。
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 2px 4px rgba(0,0,0,0.1)` | カード、ドロップダウン |
-| 2 | `0 4px 8px rgba(0,0,0,0.15)` | モーダル、ダイアログ |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- Windows での游ゴシック表示には必ず `AdjustedYuGothic` の `@font-face` トリックを使う
-- テキストカラーは `#23221e`（Text Black）を使い、純粋な `#000000` は避ける
-- ニュートラルカラーは Stone 系（ウォームグレー）を使用する
-- ブランドカラー `#00c4cc` はイラスト・チャート用とし、UIの操作要素には `#0077c7`（Product Main）を使う
-- アクセシビリティを重視し、色のコントラスト比は WCAG AA 以上を確保する
-
-### Don't（禁止）
-
-- ブランドカラー `#00c4cc` をテキストや小さなUI要素に使わない（白背景でコントラスト不足）
-- 游ゴシックを `@font-face` なしで `font-weight: 400` 指定しない（Windows で細く表示される）
-- 純粋なグレー（`#808080` 等）を使わない。Stone 系のウォームグレーを使う
-- テキストリンクの色を `#0077c7` と混同しない。リンクは `#0071c1` を使用する
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-SmartHR Design System にはメディアクエリトークンが定義されている。
-
-| Name | Width | 説明 |
-|------|-------|------|
-| SP | ≤ 599px | スマートフォン |
-| Tablet | 600px–959px | タブレット |
-| Desktop | ≥ 960px | デスクトップ |
-
-### タッチターゲット
-
-- 最小サイズ: 44px × 44px
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Brand Color: #00c4cc（ロゴ・チャート用、UIには使わない）
-Product Main: #0077c7
-Text Color: #23221e
-Text Secondary: #706d65
-Link Color: #0071c1
-Background: #f8f7f6
-Surface: #ffffff
-Border: #d6d3d0
-Danger: #e01e5a
-Font: AdjustedYuGothic, "Yu Gothic", YuGothic, "Hiragino Sans", sans-serif
-Body Size: 16px (1rem)
-Line Height: 1.5
-```
-
-### プロンプト例
-
-```
-SmartHR のデザインシステムに従って、従業員一覧テーブルを作成してください。
-- フォント: AdjustedYuGothic, "Yu Gothic", YuGothic, "Hiragino Sans", sans-serif
-- テキスト色: #23221e
-- テーブルヘッダー背景: #edebe8
-- ボーダー: 1px solid #d6d3d0
-- プライマリボタン: 背景 #0077c7、テキスト #ffffff、角丸 6px
-- 行間: line-height: 1.5
-- @font-face で游ゴシック Medium を 400 にマッピングすること
-```
+**Reject** — pure-gray neutrals, brand-teal text, pill buttons, drop-shadow cards, two saturated accents on the same surface, line-height < 1.6 on body.

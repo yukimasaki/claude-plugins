@@ -1,270 +1,145 @@
-# DESIGN.md — Zenn
+---
+version: alpha
+name: Zenn
+description: A Japanese tech-publishing platform that positions itself as the calmer, more refined sibling to Qiita. The brand blue (`#3ea8ff`) anchors every link and CTA, body ink runs slightly softer than Qiita's (`rgba(0,0,0,0.82)` flattened to `#262626`), and the page leans on white surfaces lifted by faint borders rather than canvas tinting. Body type is 16px at line-height 1.8 — generous enough to absorb kanji-heavy paragraphs and inline code without crowding. No `palt`, no `YakuHanJPs`, no CSS variables; the system is deliberately simple. Mood — clean, modern, considered, readable.
 
-> Zenn（https://zenn.dev/）のデザイン仕様書。
-> 実サイトの computed style に基づく。技術記事プラットフォームとして Qiita と並ぶ存在。ブランドカラー「Zennブルー」#3ea8ff が特徴。CSS Custom Properties は未使用。
+colors:
+  primary: "#3ea8ff"
+  primary-hover: "#0f83fd"
+  ink: "#262626"
+  body: "#404040"
+  muted: "#737373"
+  disabled: "#a3a3a3"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f1f5f9"
+  hairline: "#d6e3ed"
+  hairline-strong: "#9ca8b3"
+  on-primary: "#ffffff"
+  link: "#3ea8ff"
+  success: "#10b981"
+  warning: "#f59e0b"
+  error: "#f43f5e"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 38px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 17px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.8
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.7
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 600
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  sm: 4px
+  md: 8px
+  lg: 12px
+  pill: 9999px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 48px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: クリーンで余白を活かしたモダンなデザイン。技術記事の読みやすさを重視しつつ、Qiita よりもシンプルで洗練された印象
-- **密度**: 本文 line-height: 1.8 のゆったりとした行間。記事ページは読書体験を最優先にしたレイアウト
-- **キーワード**: クリーン、モダン、テクニカル、読みやすい、ブルーアクセント
-- **特徴**: テキスト色に `rgba(0,0,0,0.82)` を使用（Qiita の 0.87 よりわずかに薄い）。CSS Custom Properties は未使用で、直接的な値指定。palt は normal（適用なし）。Qiita の対抗サービスとして、よりシンプルな構成を志向
+Zenn (zenn.dev) is a Japanese technical publishing platform that overlaps with Qiita's audience but takes a deliberately quieter visual stance. The page is white-on-white with faint blue-tinted hairlines (`#d6e3ed`), the brand blue is reserved for actions and links, and the system avoids the small punctuation-tightening tricks Qiita uses — Zenn's voice comes from white space and a lighter ink instead.
 
----
+Mood words — clean, modern, considered, readable.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+The palette is essentially a blue-tinted neutral ramp plus a single brand blue. Body ink at `#262626` (representing `rgba(0,0,0,0.82)`) is noticeably softer than Qiita's `rgba(0,0,0,0.87)` — the difference is small but it sets the tone. Surfaces are white; the secondary surface (`#f1f5f9`) is a faint blue-gray used for code-block grounds and section breaks. Hairlines (`#d6e3ed`) carry the same blue undertone so dividers harmonize with the brand color rather than reading as cold gray.
 
-- **Zenn Blue** (`#3ea8ff`): メインのブランドカラー。CTAボタン、リンク、アクセント等に使用
-- **Zenn Blue Dark** (`#0f83fd`): ホバー・プレス時のプライマリカラー（推定）
+Status colors lean modern (Tailwind-adjacent) — success `#10b981`, warning `#f59e0b`, error `#f43f5e`.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#f43f5e`): エラー、削除、危険な操作
-- **Warning** (`#f59e0b`): 警告、注意喚起
-- **Success** (`#10b981`): 成功、完了
+Type is the system stack — `-apple-system, system-ui, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP` — with no custom webfont and no `palt`. Body runs at **16px / line-height 1.8 / weight 400**, headings step up to weight 700 with line-height 1.5. Section displays go to 38px.
 
-### Neutral（ニュートラル）
+`letter-spacing: 0` everywhere. Code uses the SF Mono / Consolas / Menlo stack at 14px / line-height 1.5.
 
-- **Text Primary** (`rgba(0,0,0,0.82)`): 本文テキスト（opacity ベース）
-- **Text Secondary** (`rgba(0,0,0,0.55)`): 補足テキスト、ラベル
-- **Text Disabled** (`rgba(0,0,0,0.36)`): 無効状態のテキスト
-- **Border** (`#d6e3ed`): 区切り線、入力欄の枠
-- **Background** (`#ffffff`): ページ背景
-- **Surface** (`#f1f5f9`): カード背景、セクション背景
+## Layout
 
----
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 48
+- Article max-width 820px (slightly wider than note's 620px because Zenn expects more code blocks)
+- 20px horizontal page padding
+- Feed pages run 2–3 columns with 16px gutters
+- Touch targets ≥ 44px square
+- Breakpoints — Mobile ≤ 640 / Tablet ≤ 960 / Desktop > 960
 
-## 3. Typography Rules
+## Elevation & Depth
 
-### 3.1 和文フォント
+Four-step shadow ramp — none at rest, level-1 (`0 2px 4px rgba(0,0,0,0.08)`) on card hover, level-2 (`0 4px 12px rgba(0,0,0,0.10)`) on dropdowns, level-3 (`0 8px 24px rgba(0,0,0,0.12)`) on modals. Cards do not carry a shadow until hovered.
 
-- **ゴシック体**: Hiragino Kaku Gothic ProN, Hiragino Sans, Meiryo
+## Shapes
 
-### 3.2 欧文フォント
+12px radius on cards, 8px on buttons and inputs, 4px on tags. The slightly softer radius compared to Qiita's universal 4px is part of how Zenn reads "modern" rather than "utilitarian."
 
-- **サンセリフ**: -apple-system, system-ui
-- **等幅**: SFMono-Regular, Consolas, Menlo, monospace
+## Components
 
-### 3.3 font-family 指定
+**Buttons** — Primary fills `#3ea8ff` with white text at weight 700, 8px radius, 8/24 padding. Secondary is transparent with a 1px brand-blue border + brand-blue text.
 
-```css
-/* 本文 */
-font-family: -apple-system, "system-ui", "Hiragino Kaku Gothic ProN",
-  "Hiragino Sans", Meiryo, sans-serif;
+**Inputs** — White fill, 1px `#d6e3ed` border, 8px radius, 16px text. Focus border thickens to brand blue.
 
-/* 等幅（コードブロック） */
-font-family: SFMono-Regular, Consolas, Menlo, monospace;
-```
+**Cards** — White surface, 1px `#d6e3ed` border, 12px radius, 20px padding. Shadow appears only on hover.
 
-**フォールバックの考え方**:
-- システムフォント（-apple-system, system-ui）を先頭に配置
-- 和文フォント（ヒラギノ角ゴ ProN, ヒラギノ角ゴシック）でカバー
-- Qiita と異なり YakuHanJPs（約物半角化フォント）は未使用
-- 約物は全角幅のまま表示される
+## Do's and Don'ts
 
-### 3.4 文字サイズ・ウェイト階層
+**Do**
+- Use opacity-style softer ink (`#262626`) — Zenn reads quieter than Qiita on purpose
+- Keep body line-height at 1.8 with `letter-spacing: 0`
+- Reserve `#3ea8ff` for primary actions and inline links
+- Use the blue-tinted hairline (`#d6e3ed`) — neutral gray dividers will look out of place
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Display (h3) | system | 38.4px | 700 | 57.6px (×1.5) | normal | "Tech" 等のセクション大見出し |
-| Heading 2 (記事) | system | 16.8px | 700 | 25.2px (×1.5) | normal | 記事タイトル |
-| Heading 2 (UI) | system | 16px | 700 | 24px (×1.5) | normal | UI上の見出し |
-| Body | system | 16px | 400 | 28.8px (×1.8) | normal | 本文 |
-| Label | system | 14px | 600 | 21px (×1.5) | normal | タグ、メタ情報 |
-| Caption | system | 12px | 400 | 18px (×1.5) | normal | 日付、補足 |
-| Code | monospace | 14px | 400 | 1.5 | normal | コードブロック内 |
+**Don't**
+- Add `YakuHanJPs` or `palt` — Zenn's design intentionally skips both
+- Use pure `#000000` for text or pure `#808080` for hairlines
+- Spread brand blue across large background fields — it is an accent, not a surface
+- Introduce CSS-variable theming where the rest of the system is plain values
 
-### 3.5 行間・字間
+## Agent Prompt Guide
 
-- **本文の行間 (line-height)**: 1.8（28.8px / 16px）— ゆったりとした行間で長文の可読性を確保
-- **見出しの行間**: 1.5（Display, Heading ともに）
-- **本文の字間 (letter-spacing)**: normal（0）— 字詰めなし
-- **見出しの字間**: normal（0）
+**Bias toward** — softer-than-Qiita ink, single brand blue, blue-tinted hairlines, 16px / line-height 1.8 body, 8–12px radius, no palt, no `YakuHanJPs`, white surfaces with faint borders.
 
-**Qiita との比較**:
-- Qiita: body lh 1.8, テキスト色 rgba(0,0,0,0.87), YakuHanJPs で約物半角化
-- Zenn: body lh 1.8, テキスト色 rgba(0,0,0,0.82), 約物半角化なし、よりソフトなコントラスト
-
-### 3.6 禁則処理・改行ルール
-
-```css
-word-break: break-all;
-overflow-wrap: break-word;
-```
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal;  /* palt 未適用 */
-```
-
-- **palt**: 未適用（normal）。Qiita も palt 未適用で、技術記事系サービスの共通傾向
-- 約物の詰め処理は行わず、等幅的な文字送りで統一
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary**
-- Background: `#3ea8ff`（Zenn Blue）
-- Text: `#ffffff`
-- Padding: 8px 24px
-- Border Radius: 8px
-- Font Size: 16px
-- Font Weight: 700
-
-**Secondary**
-- Background: `transparent`
-- Text: `#3ea8ff`
-- Border: 1px solid `#3ea8ff`
-- Padding: 8px 24px
-- Border Radius: 8px
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#d6e3ed`
-- Border (focus): 1px solid `#3ea8ff`
-- Border Radius: 8px
-- Padding: 8px 12px
-- Font Size: 16px
-- Height: 40px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: 1px solid `#d6e3ed`
-- Border Radius: 12px
-- Padding: 20px
-- Shadow: なし（ホバー時に elevation-1 適用）
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 32px |
-| XXL | 48px |
-
-### Container
-
-- Max Width: 820px（記事本文）
-- Padding (horizontal): 20px
-
-### Grid
-
-- Columns: 1（記事ページ）/ 2-3（フィード）
-- Gutter: 16px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素（デフォルト） |
-| 1 | `0 2px 4px rgba(0,0,0,0.08)` | カードホバー |
-| 2 | `0 4px 12px rgba(0,0,0,0.1)` | ドロップダウン、ポップオーバー |
-| 3 | `0 8px 24px rgba(0,0,0,0.12)` | モーダル |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- テキスト色は rgba opacity ベースで指定する（純黒 #000 を避ける）
-- 本文の line-height は 1.8 を維持する（Zenn の読みやすさの根幹）
-- ブランドカラー #3ea8ff はリンクと CTA に限定して使う
-- コードブロックには等幅フォントスタックを使用する
-- Qiita 同様、技術記事とコードの混植を前提にレイアウトする
-
-### Don't（禁止）
-
-- `font-family` に和文フォント1つだけを指定しない
-- 日本語本文に `line-height: 1.2` 以下を使わない
-- palt を本文に適用しない（Zenn のデフォルトは normal）
-- Zenn Blue を背景色として広範囲に使わない（アクセントカラーとして使う）
-- CSS Custom Properties に依存しない（Zenn は CSS vars 未使用）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 640px | モバイルレイアウト |
-| Tablet | ≤ 960px | タブレットレイアウト |
-| Desktop | > 960px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px × 44px
-
-### フォントサイズの調整
-
-- モバイルでは本文 15-16px を維持、Display 見出しは 24-28px 程度に縮小
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #3ea8ff (Zenn Blue)
-Text Color: rgba(0,0,0,0.82)
-Background: #ffffff
-Surface: #f1f5f9
-Font: -apple-system, "system-ui", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif
-Body Size: 16px
-Line Height: 1.8
-Letter Spacing: normal
-palt: なし（normal）
-CSS vars: なし
-```
-
-### プロンプト例
-
-```
-Zenn のデザインシステムに従って、技術記事一覧ページを作成してください。
-- プライマリカラー: #3ea8ff
-- フォント: -apple-system, "system-ui", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif
-- 行間: 本文は line-height: 1.8
-- テキスト色: rgba(0,0,0,0.82)
-- ボーダー: #d6e3ed
-- カード背景: #ffffff、ホバー時に shadow
-- CSS vars は使わず直接値を指定
-```
-
-### Qiita との差分（AI向けメモ）
-
-| 項目 | Zenn | Qiita |
-|------|------|-------|
-| ブランドカラー | #3ea8ff (Blue) | #55c500 (Green) |
-| テキスト色 | rgba(0,0,0,0.82) | rgba(0,0,0,0.87) |
-| font-family 先頭 | -apple-system | YakuHanJPs |
-| 約物半角化 | なし | YakuHanJPs で半角化 |
-| palt | normal | normal |
-| CSS vars | なし | あり |
-| 行間 (body) | 1.8 | 1.8 |
-| ページ背景 | #ffffff | #f5f6f6 |
+**Reject** — pure-black text, neutral-gray hairlines, palt on body, brand blue as background fill, line-height below 1.6 on body, multi-accent CTAs.

@@ -1,283 +1,146 @@
-# DESIGN.md — pixiv
+---
+version: alpha
+name: pixiv
+description: A Japanese illustration community where the gallery grid is the product. Pixiv Blue (`#0096fa`) carries every CTA and link, hot pink (`#ff4060`) is reserved for likes and bookmarks, and the entire chrome runs on a system-ui font stack so first paint stays fast on slow networks. The shell is a soft grey canvas (`#eeeeee`) with white card surfaces, organized into thumbnail grids that auto-fill from 2 to 6 columns. Mood — clean, gallery-first, systematic, lightweight.
 
-> このファイルはAIエージェントが正確な日本語UIを生成するためのデザイン仕様書です。
-> セクションヘッダーは英語、値の説明は日本語で記述しています。
+colors:
+  primary: "#0096fa"
+  primary-hover: "#0069b5"
+  ink: "#222222"
+  body: "#464a4d"
+  muted: "#8c8c8c"
+  disabled: "#b8b8b8"
+  canvas: "#eeeeee"
+  surface: "#ffffff"
+  surface-elevated: "#ffffff"
+  hairline: "#d6d6d6"
+  on-primary: "#ffffff"
+  like: "#ff4060"
+  success: "#00c853"
+  warning: "#f5a623"
+  error: "#ff0000"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 10px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  sm: 4px
+  md: 8px
+  pill: 20px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "5": 24px
+  "6": 32px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: クリーン、機能的、コンテンツ中心のギャラリーUI
-- **密度**: 情報密度が高いグリッドレイアウト（イラスト一覧）と、ゆったりとした作品詳細ページの二面構成
-- **キーワード**: クリエイティブ、鮮明、軽快、ギャラリー的、システマティック
+pixiv is a Japanese illustrator community whose UI is built around two surfaces: a dense, scrolling thumbnail grid for discovery, and a generous artwork-detail page for viewing. The chrome stays out of the way — system-ui fonts, soft-grey canvas, thin borders, restrained accent — because the artwork is the content. The product avoids Web-font loading on first paint to keep the gallery interactive immediately on slow connections.
 
----
+Mood words — clean, gallery-first, systematic, lightweight.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+**pixiv Blue `#0096fa`** is the only saturated color in the chrome. It carries primary CTAs, links, focus states, and active-tab indicators. Its hover variant is the deeper `#0069b5`.
 
-- **Primary / pixiv Blue** (`#0096fa`): メインのブランドカラー。CTAボタン、リンク、アクセント要素に使用
-- **Primary Dark** (`#0069b5`): ホバー・プレス時のプライマリカラー
+**Heart Pink `#ff4060`** is reserved for the like / bookmark control — it signals affection, never status. The bookmark button is a 20px-radius pill with a `#ff4060` border and matching icon, never a solid fill.
 
-### Semantic（意味的な色）
+The neutral ladder is the "charcoal" scale: `#464a4d` for body, `#8c8c8c` for captions, `#b8b8b8` for disabled, `#d6d6d6` for borders. Page canvas is `#eeeeee` (intentionally not pure white — the soft grey lets thumbnails breathe), card surfaces are `#ffffff`. Pure black is forbidden; ink runs at `#222222` at most.
 
-- **Danger** (`#ff0000`): エラー、削除、危険な操作
-- **Warning** (`#f5a623`): 警告、注意喚起
-- **Success** (`#00c853`): 成功、完了
-- **Like / Bookmark** (`#ff4060`): いいね、ブックマーク
+## Typography
 
-### Neutral（ニュートラル）
+The font chain leads with **system-ui** in the live site to avoid Web-font cost; we substitute Inter for Latin and Noto Sans JP for kanji here so the design system is reproducible cross-platform. The chain is `Inter → Noto Sans JP → Hiragino Sans → Yu Gothic → system-ui`.
 
-- **Text Primary** (`#464a4d`): 本文テキスト
-- **Text Secondary** (`#8c8c8c`): 補足テキスト、ラベル
-- **Text Disabled** (`#b8b8b8`): 無効状態のテキスト
-- **Border** (`#d6d6d6`): 区切り線、入力欄の枠
-- **Background** (`#eeeeee`): ページ背景
-- **Surface** (`#ffffff`): カード、モーダル等の面
+Type ladder — 10 / 12 / 14 / 16 / 22 / 28 px. Body sits at 14px (`body-md`), captions at 12px, and minimum text at 10px. Line-height stays at 1.6 minimum on body; 1.4 on display headings. Letter-spacing is 0 — pixiv never adjusts kerning, leaning on the system fonts' defaults.
 
----
+## Layout
 
-## 3. Typography Rules
+- 4-based spacing scale — 4 / 8 / 12 / 16 / 24 / 32
+- Container max-width 1224px with 16px horizontal padding
+- Thumbnail grid uses `auto-fill, minmax(...)` and runs 2 to 6 columns
+- Gutter 12 to 24px depending on viewport
+- Breakpoints — Mobile ≤ 767px, Tablet ≤ 1023px, Desktop > 1023px
 
-### 3.1 和文フォント
+## Elevation & Depth
 
-- **ゴシック体**: Noto Sans（システムフォントスタック経由）
+Light shadow stack. Cards float on a soft canvas with `0 1px 4px rgba(0,0,0,0.08)`; dropdowns and popovers use `0 2px 8px rgba(0,0,0,0.12)`; modals use `0 4px 16px rgba(0,0,0,0.16)`. The grey canvas does most of the depth work — shadows are a faint accent, not the structure.
 
-### 3.2 欧文フォント
+## Shapes
 
-- **サンセリフ**: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell
-- **等幅**: SFMono-Regular, Consolas, Menlo, monospace
+Border radius is 4px on buttons, inputs, and cards. The bookmark / like control is the one exception, using a 20px pill radius. Thumbnails preserve their natural aspect ratio — never crop to a fixed shape.
 
-### 3.3 font-family 指定
+## Components
 
-```css
-/* 本文（システムフォントスタック） */
-font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
+**Buttons** — Primary fills `#0096fa` with white text, weight 700, 4px radius, 8/24 padding. Secondary is transparent fill with 1px `#0096fa` border and `#0096fa` text. Bookmark uses 1px `#ff4060` border on transparent fill at 20px radius.
 
-/* 等幅 */
-font-family: SFMono-Regular, Consolas, Menlo, monospace;
-```
+**Inputs** — White fill, 1px `#d6d6d6` border, 4px radius, 14px text, 8/12 padding, 36px tall. Focus border swaps to 1px `#0096fa`.
 
-**フォールバックの考え方**:
-- system-ui を最優先に指定し、各OSのネイティブUIフォントを使用
-- -apple-system は macOS/iOS 向け
-- Noto Sans はクロスプラットフォームの最終フォールバック（Android/Linux対応）
-- Web フォントの読み込みを省略し、高速な初期表示を実現
+**Thumbnail cards** — White fill, no border, 4px radius, 0 padding (image fills the card edge to edge). Shadow `0 1px 4px rgba(0,0,0,0.08)`. Title and metadata sit below the image, not overlaid.
 
-### 3.4 文字サイズ・ウェイト階層
+## Do's and Don'ts
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Body (default) | system-ui stack | 12px | 400 | 18px (×1.5) | normal | body 要素のデフォルト |
-| Body Text | system-ui stack | 14px | 400 | 22px (×1.57) | normal | 段落テキスト |
-| Link | system-ui stack | 14px | 400 | 22px | normal | アンカーテキスト |
-| Small Link | system-ui stack | 12px | 400 | 18px | normal | 小サイズリンク |
-| Caption | system-ui stack | 10px | 400 | 14px | normal | 最小テキスト |
+**Do**
+- Lead with system-ui-style fonts to keep first paint fast
+- Reserve `#0096fa` for primary actions and links
+- Reserve `#ff4060` for like / bookmark, never for errors
+- Keep the canvas at `#eeeeee` so white thumbnail cards lift visually
+- Preserve thumbnail aspect ratio
 
-### 3.5 行間・字間
+**Don't**
+- Use pure `#000000` text on the grid — the muted grey scale is the brand
+- Drop body font-size below 12px
+- Add saturated accents beyond `#0096fa` and `#ff4060`
+- Stretch or crop thumbnails to a fixed aspect
+- Stack heavy drop shadows on cards (the canvas already provides separation)
 
-- **本文の行間 (line-height)**: 1.5（body 12px → 18px、14px → 22px）
-- **見出しの行間**: 1.4〜1.5
-- **本文の字間 (letter-spacing)**: normal（字詰めなし）
-- **見出しの字間**: normal
+## Agent Prompt Guide
 
-**ガイドライン**:
-- pixiv はコンパクトなUIのため body が 12px と小さめ
-- line-height: 1.5 を基本とし、情報密度を維持しつつ可読性を確保
-- letter-spacing は一貫して normal（追加の字間調整なし）
+**Bias toward** — pixiv Blue primary, hot-pink bookmark accent, charcoal-scale neutrals, soft-grey `#eeeeee` canvas with white surfaces, auto-fill thumbnail grids, system-ui-leading font stack, 4px radius with 20px pill on bookmarks.
 
-### 3.6 禁則処理・改行ルール
-
-```css
-word-break: break-all;
-overflow-wrap: break-word;
-```
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal; /* palt 未使用 */
-```
-
-- pixiv では palt（プロポーショナル字詰め）を使用していない
-- システムフォントスタックのデフォルトカーニングに依存
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary**
-- Background: `#0096fa`
-- Text: `#ffffff`
-- Padding: 8px 24px
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 700
-
-**Secondary**
-- Background: `transparent`
-- Text: `#0096fa`
-- Border: 1px solid `#0096fa`
-- Padding: 8px 24px
-- Border Radius: 4px
-
-**Like / Bookmark**
-- Background: `transparent`
-- Text/Icon: `#ff4060`
-- Border: 1px solid `#ff4060`
-- Border Radius: 20px
-- Font Size: 14px
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#d6d6d6`
-- Border (focus): 1px solid `#0096fa`
-- Border Radius: 4px
-- Padding: 8px 12px
-- Font Size: 14px
-- Height: 36px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: none
-- Border Radius: 4px
-- Padding: 0（サムネイルカードはpadding なし）
-- Shadow: `0 1px 4px rgba(0,0,0,0.08)`
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 32px |
-| XXL | 48px |
-
-### Container
-
-- Max Width: 1224px
-- Padding (horizontal): 16px
-
-### Grid
-
-- Columns: 可変（作品グリッドは auto-fill, minmax）
-- Gutter: 12〜24px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 1px 4px rgba(0,0,0,0.08)` | カード、サムネイル |
-| 2 | `0 2px 8px rgba(0,0,0,0.12)` | ドロップダウン、ポップオーバー |
-| 3 | `0 4px 16px rgba(0,0,0,0.16)` | モーダル、ダイアログ |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- システムフォントスタックを使用し、Web フォントの読み込みを省略する
-- ブランドカラー `#0096fa` を CTA やリンクの主要色として一貫して使用する
-- 背景 `#eee` とカード白 `#fff` のコントラストで情報の層を作る
-- サムネイルグリッドは均等な余白で整列させる
-- テキスト色は `#464a4d` を使用し、純粋な黒を避ける
-
-### Don't（禁止）
-
-- `font-family` にシステムフォントスタックの一部だけを指定しない
-- body の font-size を 12px 未満にしない
-- 作品サムネイルにアスペクト比の歪みを発生させない
-- `#0096fa` 以外の色をプライマリアクションに使用しない
-- テキスト色に純粋な `#000000` を使わない
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1023px | タブレットレイアウト |
-| Desktop | > 1023px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは body 12px を維持、グリッドカラム数を減少
-- サムネイルは画面幅に応じて 2〜6 列で可変
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #0096fa
-Text Color: #464a4d
-Background: #eeeeee
-Surface: #ffffff
-Font: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif
-Body Size: 12px (default) / 14px (paragraph)
-Line Height: 1.5
-```
-
-### プロンプト例
-
-```
-pixivのデザインシステムに従って、イラスト作品一覧ページを作成してください。
-- プライマリカラー: #0096fa
-- フォント: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif
-- 行間: 本文は line-height: 1.5 を使用
-- 背景色: #eee（ページ）/ #fff（カード）
-- テキスト色: #464a4d
-- ボーダー: #d6d6d6
-- サムネイルのアスペクト比を維持する
-```
-
-### CSS 変数（114件・抜粋）
-
-pixiv は独自の CSS Custom Properties を 114件保持している。主要なトークンは以下の通り:
-
-```css
-/* ブランド・アクセント */
---color-blue: #0096fa;
-
-/* テキスト */
---charcoal-text: #464a4d;
-
-/* 背景・サーフェス */
---charcoal-bg: #eeeeee;
---charcoal-surface: #ffffff;
-
-/* ボーダー */
---charcoal-border: #d6d6d6;
-
-/* セマンティック */
---charcoal-like: #ff4060;
---charcoal-danger: #ff0000;
-```
+**Reject** — pure black text, body line-height < 1.6, custom Web fonts as primary face, overlay text on raw thumbnails without a scrim, additional saturated accents beyond blue and pink.

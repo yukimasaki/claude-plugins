@@ -49,8 +49,8 @@
   - `plugins/design-director/skills/design-director/references/design-md/japanese-editorial/` — note / qiita / zenn / connpass / wired
   - `plugins/design-director/skills/design-director/references/design-md/japanese-creative/` — studio / droga5 / notion / novasell
 - **取得方法**: `git clone --depth 1 https://github.com/kzhrknt/awesome-design-md-jp.git` → `cp design-md/{site}/DESIGN.md` → `references/design-md/japanese-{family}/{site}.md`
-- **配信形式**: legacy prose（`# DESIGN.md — Brand` + `## 1. Visual Theme & Atmosphere` 構造）。本リポジトリの skill は両形式（DESIGN.md 公式仕様 / legacy prose）対応済み（PR #2-1）
-- **Modifications**: 無改変。`scripts/check-diff-upstream.ts awesome-design-md-jp` で SHA256 一致を検証可能
+- **配信形式（upstream）**: legacy prose（`# DESIGN.md — Brand` + `## 1. Visual Theme & Atmosphere` 構造）
+- **Modifications**: 25 サイトすべてを **DESIGN.md 公式仕様（frontmatter YAML + Markdown body）** に再構成済み（Issue #28）。upstream の prose から得た design tokens（colors / typography / spacing / radius）を frontmatter に構造化、Markdown body は短縮版にリライト。CJK ハイブリッドルール（latin-first フォントチェーン + Noto Sans JP fallback、body line-height >= 1.6 floor、letter-spacing >= 0）を適用。`npx @google/design.md lint` で 0 errors 達成。upstream とは SHA drift 状態（`scripts/check-diff-upstream.ts awesome-design-md-jp` は 25 件 changed を報告）— kzhrknt が将来公式仕様に移行した場合の再追従の選択肢を残すため REPOS には残置している
 - **family 振り分け**: 本リポジトリ独自の判断で `japanese-corporate` / `japanese-consumer` / `japanese-editorial` / `japanese-creative` の 4 family に分類（rohitg00 体系の延長）
 - **Trademark notice**: vendored 各 DESIGN.md は対応する日本ブランド（SmartHR / 無印良品 / メルカリ等）の **公開ページから推定された design tokens** であり、当該ブランドのロゴ・著作物の複製ではありません
 - **連動する Layer**: `references/prompts/japanese-typography.v1.txt` で CJK タイポグラフィ規約（fallback chain / 行間 / palt / 禁則 / 混植）を Layer 1 として併用

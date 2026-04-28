@@ -1,304 +1,151 @@
-# DESIGN.md — 無印良品ネットストア (muji.com)
+---
+version: alpha
+name: MUJI
+description: MUJI's online store is the digital expression of the brand's "no-brand quality goods" philosophy — ornament removed, whitespace doing the talking, and a single warm kinari (unbleached) tone replacing decoration. The palette is built from kinari `#f4eede` and beige `#e0ceaa` against off-black ink `#3c3c43`, with the deep MUJI Red `#7f0019` reserved for logo and rare accents. Body type runs at 16px with line-height 1.6 across nearly every element to enforce a calm, even rhythm. Mood — quiet, restrained, natural, unadorned.
 
-> このファイルはAIエージェントが正確な日本語UIを生成するためのデザイン仕様書です。
-> セクションヘッダーは英語、値の説明は日本語で記述しています。
+colors:
+  primary: "#3c3c43"
+  brand-red: "#7f0019"
+  accent-red: "#dd0c14"
+  kinari: "#f4eede"
+  beige: "#e0ceaa"
+  ink: "#3c3c43"
+  body: "#3c3c43"
+  muted: "#6d6d72"
+  subtle: "#76767b"
+  disabled: "#9d9da0"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f5f5f5"
+  hairline: "#d8d8d9"
+  hairline-light: "#ebebec"
+  on-primary: "#ffffff"
+  success: "#43a047"
+  warning: "#f9a825"
+  error: "#dd0c14"
 
+typography:
+  display-xl:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 26px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0.1em
+  body-md:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Helvetica Neue, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0.04em
+
+rounded:
+  none: 0px
+  sm: 4px
+  md: 4px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 48px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: ミニマリズムの極致。装飾を完全に排し、余白で語るデザイン
-- **密度**: ゆったりとしたメディア型。商品画像と余白を活かした構成
-- **キーワード**: 素朴、静謐、無装飾、自然体、余白
+MUJI's online store mirrors the physical retail philosophy: products on plain backgrounds, generous breathing room, and almost no decorative chrome. The palette is anchored by kinari (unbleached cream `#f4eede`) and beige (`#e0ceaa`) — both used sparingly as section backgrounds rather than UI accents. Ink is `#3c3c43` (a soft off-black, never pure `#000`), and the rest of the neutral scale is a 12-step warm gray ramp. Brand red `#7f0019` exists but is held in reserve for the logo and high-stakes moments only.
 
----
+Mood words — quiet, restrained, natural, unadorned.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+The neutral system carries the entire interface. Text Primary `#3c3c43` does double duty as the primary CTA fill — that's how restrained the brand is. Background is plain white `#ffffff`; section backgrounds switch to `#f5f5f5` or kinari `#f4eede` for warmth. Hairlines use `#d8d8d9` (medium) and `#ebebec` (light) to imply structure without drawing it.
 
-- **MUJI Red** (`#7f0019`): ムジの赤。深みのあるブランドカラー。ロゴ、アクセントに控えめに使用
-- **Red** (`#dd0c14`): 強調・セール・エラー表示
+MUJI Red `#7f0019` is a deep wine red, not a vivid red, and is used only on logo / rare accents. The brighter `#dd0c14` is reserved for sale tags, errors, and limited "new" badges.
 
-### Brand Neutral（MUJIらしさを出すニュートラル）
+## Typography
 
-- **Kinari（きなり色）** (`#f4eede`): MUJIの象徴。ヒーロー背景、セクション背景に使用
-- **Beige** (`#e0ceaa`): ベージュ。温かみのあるアクセント面
+The font chain is **`Helvetica Neue, Arial` first, then JP fallbacks** — Latin glyphs lead because that's the brand's preferred Latin face, and Japanese resolves through Noto Sans JP / Hiragino Kaku Gothic ProN / Meiryo. No Mincho. No serif. No `palt`.
 
-### Semantic（意味的な色）
+The signature decision is line-height: nearly every text role runs at 1.6, including most headings. That gives MUJI its even, contemplative rhythm. The one exception is h3-style titles, which use tight line-height 1.15 with wide letter-spacing (~0.1em) to create a quiet contrast — represented here as `title-lg`. Body weight is 400; headings step up to 700 with no intermediate semibold.
 
-- **Danger** (`#dd0c14`): エラー、削除、危険な操作
-- **Warning**: 未定義（実測なし）
-- **Success**: 未定義（実測なし）
+## Layout
 
-### Neutral（ニュートラル）
+- 12-step spacing scale from 4px (XXXXS) through 96px (XXXXL)
+- Container max-width approx 1120px, horizontal padding 16–32px
+- Product grid 2–4 columns with 16–24px gutter
+- Touch targets ≥ 44px square per WCAG
+- Breakpoints — Mobile ≤ 767px, Tablet ≤ 1024px, Desktop > 1024px
 
-- **Text Primary** (`#3c3c43`): 本文テキスト。純黒ではなく暗いグレー
-- **Text Secondary** (`#6d6d72`): 補足テキスト、ラベル
-- **Text Tertiary** (`#76767b`): さらに薄い補足テキスト
-- **Text Disabled** (`#9d9da0`): 無効状態のテキスト
-- **Border** (`#d8d8d9`): 区切り線、入力欄の枠
-- **Border Light** (`#ebebec`): 薄い区切り線
-- **Background** (`#fff`): ページ背景
-- **Background Secondary** (`#f5f5f5`): セクション背景
-- **Surface** (`#fff`): カード、モーダル等の面
-- **Black** (`#000`): 限定的に使用（ヘッダー等）
+## Elevation & Depth
 
-### Gray Scale（12段階）
+Effectively flat. Cards have no shadow — they're separated by the lightest possible hairline (`#ebebec`). Hover may add an extremely subtle level-1 lift (`0 1px 2px rgba(0,0,0,0.08)`); dropdowns use level-2 (`0 2px 8px rgba(0,0,0,0.1)`). Anything heavier than this reads as "not MUJI".
 
-| Token | Value |
-|-------|-------|
-| Gray 800 | `#3c3c43` |
-| Gray 700 | `#6d6d72` |
-| Gray 600 | `#76767b` |
-| Gray 500 | `#9d9da0` |
-| Gray 400 | `#c4c4c6` |
-| Gray 300 | `#d8d8d9` |
-| Gray 200 | `#ebebec` |
-| Gray 100 | `#f5f5f5` |
-| White | `#fff` |
+## Shapes
 
----
+Border radius is 4px on buttons and tags. Inputs and cards use 0px — sharp corners reinforce the brand's clean-line industrial-design heritage. No pill shapes, no large radii, no rounded hero panels.
 
-## 3. Typography Rules
+## Components
 
-### 3.1 和文フォント
+**Buttons** — Primary fills `#3c3c43` (the body text color) with white text, 4px radius, 12px / weight 700. Secondary is transparent with 1px `#d8d8d9` border and `#3c3c43` text. Brand Accent fills `#7f0019` and is reserved for special promotions only.
 
-- **ゴシック体**: Noto Sans JP, Noto Sans JP Fallback, Hiragino Kaku Gothic ProN, Meiryo
-- **明朝体**: 使用なし
+**Inputs** — White fill, 1px `#d8d8d9` border, **0px radius** (a deliberate choice), 16px text, 8/12 padding. Focus thickens the border to `#3c3c43`.
 
-### 3.2 欧文フォント
+**Cards** — White fill, 1px `#ebebec` border, 0px radius, 16px padding, no shadow.
 
-- **サンセリフ**: Helvetica Neue, Arial
-- **セリフ**: 使用なし
-- **等幅**: 未定義
+**Section panels** — Kinari `#f4eede` for hero/feature sections, beige `#e0ceaa` for warm-tone callouts, `#f5f5f5` for plain alternating bands.
 
-### 3.3 font-family 指定
+## Do's and Don'ts
 
-```css
-/* 本文（欧文を先に指定し、和文フォントでフォールバック） */
-font-family: "Helvetica Neue", Arial, "Noto Sans JP", "Noto Sans JP Fallback", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-```
+**Do**
+- Use ink `#3c3c43` for text, never pure `#000`
+- Hold body line-height at 1.6 across the board for the calm MUJI rhythm
+- Use kinari `#f4eede` and beige `#e0ceaa` as section backgrounds for warmth
+- Keep buttons at 4px radius and inputs at 0px
+- Use the 12-step spacing scale consistently
+- Lead the font stack with Helvetica Neue / Arial, then JP fallbacks
 
-**フォールバックの考え方**:
-- 欧文フォント（Helvetica Neue, Arial）を先に指定し、欧文グリフの品質を優先
-- 和文は Noto Sans JP を第一候補とし、ヒラギノ・メイリオでフォールバック
-- generic family は `sans-serif`
+**Don't**
+- Use MUJI Red `#7f0019` as a wide-area background — it's a logo accent only
+- Apply `palt` — MUJI prefers the unkerned, plain composition
+- Use border-radius ≥ 8px — large radii feel un-MUJI
+- Use pure black `#000` for body text or pure black/saturated drop shadows
+- Add multiple saturated accents — the design earns its warmth from neutrals, not color
 
-### 3.4 文字サイズ・ウェイト階層
+## Agent Prompt Guide
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Heading 1 | 本文と同じ | 26px | 700 | 41.6px (×1.6) | normal | 「店舗を探す」等 |
-| Heading 2 | 本文と同じ | 32px | 700 | 51.2px (×1.6) | normal | 「新商品」等 |
-| Heading 3 | 本文と同じ | 26px | 700 | 29.9px (×1.15) | 2.4px | 広いトラッキング |
-| Body | 本文と同じ | 16px | 400 | 25.6px (×1.6) | normal | ページ全体のベース |
-| Paragraph | 本文と同じ | 12px | 400 | 19.2px (×1.6) | normal | 商品説明等 |
-| Nav Link | 本文と同じ | 16px | 700 | 22.4px (×1.4) | normal | ナビゲーション |
-| Caption | 本文と同じ | 14px | 400 | 22.4px (×1.6) | normal | フッター補足 |
-| CTA Button | 本文と同じ | 12px | 700 | — | normal | 「アプリで開く」等 |
+**Bias toward** — kinari + beige + warm-gray neutrals, off-black `#3c3c43` ink, single muted CTA color, 4px / 0px radii, hairline-only separation, line-height 1.6 across roles, Helvetica Neue + Noto Sans JP chain, generous whitespace.
 
-### 3.5 行間・字間
-
-- **本文の行間 (line-height)**: 1.6（すべての要素でほぼ統一。珍しい特徴）
-- **見出しの行間**: 1.6（h1, h2）/ 1.15（h3 のみ例外）
-- **本文の字間 (letter-spacing)**: normal
-- **見出しの字間**: normal（h3 のみ 2.4px の広いトラッキング）
-
-**ガイドライン**:
-- line-height を 1.6 で統一する設計思想。見出しも本文も同じリズムを持つ
-- h3 だけが例外で、line-height: 1.15 / letter-spacing: 2.4px と異なるスタイル
-- 全体的に穏やかで静かなリズム感を維持する
-
-### 3.6 禁則処理・改行ルール
-
-```css
-/* 実測値に基づく推定設定 */
-word-break: break-all;
-overflow-wrap: break-word;
-line-break: strict;
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal;  /* palt なし */
-font-kerning: auto;
-```
-
-- **palt**: 使用していない。プロポーショナル字詰めを適用しない設計
-- **kern**: 標準のカーニングのみ
-- MUJIはフォント機能を最小限にとどめ、素朴な組版を維持している
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary (CTA)**
-- Background: `#3c3c43`（テキスト色と同じ暗いグレー）
-- Text: `#fff`
-- Padding: 8px 16px（推定）
-- Border Radius: 4px
-- Font Size: 12px
-- Font Weight: 700
-
-**Secondary (Outline)**
-- Background: `transparent`
-- Text: `#3c3c43`
-- Border: 1px solid `#d8d8d9`
-- Padding: 8px 16px（推定）
-- Border Radius: 4px
-
-**Brand Accent**
-- Background: `#7f0019`（MUJI Red）
-- Text: `#fff`
-- Border Radius: 4px
-- 使用頻度は低い。特別な強調時のみ
-
-### Inputs
-
-- Background: `#fff`
-- Border: 1px solid `#d8d8d9`
-- Border (focus): 1px solid `#3c3c43`（推定）
-- Border Radius: 0px（角丸なし。MUJIらしいシャープさ）
-- Padding: 8px 12px（推定）
-- Font Size: 16px
-
-### Cards
-
-- Background: `#fff`
-- Border: 1px solid `#ebebec`
-- Border Radius: 0px（推定。直線的なデザイン）
-- Padding: 16px
-- Shadow: なし（フラットデザイン）
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale（12段階）
-
-| Token | Value |
-|-------|-------|
-| XXXXS | 4px |
-| XXXS | 8px |
-| XXS | 12px |
-| XS | 16px |
-| S | 20px |
-| SM | 24px |
-| M | 32px |
-| ML | 40px |
-| L | 48px |
-| XL | 56px |
-| XXL | 64px |
-| XXXL | 80px |
-| XXXXL | 96px |
-
-> CSS Custom Properties: `--space-v-xxxxs` (4px) から `--space-v-xxxxl` (96px) まで12段階
-
-### Container
-
-- Max Width: 1120px（推定）
-- Padding (horizontal): 16px〜32px
-
-### Grid
-
-- Columns: 可変（商品グリッドは 2〜4 列）
-- Gutter: 16px〜24px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | ほぼすべての要素。フラットが基本 |
-| 1 | `0 1px 2px rgba(0,0,0,0.08)` | ホバー時のカード（控えめ） |
-| 2 | `0 2px 8px rgba(0,0,0,0.1)` | ドロップダウン、ポップオーバー |
-
-> MUJIは影をほぼ使わない。フラットで素朴な表現が基本方針
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- テキスト色は `#3c3c43` を使い、純黒 `#000` を避ける
-- line-height は 1.6 で統一する
-- 余白を十分に取り、要素間にゆとりを持たせる
-- ボタンの角丸は 4px に留め、過度な丸みを避ける
-- きなり色 `#f4eede` やベージュ `#e0ceaa` で温かみを加える
-- スペーシングスケールに従い、一貫した余白を使う
-
-### Don't（禁止）
-
-- 装飾的なグラデーション、シャドウ、アニメーションを多用しない
-- MUJI Red `#7f0019` を広い面積に使わない（アクセントとして控えめに）
-- palt（プロポーショナル字詰め）を適用しない
-- 角丸を大きくしない（8px以上は MUJIらしくない）
-- テキストに純黒 `#000000` を使わない
-- letter-spacing を全体に適用しない（h3 の 2.4px は例外）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1024px | タブレットレイアウト |
-| Desktop | > 1024px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px × 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 14–16px、見出しはデスクトップの 70–80% 程度に縮小
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Brand Color: #7f0019 (MUJI Red)
-Text Color: #3c3c43
-Background: #fff
-Kinari: #f4eede
-Beige: #e0ceaa
-Font: "Helvetica Neue", Arial, "Noto Sans JP", "Noto Sans JP Fallback", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif
-Body Size: 16px
-Line Height: 1.6
-Button Radius: 4px
-Input Radius: 0px
-```
-
-### プロンプト例
-
-```
-無印良品のデザインシステムに従って、商品一覧ページを作成してください。
-- テキスト色: #3c3c43（純黒を使わない）
-- フォント: "Helvetica Neue", Arial, "Noto Sans JP", sans-serif
-- 行間: line-height: 1.6 で統一
-- 背景: きなり色 #f4eede をヒーローセクションに使用
-- ボタン: bg #3c3c43, 角丸 4px, 12px/700
-- 余白: 4px〜96px の12段階スペーシングスケールを使用
-- 装飾は最小限に。影やグラデーションは使わない
-- MUJI Red #7f0019 はロゴやアクセントのみに限定
-```
+**Reject** — pure black/white-only palettes, large rounded corners, decorative shadows or gradients, `palt` and other typographic ornaments, saturated brand red as a primary fill, line-height < 1.6 on body.
