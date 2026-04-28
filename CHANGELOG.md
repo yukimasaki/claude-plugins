@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.5](https://github.com/yukimasaki/claude-plugins/compare/v0.4.4...v0.4.5) (2026-04-28)
+
+
+### Bug Fixes
+
+* **design-director:** バリエーション生成を JSX/TSX に固定し HTML 文字列＋iframe を禁止 ([#39](https://github.com/yukimasaki/claude-plugins/issues/39)) ([f516a5a](https://github.com/yukimasaki/claude-plugins/commit/f516a5acd3b22765396c3149c687cfbca4500ba6)), closes [#18](https://github.com/yukimasaki/claude-plugins/issues/18)
+
 ## [0.4.4](https://github.com/yukimasaki/claude-plugins/compare/v0.4.3...v0.4.4) (2026-04-28)
 
 
