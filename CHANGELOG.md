@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1](https://github.com/yukimasaki/claude-plugins/compare/v0.4.0...v0.4.1) (2026-04-28)
+
+
+### Features
+
+* **design-director:** getdesign.md カタログから 51 サイトを取り込み 85 サイトに拡張 ([#24](https://github.com/yukimasaki/claude-plugins/issues/24)) ([06ff13a](https://github.com/yukimasaki/claude-plugins/commit/06ff13af483dcafff4d7fd5c3bc890397000de77)), closes [#1](https://github.com/yukimasaki/claude-plugins/issues/1)
+
 ## [0.4.0](https://github.com/yukimasaki/claude-plugins/compare/v0.3.0...v0.4.0) (2026-04-27)
 
 
