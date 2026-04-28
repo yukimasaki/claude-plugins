@@ -7,12 +7,72 @@ import { fileURLToPath } from "node:url";
 import { globby } from "globby";
 import { simpleGit } from "simple-git";
 
-export type UpstreamRepo = "getdesign-md" | "open-codesign";
+export type UpstreamRepo =
+  | "getdesign-md"
+  | "awesome-design-md-jp"
+  | "open-codesign";
 
 export type FileMapping = {
   upstreamGlob: string;
-  toLocalPath: (upstreamRelPath: string) => string;
+  /**
+   * upstream の相対パスを vendored 上のローカルパスに変換する。
+   * `null` を返すと「このファイルは取り込み対象外」として skip する
+   * （familyMap で限定取り込みする場合等に使う）。
+   */
+  toLocalPath: (upstreamRelPath: string) => string | null;
   excludePatterns?: string[];
+  /**
+   * vendored 側のスキャン起点ディレクトリ。`toLocalPath` がサンプル入力で
+   * null を返すケース（familyMap 等）では prefix を自動推定できないため
+   * 明示指定が必要。未指定なら upstreamGlob/toLocalPath から自動推定する。
+   */
+  vendoredPrefix?: string;
+  /**
+   * vendored 側のうち、本 mapping が「所有」する localPath を判定する。
+   * 指定すると enumerateVendoredFiles の deletion 検出が本セットに限定され、
+   * 別 upstream / 自前メンテのファイルを deleted と誤判定しない。
+   * 未指定なら vendoredPrefix 配下の全ファイルを所有とみなす。
+   */
+  claimsVendoredPath?: (localPath: string) => boolean;
+};
+
+/**
+ * kzhrknt/awesome-design-md-jp（25 サイト、日本企業）を rohitg00 流の
+ * family 体系に振り分ける表。本リポでは欧米中心の 10 family に加えて
+ * 日本市場向け 4 family（japanese-corporate / japanese-consumer /
+ * japanese-editorial / japanese-creative）を新設し、JP サイトはそちらに
+ * 配置する。
+ */
+export const KZHRKNT_FAMILY_MAP: Record<string, string> = {
+  // japanese-corporate (7)
+  smarthr: "japanese-corporate",
+  freee: "japanese-corporate",
+  moneyforward: "japanese-corporate",
+  cybozu: "japanese-corporate",
+  sansan: "japanese-corporate",
+  toyota: "japanese-corporate",
+  mec: "japanese-corporate",
+  // japanese-consumer (9)
+  apple: "japanese-consumer",
+  muji: "japanese-consumer",
+  mercari: "japanese-consumer",
+  cookpad: "japanese-consumer",
+  tabelog: "japanese-consumer",
+  rakuten: "japanese-consumer",
+  pixiv: "japanese-consumer",
+  abema: "japanese-consumer",
+  line: "japanese-consumer",
+  // japanese-editorial (5)
+  note: "japanese-editorial",
+  qiita: "japanese-editorial",
+  zenn: "japanese-editorial",
+  connpass: "japanese-editorial",
+  wired: "japanese-editorial",
+  // japanese-creative (4)
+  studio: "japanese-creative",
+  droga5: "japanese-creative",
+  notion: "japanese-creative",
+  novasell: "japanese-creative",
 };
 
 export type GitRepoConfig = {
@@ -125,6 +185,33 @@ export const REPOS: Record<UpstreamRepo, RepoConfig> = {
       "design-md/terminal/warp.md": "design-md/warp/DESIGN.md",
     },
   },
+  "awesome-design-md-jp": {
+    kind: "git",
+    url: "https://github.com/kzhrknt/awesome-design-md-jp.git",
+    mappings: [
+      {
+        // upstream は `design-md/{site}/DESIGN.md` のフラット構造（25 サイト）。
+        // KZHRKNT_FAMILY_MAP に登録されたサイトのみ取り込み、未登録は null で skip。
+        // 配置先は本リポ独自の japanese-* 4 family（rohitg00 体系の延長）。
+        upstreamGlob: "design-md/*/DESIGN.md",
+        toLocalPath: (p) => {
+          const segments = p.split("/");
+          const site = segments[1];
+          if (!site) return null;
+          const family = KZHRKNT_FAMILY_MAP[site];
+          if (!family) return null;
+          return `design-md/${family}/${site}.md`;
+        },
+        vendoredPrefix: "design-md",
+        claimsVendoredPath: (p) => {
+          // 期待形式: design-md/japanese-{family}/{site}.md
+          const m = p.match(/^design-md\/(japanese-[^/]+)\/(.+)\.md$/);
+          if (!m) return false;
+          return KZHRKNT_FAMILY_MAP[m[2]] === m[1];
+        },
+      },
+    ],
+  },
   "open-codesign": {
     kind: "git",
     url: "https://github.com/OpenCoworkAI/open-codesign.git",
@@ -195,10 +282,12 @@ export async function enumerateUpstreamFilesGit(
     for (const match of matches) {
       if (seen.has(match)) continue;
       seen.add(match);
+      const localPath = mapping.toLocalPath(match);
+      if (localPath === null) continue;
       const buf = await fs.readFile(path.join(repoDir, match));
       result.push({
         upstreamPath: match,
-        localPath: mapping.toLocalPath(match),
+        localPath,
         hash: computeHash(buf),
       });
     }
@@ -286,12 +375,26 @@ export async function enumerateVendoredFilesGit(
 ): Promise<Map<string, string>> {
   const localPathPrefixes = new Set<string>();
   for (const m of mappings) {
+    if (m.vendoredPrefix) {
+      localPathPrefixes.add(m.vendoredPrefix);
+      continue;
+    }
     const sample = m.toLocalPath(
       m.upstreamGlob.replace(/\*\*?/g, "x").replace(/\*/g, "x"),
     );
+    if (!sample) continue;
     const prefix = sample.split(path.sep)[0];
     if (prefix) localPathPrefixes.add(prefix);
   }
+
+  // 各 mapping の claimsVendoredPath が指定されていれば、本 mapping が claim
+  // する localPath だけ採用する。未指定なら全ファイル採用（後方互換）。
+  const claims: ((localPath: string) => boolean)[] = mappings
+    .map((m) => m.claimsVendoredPath)
+    .filter((c): c is (localPath: string) => boolean => Boolean(c));
+  const hasClaims = claims.length > 0;
+  const isClaimed = (localPath: string): boolean =>
+    !hasClaims || claims.some((c) => c(localPath));
 
   const result = new Map<string, string>();
   for (const prefix of localPathPrefixes) {
@@ -311,6 +414,7 @@ export async function enumerateVendoredFilesGit(
     });
     for (const match of matches) {
       const localPath = path.join(prefix, match).split(path.sep).join("/");
+      if (!isClaimed(localPath)) continue;
       const buf = await fs.readFile(path.join(dir, match));
       result.set(localPath, computeHash(buf));
     }
@@ -551,7 +655,11 @@ async function checkRepoHttp(
 }
 
 function isUpstreamRepo(value: string): value is UpstreamRepo {
-  return value === "getdesign-md" || value === "open-codesign";
+  return (
+    value === "getdesign-md" ||
+    value === "awesome-design-md-jp" ||
+    value === "open-codesign"
+  );
 }
 
 function printUsage(): void {
@@ -560,8 +668,9 @@ function printUsage(): void {
       "usage: check-diff-upstream [repo]",
       "",
       "  repo (省略時は全 upstream を順に検査):",
-      "    getdesign-md  (https://getdesign.md — DESIGN.md 公式仕様カタログ、HTTP fetch ベース)",
-      "    open-codesign (OpenCoworkAI/open-codesign — prompts / design-skills / builtin-skills、git clone ベース)",
+      "    getdesign-md         (https://getdesign.md — DESIGN.md 公式仕様カタログ、HTTP fetch ベース)",
+      "    awesome-design-md-jp (kzhrknt/awesome-design-md-jp — 日本企業 25 サイト、git clone ベース)",
+      "    open-codesign        (OpenCoworkAI/open-codesign — prompts / design-skills / builtin-skills、git clone ベース)",
       "",
     ].join("\n"),
   );

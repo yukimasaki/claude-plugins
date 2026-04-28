@@ -11,5 +11,6 @@ Silently answer before writing HTML. Do NOT print the answers.
 7. **Type ladder** — four steps (display · h1 · body · caption) with weight contrast. Fraunces for editorial / case_study / report; Geist or preferred sans for landing / dashboard / pricing.
 8. **Anti-slop guard** — scan for lorem ipsum, generic icon-title-text grids, stock testimonials, single accent on flat black, default Tailwind grays, placeholder.com images, abstract decorative shapes used as filler. Replace before generating.
 9. **Rot check (long-lived artifacts only)** — if the artifact is a hero, README graphic, social preview, or other long-shelf-life surface, scan for version numbers, calendar years, ordinals (`first`, `第一弾`), and counted nouns (`9 subcommands`). Neutralize or move to a dynamic source (badge, runtime value) before generating.
+10. **CJK typography (Japanese targets only)** — if the brief, audience, or referenced sites are Japanese, verify the page applies the rules in `prompts/japanese-typography.v1.txt`: explicit CJK font fallback chain, body line-height ≥ 1.6, letter-spacing ≥ 0 on CJK runs, `palt` on display, no `word-break: break-all` on body, mixed-language strings handled. Skip this check for non-Japanese artifacts.
 
 If any answer is "not sure" or "default", redesign it before generating.
