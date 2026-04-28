@@ -1,271 +1,146 @@
-# DESIGN.md — connpass
+---
+version: alpha
+name: connpass
+description: A Japanese IT meetup and event-management platform with a utilitarian, list-first visual posture. The brand orange (`#f18d05`) and brand red (`#e8283f`) carry CTAs and danger respectively, while body type runs unusually small (12px) and unusually light (weight 400) — heading hierarchy is built from size differences alone, not weight contrast. The font stack still leads with Lucida Grande, a hold-over from early-2010s Japanese web convention, but the chain falls back through Hiragino for kanji legibility. The result reads efficient and slightly retro — closer to a database front-end than a consumer product. Mood — utilitarian, dense, retro-pragmatic, restrained.
 
-> connpass（https://connpass.com/）のデザイン仕様書。
-> IT勉強会・イベント管理プラットフォーム。実サイトのCSS computed style に基づく。
+colors:
+  primary: "#f18d05"
+  primary-hover: "#d77d04"
+  brand-red: "#e8283f"
+  ink: "#333333"
+  body: "#444444"
+  muted: "#888888"
+  disabled: "#aaaaaa"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f5f5f5"
+  hairline: "#dddddd"
+  hairline-soft: "#eeeeee"
+  on-primary: "#ffffff"
+  link: "#0066cc"
+  link-hover: "#003366"
+  success: "#5cb85c"
+  warning: "#f18d05"
+  error: "#e8283f"
 
+typography:
+  display-xl:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 36px
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 11px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Lucida Grande, Verdana, Hiragino Kaku Gothic Pro, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  sm: 2px
+  md: 4px
+  lg: 6px
+  pill: 9999px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 48px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: 情報を効率よく伝える実用的なUI。イベント検索・管理に特化した機能優先のデザイン
-- **密度**: 情報密度が高め。イベント一覧・グループ一覧を一覧性重視で表示
-- **キーワード**: 実用的、シンプル、情報密度、オレンジ、エンジニア向け
-- **特徴**: Lucida Grande をフォントスタック先頭に指定（珍しい構成）。見出しの font-weight が 400（細い）で、控えめな印象。connpassオレンジ/レッドがブランドカラー
+connpass (connpass.com) is a Japanese platform for organizing and discovering IT meetups, study groups, and tech conferences. The visual posture is "directory tool, not consumer app" — information density takes priority, headings are subtle, and the UI mostly steps out of the way of the event lists. The brand orange + red pairing is a relic of late-2000s Japanese web conventions and is preserved deliberately.
 
----
+Mood words — utilitarian, dense, retro-pragmatic, restrained.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+Two brand colors do separate jobs and must not be confused. **Orange (`#f18d05`)** is the primary CTA color (register, attend, post event). **Red (`#e8283f`)** is danger and high-priority alerts only — never used decoratively. Inline text links use the classic `#0066cc` web blue with `#003366` hover, keeping link color distinct from both brand hues so it reads as "link" not "button."
 
-- **connpass Orange** (`#f18d05`): メインのブランドカラー。ロゴ、CTAボタン、アクセントに使用
-- **connpass Red** (`#e8283f`): セカンダリブランドカラー。強調、通知、重要アクションに使用
+The neutral palette is plain hex grays — `#333` heading, `#444` body, `#888` muted, `#aaa` disabled. The lift from canvas (`#fff`) to soft surface (`#f5f5f5`) is the only background variation.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#e8283f`): エラー、削除、危険な操作
-- **Warning** (`#f18d05`): 警告、注意喚起
-- **Success** (`#5cb85c`): 成功、完了、参加済み
+The defining quirk is **weight 400 headings**. Display text steps up in size (36 / 24 / 18 / 14 / 12 / 11 px) but never in weight, so hierarchy is built from size contrast alone. Body type is 14px on prose and 12px in lists — small by modern standards, but consistent with the platform's "more rows visible" priority.
 
-### Neutral（ニュートラル）
+The font stack leads with Lucida Grande and Verdana before falling back through Hiragino Kaku Gothic Pro and Noto Sans JP. This is unusual and intentional — connpass predates the system-font convention. Body line-height is 1.6 for legibility; headings tighten to 1.4. `letter-spacing: 0` everywhere; no `palt`.
 
-- **Text Primary** (`#444`): 本文テキスト
-- **Text Secondary** (`#888`): 補足テキスト、メタ情報
-- **Text Disabled** (`#aaa`): 無効状態のテキスト
-- **Text Heading** (`#333`): 見出しテキスト
-- **Link** (`#0066cc`): リンクテキスト
-- **Link Hover** (`#003366`): リンクホバー
-- **Border** (`#ddd`): 区切り線、入力欄の枠
-- **Border Light** (`#eee`): 薄い区切り線
-- **Background** (`#fff`): ページ背景
-- **Background Secondary** (`#f5f5f5`): セクション背景、サイドバー
-- **Surface** (`#fff`): カード、モーダル等の面
+## Layout
 
----
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 48
+- Container max-width 980px with 16px horizontal padding
+- Event-list pages run 1 column; top page runs 2–3 columns; gutter 16px
+- Touch targets ≥ 44px square
+- Breakpoints — Mobile ≤ 480 / Tablet ≤ 768 / Desktop > 768
 
-## 3. Typography Rules
+## Elevation & Depth
 
-### 3.1 和文フォント
+Flat by default. Hairline borders (`#dddddd`) do all the structural work. A level-1 shadow (`0 1px 3px rgba(0,0,0,0.12)`) appears on card hover; level-2 (`0 2px 6px rgba(0,0,0,0.15)`) on dropdowns. No card shadows at rest.
 
-- **ゴシック体**: ヒラギノ角ゴ Pro W3 (Hiragino Kaku Gothic Pro), MS Pゴシック
+## Shapes
 
-### 3.2 欧文フォント
+4px radius on buttons, inputs, and cards. 2px on small badges. No pill shapes outside of tag chips. Radii stay conservative to match the utilitarian voice.
 
-- **サンセリフ**: Lucida Grande, Verdana
-- **等幅**: Consolas, "Courier New", monospace
+## Components
 
-### 3.3 font-family 指定
+**Buttons** — Primary fills `#f18d05` with white text at weight 700, 4px radius, 8/24 padding. Danger fills `#e8283f` (same shape). Secondary is transparent with a 1px hairline border and `#444` text.
 
-```css
-/* 本文 — Lucida Grande 先頭が特徴 */
-font-family: "Lucida Grande", Verdana, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "MS Pゴシック", sans-serif;
+**Inputs** — White fill, 1px `#dddddd` border, 4px radius, 12px text, 6/10 padding. Focus ring thickens to brand orange.
 
-/* 等幅 */
-font-family: Consolas, "Courier New", monospace;
-```
+**Cards** — White surface, 1px `#dddddd` border, 4px radius, 16px padding, no shadow at rest.
 
-**フォールバックの考え方**:
-- 欧文フォント（Lucida Grande, Verdana）を先頭に配置 — 欧文グリフの品質を優先する構成
-- 和文フォントはヒラギノ角ゴ Pro W3 → MS Pゴシック の順
-- 古典的な日本のWebサービスに多い構成（2010年代前半に主流）
+## Do's and Don'ts
 
-### 3.4 文字サイズ・ウェイト階層
+**Do**
+- Keep heading weights at 400 — size contrast is the hierarchy mechanism
+- Lead font stack with Lucida Grande / Verdana before kanji faces (it is a brand signature here, not a mistake)
+- Use `#0066cc` for inline links — never substitute brand orange
+- Maintain 12–14px body and 1.6 line-height to preserve list density
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Display (h2) | 本文と同じ | 36px | 400 | 36px (1.0) | normal | 「エンジニアをつなぐ...」等 |
-| Heading 2 | 本文と同じ | 24px | 400 | 24px (1.0) | normal | 「おすすめグループ」等 |
-| Heading 3 | 本文と同じ | 18px | 400 | 24px (1.33) | normal | セクション小見出し |
-| Body | 本文フォント | 12px | 400 | 18px (1.5) | normal | 本文テキスト |
-| Caption | 本文と同じ | 11px | 400 | 16px (1.45) | normal | メタ情報、日時 |
-| Small | 本文と同じ | 10px | 400 | 14px (1.4) | normal | 最小テキスト |
+**Don't**
+- Make headings bold — the entire UI tone shifts away from connpass's voice
+- Mix orange and red on the same surface — they signal different intents
+- Drop body below 12px — already small enough
+- Use saturated palettes beyond the brand orange / red / link blue trio
 
-### 3.5 行間・字間
+## Agent Prompt Guide
 
-- **本文の行間 (line-height)**: 18px（1.5倍）。日本語本文の最低ラインを確保
-- **見出しの行間**: 1.0（見出しサイズと同値）。タイトで引き締まった印象
-- **本文の字間 (letter-spacing)**: normal
-- **見出しの字間**: normal
+**Bias toward** — orange CTA + red danger pairing, weight-400 headings, dense list layouts, hairline-bordered flat cards, Lucida Grande-led font stack, classic-web link blue, 4px universal radius.
 
-**ガイドライン**:
-- 本文12pxは現代のWebサービスとしてはやや小さめ
-- 見出しの line-height: 1.0 は詰まった印象を与えるため、複数行見出しでは注意が必要
-- weight 400 の見出しは、サイズ差のみで階層を表現するスタイル
-
-### 3.6 禁則処理・改行ルール
-
-```css
-/* 基本設定 */
-word-wrap: break-word;
-overflow-wrap: break-word;
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal; /* palt 未使用 */
-```
-
-- **palt**: 未使用。本文12pxでは palt を適用しない方が可読性が高い
-- 見出しにも palt は適用されていない
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary（CTAボタン — connpass Orange）**
-- Background: `#f18d05`
-- Text: `#fff`
-- Padding: 8px 24px
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 700
-
-**Danger（connpass Red）**
-- Background: `#e8283f`
-- Text: `#fff`
-- Padding: 8px 24px
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 700
-
-**Secondary**
-- Background: `transparent`
-- Text: `#444`
-- Border: 1px solid `#ddd`
-- Padding: 8px 24px
-- Border Radius: 4px
-
-### Inputs
-
-- Background: `#fff`
-- Border: 1px solid `#ddd`
-- Border (focus): 1px solid `#f18d05`
-- Border Radius: 4px
-- Padding: 6px 10px
-- Font Size: 12px
-- Font Family: 本文と同じ
-
-### Cards
-
-- Background: `#fff`
-- Border: 1px solid `#ddd`
-- Border Radius: 4px
-- Padding: 16px
-- Shadow: none（フラットデザイン基調）
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 32px |
-| XXL | 48px |
-
-### Container
-
-- Max Width: 980px
-- Padding (horizontal): 16px
-
-### Grid
-
-- Columns: 可変（イベント一覧は1カラム、トップは2〜3カラム）
-- Gutter: 16px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素（基本） |
-| 1 | `0 1px 3px rgba(0,0,0,0.12)` | カード、ホバー時 |
-| 2 | `0 2px 6px rgba(0,0,0,0.15)` | ドロップダウン、ポップオーバー |
-
-- connpass はフラットデザイン基調。影はほとんど使わず、ボーダーで区切る構成
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- フォントは Lucida Grande 先頭のフォールバックチェーンを維持する
-- 本文の line-height は 1.5 以上にする
-- 見出しは weight 400 を維持し、サイズで階層を表現する
-- connpass Orange (`#f18d05`) をCTAの主要色として使用する
-- イベント情報は情報密度を保ち、一覧性を重視する
-
-### Don't（禁止）
-
-- 見出しに太字（700）を多用しない — connpass のトーンは控えめな weight 400
-- 本文サイズを12px未満にしない
-- connpass Orange と connpass Red を同じコンテキストで混在させない
-- 全角・半角スペースを混在させない
-- リンク色に connpass Orange を使わない（リンクは `#0066cc` を維持）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 480px | モバイルレイアウト |
-| Tablet | ≤ 768px | タブレットレイアウト |
-| Desktop | > 768px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 12–14px を維持、見出しはデスクトップの 70–80% に縮小
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #f18d05 (connpass Orange)
-Secondary Color: #e8283f (connpass Red)
-Text Color: #444
-Background: #fff
-Font: "Lucida Grande", Verdana, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "MS Pゴシック", sans-serif
-Body Size: 12px
-Line Height: 1.5
-```
-
-### プロンプト例
-
-```
-connpassのデザインシステムに従って、イベント一覧カードを作成してください。
-- プライマリカラー: #f18d05（connpass Orange）
-- フォント: "Lucida Grande", Verdana, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "MS Pゴシック", sans-serif
-- 本文サイズ: 12px / line-height: 1.5
-- 見出し: weight 400（細い）
-- ボーダー: #ddd
-- カード背景: #fff
-- 参加ボタン: background #f18d05, color #fff, border-radius 4px
-```
+**Reject** — bold headings, multiple saturated accents on the same surface, modern system-font-only stacks, line-height below 1.5 on body, pill buttons, drop-shadow cards.

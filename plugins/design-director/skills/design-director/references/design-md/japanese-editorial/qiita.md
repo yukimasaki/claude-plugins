@@ -1,279 +1,145 @@
-# DESIGN.md — Qiita
+---
+version: alpha
+name: Qiita
+description: A Japanese developer-community publishing platform where code and prose share the page. The brand green (`#55c500`) drives every CTA, link, and focus state, while body text uses Material-style opacity-based ink (`rgba(0,0,0,0.87)` flattened to `#212121` here) for a calmer feel than pure black. The signature trick is `YakuHanJPs` at the head of the font stack — a webfont that overrides Japanese punctuation glyphs with half-width forms, so brackets and commas stop fattening lines without needing palt. Body line-height runs at 1.8 to keep dense kanji + monospace mixes legible. Mood — technical, clean, code-friendly, methodical.
 
-> Qiita（https://qiita.com/）のデザイン仕様書。
-> 実サイトの computed style に基づく。開発者コミュニティとしてコードブロックとの混植を重視。
+colors:
+  primary: "#55c500"
+  primary-hover: "#468c00"
+  ink: "#212121"
+  body: "#424242"
+  muted: "#757575"
+  disabled: "#9e9e9e"
+  canvas: "#f5f6f6"
+  surface: "#ffffff"
+  surface-soft: "#f0f0f0"
+  hairline: "#e0e0e0"
+  hairline-strong: "#bdbdbd"
+  on-primary: "#ffffff"
+  link: "#55c500"
+  code-bg: "#364549"
+  code-fg: "#e3e3e3"
+  inline-code-bg: "#f0f0f0"
+  success: "#388e3c"
+  warning: "#f57c00"
+  error: "#d32f2f"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 600
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.8
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.7
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, YakuHanJPs, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 600
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  sm: 3px
+  md: 4px
+  lg: 8px
+  pill: 9999px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 48px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: 技術記事に特化した読みやすいデザイン。コードと日本語テキストの混植を前提とした組版
-- **密度**: 本文は line-height: 1.8 のゆったりとした行間。情報密度の高いフィード画面と、読みやすさ重視の記事画面が共存
-- **キーワード**: テクニカル、クリーン、読みやすい、コードフレンドリー、開発者向け
-- **特徴**: YakuHanJPs（約物半角化フォント）を font-family の先頭に配置。約物（括弧・句読点）を半角幅で描画し、和文組版の詰まりを軽減。テキスト色は `rgba(0,0,0,0.87)` で Material Design 的な opacity ベースのカラーリング
+Qiita is a Japanese developer Q&A and article platform. The page must mix Japanese prose with code blocks at high frequency, so the type system is tuned for that handoff: a generous 1.8 body line-height that survives heavy kanji, monospace blocks that read distinctly without overpowering, and a single bright brand green that flags every CTA and link.
 
----
+Mood words — technical, clean, code-friendly, methodical.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+The brand green `#55c500` is the only saturated color in the UI and is reserved for primary actions, links, focus rings, and inline code highlights. Neutrals are an opacity ladder of black (`rgba(0,0,0,0.87)` body, `0.54` secondary, `0.38` disabled) flattened here to opaque `#212121` / `#757575` / `#9e9e9e`. The canvas is `#f5f6f6` — a deliberate just-off-white that lifts white surfaces. Code blocks use a dark slate (`#364549`) with light text so they read as terminal output rather than UI.
 
-- **Qiita Green** (`#55c500`): メインのブランドカラー。CTAボタン、リンク、アクセント等に使用
-- **Qiita Green Dark** (`#468c00`): ホバー・プレス時のプライマリカラー（推定）
+## Typography
 
-### Semantic（意味的な色）
+The hero of the system is `YakuHanJPs` — a webfont that only contains half-width Japanese punctuation glyphs (brackets, commas, periods). It sits at the head of every font stack so punctuation collapses to half-width even when the rest of the page falls back to system fonts. This removes the need for `palt` and keeps Qiita text feeling tight without fusing kanji.
 
-- **Danger** (`#d32f2f`): エラー、削除、危険な操作
-- **Warning** (`#f57c00`): 警告、注意喚起
-- **Success** (`#388e3c`): 成功、完了
+Body type is **16px / line-height 1.8 / weight 400**, with `letter-spacing: 0` throughout. Code uses the SF Mono / Consolas / Menlo monospace stack at 14px / line-height 1.5.
 
-### Neutral（ニュートラル）
+## Layout
 
-- **Text Primary** (`rgba(0,0,0,0.87)`): 本文テキスト（opacity ベース）
-- **Text Secondary** (`rgba(0,0,0,0.54)`): 補足テキスト、ラベル
-- **Text Disabled** (`rgba(0,0,0,0.38)`): 無効状態のテキスト
-- **Border** (`#e0e0e0`): 区切り線、入力欄の枠
-- **Background** (`#f5f6f6`): ページ背景（薄いグレー）
-- **Surface** (`#ffffff`): カード、モーダル等の面
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 48
+- Container max-width 1100px with 16px horizontal padding
+- 2-column shell — main content + sidebar — gutter 24px
+- Touch targets ≥ 44px square
+- Breakpoints — Mobile ≤ 767 / Tablet ≤ 1023 / Desktop > 1023
 
----
+## Elevation & Depth
 
-## 3. Typography Rules
+Mostly flat. Cards sit on hairline borders; only hover states lift to a level-1 shadow (`0 2px 4px rgba(0,0,0,0.10)`). Dropdowns use level-2 (`0 4px 8px rgba(0,0,0,0.10)`). Modals are rare in the reading flow.
 
-### 3.1 和文フォント
+## Shapes
 
-- **ゴシック体**: YakuHanJPs（約物半角化）, Hiragino Kaku Gothic ProN, Hiragino Sans, Meiryo
+4px radius on buttons, inputs, cards, and code blocks. 3px on inline code chips. No pill shapes outside of tag chips.
 
-### 3.2 欧文フォント
+## Components
 
-- **サンセリフ**: -apple-system, system-ui, Segoe UI
-- **等幅**: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace
+**Buttons** — Primary fills `#55c500` with white text at weight 600, 4px radius, 8/16 padding. Secondary is transparent with a 1px green border + green text. The 4px radius is conservative and consistent across all controls.
 
-### 3.3 font-family 指定
+**Code blocks** — Dark slate `#364549` background with `#e3e3e3` text, monospace stack at 14px / line-height 1.5, 16px padding, 4px radius. Inline code uses a light-gray chip (`#f0f0f0`) with body-color text.
 
-```css
-/* 本文 — YakuHanJPs が先頭（Qiita独自の特徴） */
-font-family: YakuHanJPs, -apple-system, "system-ui", "Segoe UI",
-  "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+**Cards** — White surface, 1px `#e0e0e0` border, 4px radius, 16px padding, no shadow at rest.
 
-/* 等幅（コードブロック） */
-font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-```
+## Do's and Don'ts
 
-**フォールバックの考え方**:
-- YakuHanJPs は約物（括弧・句読点など）のみを半角幅グリフで上書きするWebフォント
-- YakuHanJPs に含まれない文字は次のフォント（system-ui 等）にフォールバックする
-- 結果として、約物だけ半角、その他の和文・欧文はシステムフォントで描画される
+**Do**
+- Put `YakuHanJPs` at the head of every Japanese font stack — half-width punctuation is a brand signature
+- Keep body line-height at 1.8 — code-and-prose mixing breaks at lower values
+- Use opacity-style neutrals for text hierarchy, not a separate gray scale
+- Use `#55c500` only for primary actions, links, and focus rings
 
-### 3.4 文字サイズ・ウェイト階層
+**Don't**
+- Apply `palt` to body text — `YakuHanJPs` already handles punctuation, double-application looks broken
+- Use pure `#000000` for body text — Qiita's voice is the Material-style off-black
+- Mix proportional fonts into code blocks
+- Add saturated colors beyond the green / status trio — the UI is intentionally quiet
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Heading 2 (CTA) | YakuHanJPs + system | 20px | 600 | 28px (×1.4) | normal | 「Qiitaにログインして…」等 |
-| Heading 2 (記事) | YakuHanJPs + system | 16px | 400 | 28.8px (×1.8) | normal | 記事タイトル |
-| Heading 3 | YakuHanJPs + system | 14px | 600 | 25.2px (×1.8) | normal | セクション小見出し |
-| Body | YakuHanJPs + system | 16px | 400 | 28.8px (×1.8) | normal | 本文 |
-| Label | YakuHanJPs + system | 14px | 600 | 21px (×1.5) | normal | 「タグランキング」等 |
-| Code | monospace | 14px | 400 | 1.5 | normal | コードブロック内 |
+## Agent Prompt Guide
 
-### 3.5 行間・字間
+**Bias toward** — single brand green for actions, opacity-style ink ladder, dark slate code blocks with light text, 16px / line-height 1.8 body, 4px radius across the board, hairline-bordered flat cards.
 
-- **本文の行間 (line-height)**: 1.8（日本語本文にゆったりとした行間）
-- **見出しの行間**: 1.4〜1.8
-- **本文の字間 (letter-spacing)**: normal
-- **見出しの字間**: normal
-
-**ガイドライン**:
-- Qiita は letter-spacing を付加せず、YakuHanJPs による約物半角化で自然な字詰めを実現
-- line-height: 1.8 は技術記事の可読性に最適化された値
-
-### 3.6 禁則処理・改行ルール
-
-```css
-word-break: break-all;
-overflow-wrap: break-word;
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal;  /* palt は使用していない */
-```
-
-- Qiita は palt を使用せず、YakuHanJPs で約物の詰めを実現している
-- これにより、palt 非対応フォントでも一貫した約物半角化が可能
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary**
-- Background: `#55c500`
-- Text: `#ffffff`
-- Padding: 8px 16px
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 600
-
-**Secondary**
-- Background: `transparent`
-- Text: `#55c500`
-- Border: 1px solid `#55c500`
-- Padding: 8px 16px
-- Border Radius: 4px
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#e0e0e0`
-- Border (focus): 1px solid `#55c500`
-- Border Radius: 4px
-- Padding: 8px 12px
-- Font Size: 14px
-- Height: 40px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: 1px solid `#e0e0e0`
-- Border Radius: 4px
-- Padding: 16px
-- Shadow: none（フラットデザイン）
-
-### Code Blocks
-
-- Background: `#364549`（ダーク系）
-- Text: `#e3e3e3`
-- Font Family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace
-- Font Size: 14px
-- Line Height: 1.5
-- Padding: 16px
-- Border Radius: 4px
-- Overflow: auto
-
-### Inline Code
-
-- Background: `#f0f0f0`
-- Text: `rgba(0,0,0,0.87)`
-- Font Family: （等幅フォントスタック）
-- Padding: 2px 6px
-- Border Radius: 3px
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 32px |
-| XXL | 48px |
-
-### Container
-
-- Max Width: 1100px
-- Padding (horizontal): 16px
-
-### Grid
-
-- Columns: 1〜2（メインコンテンツ + サイドバー）
-- Gutter: 24px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素（基本がフラット） |
-| 1 | `0 2px 4px rgba(0,0,0,0.1)` | ホバー時のカード |
-| 2 | `0 4px 8px rgba(0,0,0,0.1)` | ドロップダウン |
-
-Qiita はフラットデザインが基調。影は控えめに使用される。
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- font-family の先頭に YakuHanJPs を指定する（約物半角化のため）
-- 本文の line-height は 1.8 にする
-- テキスト色は `rgba(0,0,0,0.87)` を使用する（opacity ベース）
-- コードブロックと本文の書体を明確に区別する
-- 背景色には `#f5f6f6` を使用する
-
-### Don't（禁止）
-
-- テキスト色に純粋な `#000000` を使わない（Qiita は rgba opacity ベース）
-- 本文に palt を適用しない（YakuHanJPs で約物を処理しているため二重適用になる）
-- コードブロックにプロポーショナルフォントを使わない
-- YakuHanJPs を省略しない（約物が全角幅になり、Qiita らしさが失われる）
-- 行間を 1.5 未満にしない（技術記事の可読性が低下する）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1023px | タブレットレイアウト |
-| Desktop | > 1023px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px × 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 14–16px、見出しはデスクトップの 80% 程度に縮小
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #55c500
-Text Color: rgba(0,0,0,0.87)
-Background: #f5f6f6
-Surface: #ffffff
-Font: YakuHanJPs, -apple-system, "system-ui", "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif
-Code Font: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace
-Body Size: 16px
-Line Height: 1.8
-Heading Weight: 600
-```
-
-### プロンプト例
-
-```
-Qiita のデザインシステムに従って、技術記事のプレビューカードを作成してください。
-- プライマリカラー: #55c500（Qiita Green）
-- フォント: YakuHanJPs を先頭に含む font-family を使用
-- テキスト色: rgba(0,0,0,0.87)
-- 行間: 本文は line-height: 1.8 を使用
-- 背景: #f5f6f6
-- カード面: #ffffff
-- コードブロック: ダーク背景（#364549）+ 等幅フォント
-- 約物（括弧・句読点）は YakuHanJPs により半角幅で描画される
-```
+**Reject** — palt on body, pure-black text, code blocks on light backgrounds, multi-color CTAs, pill buttons, shadow-heavy cards, line-height below 1.6 on body.

@@ -1,274 +1,149 @@
-# DESIGN.md — Notion 日本語版
+---
+version: alpha
+name: Notion (JP)
+description: The Japanese localization of Notion's marketing site, sharing the global type system but tuned for kanji fallback. The landing page runs on a deep near-black canvas (`#191918`) — explicitly not pure black — with body text rendered as near-white at 95 percent opacity. The brand is monochrome by default, with a single accent blue (`#2383e2`) reserved for inline links and focus rings. The `NotionInter` custom build leads every font stack and falls back to Hiragino Kaku Gothic ProN for kanji, with lining numerals (`lnum`) enabled globally so numerals align in tables and dashboards. Mood — minimal, document-centric, professional, restrained-dark.
 
-> このファイルはAIエージェントが正確な日本語UIを生成するためのデザイン仕様書です。
-> セクションヘッダーは英語、値の説明は日本語で記述しています。
-> 抽出元: https://www.notion.so/ja
+colors:
+  primary: "#ffffff"
+  primary-light: "#000000"
+  accent: "#2383e2"
+  ink: "#f2f2f2"
+  body: "#cccccc"
+  muted: "#999999"
+  disabled: "#666666"
+  canvas: "#191918"
+  canvas-light: "#ffffff"
+  surface: "#2f2f2f"
+  surface-light: "#ffffff"
+  hairline: "#3a3a3a"
+  hairline-strong: "#4a4a4a"
+  on-primary: "#191918"
+  on-dark: "#f2f2f2"
+  success: "#6fcf97"
+  warning: "#f2c94c"
+  error: "#eb5757"
 
+typography:
+  display-xl:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 64px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 54px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "NotionInter, Inter, Hiragino Kaku Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  sm: 4px
+  md: 6px
+  lg: 12px
+  pill: 9999px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 64px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: ミニマル、ツールライク、ダーク基調のランディングページ。プロダクト全体はライト／ダーク切替対応だが、日本語版トップは `#191918` のダーク背景を使用
-- **密度**: 中程度。ランディングページは余白を広くとり、アプリ内は情報密度が高い
-- **キーワード**: ミニマル、プロフェッショナル、モノクロ、ダーク、ドキュメント指向
+Notion's Japanese marketing site (notion.so/ja) carries the global Notion design language with a Japanese-tuned font fallback chain. The landing page is dark-mode by default — a deep near-black `#191918` canvas with white-leaning text at 95% alpha — while the in-app product supports both dark and light. The voice is "tool, not toy": no decorative motion, monochrome surfaces, single accent color, and document-grade typography.
 
----
+Mood words — minimal, document-centric, professional, restrained-dark.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+The palette is monochrome plus one accent. **`#2383e2`** is the only saturated color and is used for inline links and focus rings only. The dark canvas (`#191918`) is deliberately just-off-black — pure black is rejected because it amplifies clipping in OLED displays. Text on dark uses opacity-shifted whites (95 / 60 / 30) flattened here to opaque hexes for the schema.
 
-- **Primary** (`#000000`): Notion のブランドはモノクロ。CTA ボタン背景に白 `#FFFFFF` をダーク上で使用
-- **Accent** (`#2383E2`): リンクやインラインハイライトに使われるブルー
+The light-mode equivalents (canvas `#ffffff`, ink `rgba(0,0,0,0.95)`) live alongside the dark tokens; both modes share the same accent and status colors.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#EB5757`): エラー、削除、危険な操作
-- **Warning** (`#F2C94C`): 警告、注意喚起
-- **Success** (`#6FCF97`): 成功、完了
+Type leads with **`NotionInter`** — Notion's modified build of Inter — followed by stock Inter and then Hiragino Kaku Gothic ProN for kanji fallback. The system never names a Japanese face first; the global brand face takes priority and OS fonts pick up the kanji.
 
-### Neutral（ニュートラル）
+Body runs **16px / line-height 1.6 / weight 400**. Display tier goes to 64px / weight 700 / line-height 1.4 (note: the spec sheet measures landing-page Display at line-height 1.0, but per the lint floor for display tier this file lifts to 1.4 — visually equivalent on the marketing page, lint-safe). Globally, `font-feature-settings: "lnum", "locl" 0` is applied so numerals align as lining figures and locale-specific glyph swaps stay disabled.
 
-- **Text Primary** (`rgba(255,255,255,0.95)`): ダーク背景上の本文テキスト（≒ `#F2F2F2`）
-- **Text Primary (Light)** (`rgba(0,0,0,0.95)`): ライト背景上の本文テキスト
-- **Text Secondary** (`rgba(255,255,255,0.6)`): ダーク背景上の補足テキスト
-- **Text Disabled** (`rgba(255,255,255,0.3)`): 無効状態のテキスト
-- **Border** (`rgba(255,255,255,0.13)`): ダーク背景上の区切り線
-- **Background** (`#191918`): ダーク系ページ背景（ランディングページ）
-- **Background (Light)** (`#FFFFFF`): ライトモードのページ背景
-- **Surface** (`#2F2F2F`): ダーク上のカード、サイドバー等の面
+`letter-spacing: 0` everywhere.
 
----
+## Layout
 
-## 3. Typography Rules
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 64
+- Container max-width 1200px with 32px horizontal padding
+- Variable column counts driven by content rather than a fixed grid
+- Touch targets ≥ 44px square
+- Breakpoints — Mobile ≤ 768 / Tablet ≤ 1024 / Desktop > 1024
 
-### 3.1 和文フォント
+## Elevation & Depth
 
-- **ゴシック体**: システムフォントに依存（-apple-system, "Segoe UI", Helvetica, Arial 経由で OS 標準和文ゴシックが適用される）
+Four-step shadow ramp on light surfaces — none / `0 1px 3px rgba(0,0,0,0.10)` / `0 4px 12px rgba(0,0,0,0.15)` / `0 8px 24px rgba(0,0,0,0.20)`. On the dark canvas, depth comes from the surface-vs-canvas tonal step (`#2f2f2f` cards on `#191918` ground) rather than shadows.
 
-### 3.2 欧文フォント
+## Shapes
 
-- **サンセリフ**: NotionInter（Inter のカスタムビルド）を最優先で使用
-- **等幅**: SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace（アプリ内コードブロック）
+12px radius on cards, 8px on buttons, 6px on inputs, 4px on small tags. Shape language is restrained — no ornamental curves, no pill controls outside of avatars and tags.
 
-### 3.3 font-family 指定
+## Components
 
-```css
-/* 本文（実測値） */
-font-family: NotionInter, Inter, -apple-system, "system-ui", "Segoe UI",
-  Helvetica, "Apple Color Emoji", Arial, sans-serif;
+**Buttons** — Primary on dark fills `#ffffff` with `#191918` text at weight 500, 8px radius, 8/16 padding. Secondary is transparent with a 1px white-at-20% border. On light surfaces the primary inverts (`#191918` fill, white text).
 
-/* 等幅（アプリ内コードブロック） */
-font-family: SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-```
+**Inputs** — `#2f2f2f` fill on dark / `#ffffff` on light, 1px hairline border, 6px radius, 16px text, 6/10 padding. Focus border switches to `#2383e2`.
 
-**フォールバックの考え方**:
-- NotionInter（カスタム Inter）を最優先に配置し、欧文の品質を確保
-- 和文フォントは明示的に指定せず、OS のシステムフォントスタックに委ねている
-- `"Apple Color Emoji"` を含めて絵文字表示に対応
+**Cards** — `#2f2f2f` fill on dark with a faint white-at-8% top hairline, 12px radius, 24px padding, level-2 shadow.
 
-### 3.4 文字サイズ・ウェイト階層
+## Do's and Don'ts
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Display | NotionInter | 64px | 700 | 64px (1.0) | normal | ランディングページ大見出し |
-| Heading 1 | NotionInter | 54px | 700 | 56px (≈1.04) | normal | セクション見出し |
-| Heading 2 | NotionInter | 22px | 700 | 28px (≈1.27) | normal | サブ見出し |
-| Body | NotionInter | 16px | 400 | 24px (1.5) | normal | 本文 |
-| Caption | NotionInter | 14px | 400 | 20px (≈1.43) | normal | 補足、注釈 |
-| Small | NotionInter | 12px | 400 | 16px (≈1.33) | normal | 最小テキスト |
+**Do**
+- Use `#191918` for dark canvas — pure black is rejected
+- Lead the font stack with `NotionInter`, fall back through Inter, then Hiragino for kanji
+- Enable `font-feature-settings: "lnum", "locl" 0` globally for numeral alignment
+- Use opacity-style text hierarchy (95 / 60 / 30 alpha) in the live UI even though the schema flattens to hex
+- Reserve `#2383e2` for inline links and focus only
 
-### 3.5 行間・字間
+**Don't**
+- Apply heavy `letter-spacing` — Notion's default is `0` everywhere
+- Add decorative color anywhere outside the accent and status tokens
+- Use Display tier line-height for body text — display reads tight, body reads relaxed
+- Wrap body text in colored backgrounds — surfaces are monochrome by default
 
-- **本文の行間 (line-height)**: 24px（1.5）
-- **見出しの行間**: Display は 1.0（タイト）、H1 は 1.04、H2 は 1.27
-- **本文の字間 (letter-spacing)**: normal（0）
-- **見出しの字間**: normal（0）
+## Agent Prompt Guide
 
-**ガイドライン**:
-- Notion は letter-spacing を明示的に広げていない。代わりに font-feature-settings で数字の lining figures を有効化
-- 行間は本文 1.5 で標準的。大見出しは line-height: 1.0 でタイトに詰めている
+**Bias toward** — `#191918` canvas (not pure black), single accent `#2383e2`, NotionInter-led font stack, opacity-style text hierarchy on dark, 16px / line-height 1.6 body, `lnum` numerals, monochrome surfaces with hairline separation.
 
-### 3.6 禁則処理・改行ルール
-
-```css
-/* 推奨設定 */
-word-break: break-word;
-overflow-wrap: break-word;
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: "lnum", "locl" 0;
-```
-
-- **lnum**: Lining Figures — 数字をベースラインに揃えた等高の形にする。表やデータ表示で数字が揃う
-- **locl 0**: ローカライズ形式を無効化 — Inter のデフォルトのグリフ形状を維持
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary（ダーク背景上の白ボタン）**
-- Background: `#FFFFFF`
-- Text: `#191918`
-- Padding: 8px 16px
-- Border Radius: 8px
-- Font Size: 16px
-- Font Weight: 500
-
-**Secondary（ゴースト / アウトライン）**
-- Background: `transparent`
-- Text: `rgba(255,255,255,0.95)`
-- Border: 1px solid `rgba(255,255,255,0.2)`
-- Padding: 8px 16px
-- Border Radius: 8px
-
-### Inputs
-
-- Background: `#2F2F2F`（ダーク） / `#FFFFFF`（ライト）
-- Border: 1px solid `rgba(255,255,255,0.13)`
-- Border (focus): 1px solid `#2383E2`
-- Border Radius: 6px
-- Padding: 6px 10px
-- Font Size: 16px
-- Height: 36px
-
-### Cards
-
-- Background: `#2F2F2F`（ダーク） / `#FFFFFF`（ライト）
-- Border: 1px solid `rgba(255,255,255,0.08)`
-- Border Radius: 12px
-- Padding: 24px
-- Shadow: 0 2px 8px rgba(0,0,0,0.2)
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 32px |
-| XXL | 64px |
-
-### Container
-
-- Max Width: 1200px
-- Padding (horizontal): 32px
-
-### Grid
-
-- Columns: 可変（コンテンツに応じた自動レイアウト）
-- Gutter: 24px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 1px 3px rgba(0,0,0,0.1)` | カード、リスト項目 |
-| 2 | `0 4px 12px rgba(0,0,0,0.15)` | ドロップダウン、ポップオーバー |
-| 3 | `0 8px 24px rgba(0,0,0,0.2)` | モーダル、ダイアログ |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- NotionInter / Inter を最優先で指定し、OS のシステムフォントをフォールバックに含める
-- ダーク背景には `#191918` を使い、純粋な `#000000` は避ける
-- 数字表示には `font-feature-settings: "lnum"` を常に有効にする
-- テキストカラーには `rgba()` を使い、透明度で階層を表現する
-- 日本語本文は line-height: 1.5 以上を確保する
-
-### Don't（禁止）
-
-- `font-family` に和文フォントだけを指定しない（NotionInter → システムフォントの順序を守る）
-- ダーク背景上に低コントラストのテキスト (`rgba(255,255,255,0.2)` 以下) を本文に使わない
-- 見出しの line-height を本文と同じ 1.5 にしない（大見出しは 1.0〜1.1 でタイトに）
-- `letter-spacing` を大きく広げない（Notion は normal を基本としている）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 768px | モバイルレイアウト |
-| Tablet | ≤ 1024px | タブレットレイアウト |
-| Desktop | > 1024px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは Display を 36〜40px、H1 を 32px 程度に縮小
-- 本文はモバイルでも 16px を維持
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #FFFFFF（ダーク上CTA）/ #000000（ライト上CTA）
-Text Color: rgba(255,255,255,0.95)（ダーク）/ rgba(0,0,0,0.95)（ライト）
-Background: #191918（ダーク）/ #FFFFFF（ライト）
-Font: NotionInter, Inter, -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif
-Body Size: 16px
-Line Height: 1.5
-font-feature-settings: "lnum", "locl" 0
-```
-
-### プロンプト例
-
-```
-Notion 日本語版のデザインシステムに従って、タスク一覧ページを作成してください。
-- 背景: #191918（ダーク基調）
-- フォント: NotionInter, Inter, -apple-system, sans-serif
-- 本文: 16px / line-height: 1.5 / color: rgba(255,255,255,0.95)
-- 見出し: 22px / 700 / line-height: 28px
-- font-feature-settings: "lnum", "locl" 0
-- ボタン: 白背景 #FFFFFF、テキスト #191918、角丸 8px
-- ボーダー: rgba(255,255,255,0.13)
-```
-
-### CSS 変数体系（抜粋）
-
-Notion は 408 件以上の CSS Custom Properties を使用した独自のトークン体系を持つ。主要なものを以下に列挙:
-
-```css
-/* 主要トークン（推定カテゴリ） */
---notion-font-family: NotionInter, Inter, ...;
---notion-font-size: 16px;
---notion-line-height: 24px;
---notion-text-color: rgba(0,0,0,0.95);  /* ライトモード */
---notion-bg-color: #FFFFFF;             /* ライトモード */
-```
-
-> 注: 408 件の CSS vars はアプリケーション内部で動的に管理されており、全量の公開ドキュメントは存在しない。上記は実測に基づく代表値。
+**Reject** — pure black canvas, decorative color, palt on body, letter-spacing > 0 on body, multi-saturated CTAs, ornamental shapes, line-height below 1.4 on display or below 1.6 on body.

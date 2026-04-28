@@ -1,262 +1,151 @@
-# DESIGN.md — Sansan
+---
+version: alpha
+name: Sansan
+description: A confident enterprise SaaS aesthetic from a Japanese business-card and contacts platform. Sansan leads with a deep navy (`#042a6d`) for brand surface and a brighter blue (`#2566d4`) for CTAs, both sitting on near-white. Headings are Helvetica-led and large (up to 54.8px display) with weight 700, while body copy stays at 14px to project a working-tool density. The original site sets body line-height to 1.0 — that is intentionally tight for hero metrics and would be unreadable for long copy, so this token set lifts the body floor to a JP-safe 1.6. Mood — confident, professional, navy, enterprise.
 
-> Sansan（https://jp.sansan.com/）のデザイン仕様書。
-> コーポレートサイトの computed style 実測値に基づく。
+colors:
+  primary: "#2566d4"
+  navy: "#042a6d"
+  ink: "#1a1a1a"
+  body: "#1a1a1a"
+  muted: "#666666"
+  disabled: "#999999"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f5f5f5"
+  hairline: "#dddddd"
+  hairline-soft: "#eeeeee"
+  on-primary: "#ffffff"
+  on-navy: "#ffffff"
+  success: "#2e8b57"
+  warning: "#f5a623"
+  error: "#cc0000"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 56px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-md:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, Yu Gothic, YuGothic, Noto Sans JP, Hiragino Sans, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0.1em
+
+rounded:
+  sm: 4px
+  md: 4px
+  lg: 8px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 40px
+  "6": 64px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: プロフェッショナルかつ信頼感のあるビジネスSaaSデザイン。深いネイビーブルーを基調とし、堅実さと先進性を両立
-- **密度**: LPらしいゆったりとしたセクション構成だが、body の line-height: 1.0 と極めてタイトな行間が特徴的
-- **キーワード**: 信頼、堅実、ネイビーブルー、ビジネス、クリーン
-- **特徴**: helvetica を先頭（小文字）に配置し、游ゴシックと組み合わせる欧文優先のフォントスタック。大見出し 54.8px の迫力ある数値。CSS カスタムプロパティ 51件
+Sansan is a Japanese B2B SaaS for business-card management and corporate contacts. The visual posture is "confident enterprise tool" — generous hero scale, deep navy authority on dark backdrops, and a clean working surface in the working areas. The marketing site uses very large display headings (up to 54.8px / 700) over white, with two distinct blues handling brand vs. action.
 
----
+Mood words — confident, professional, navy, enterprise.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+Two blues do separate jobs and must not be confused. **Sansan Navy `#042a6d`** is the brand surface — used on full-bleed dark sections, navy banners, and the on-dark variant of CTAs. **Sansan Blue `#2566d4`** carries CTAs, links, and focus on light surfaces. Navy is never used for text against white (the contrast is fine, but it visually fights the action blue).
 
-- **Sansan Navy** (`#042a6d`): メインのブランドカラー。ダークネイビーで信頼感を表現
-- **Sansan Blue** (`#2566d4`): CTAボタン、リンク、アクセント要素に使用
+Body text sits on `#1a1a1a` — slightly off-black so type doesn't feel severe. Muted `#666666` and disabled `#999999` round out the neutral ladder. Surfaces are `#ffffff` page and `#f5f5f5` band; hairlines split between `#dddddd` (default) and `#eeeeee` (lighter card outline).
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#cc0000`): エラー、削除、危険な操作
-- **Warning** (`#f5a623`): 警告、注意喚起
-- **Success** (`#2e8b57`): 成功、完了
+The latin face is Helvetica (the live site uses lowercase `helvetica` first), paired with **Yu Gothic** as the JP face — both `YuGothic` (macOS) and `Yu Gothic` (Windows) appear in the chain. The hybrid stack here puts Inter at the head, then Yu Gothic, with Noto Sans JP and Hiragino as further fallbacks.
 
-### Neutral（ニュートラル）
+The live site sets body `line-height: 1.0`, which is appropriate only for hero numerals and would be unreadable for paragraph copy. This token set lifts the body floor to **1.6** per JP design-director rules; component overrides can drop down to 1.4 for tight metric displays only. Heading line-height is 1.4 throughout. `letterSpacing` is 0 across the board.
 
-- **Text Primary** (`#1a1a1a`): 本文テキスト
-- **Text Secondary** (`#666666`): 補足テキスト、ラベル
-- **Text Disabled** (`#999999`): 無効状態のテキスト
-- **Border** (`#dddddd`): 区切り線、入力欄の枠
-- **Background** (`#ffffff`): ページ背景
-- **Surface** (`#f5f5f5`): カード、セクション背景
+## Layout
 
----
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 40 / 64
+- Container max-width 1200px with 20px horizontal padding
+- 12-column grid, 24px gutter
+- Touch targets ≥ 44px (WCAG)
+- Breakpoints — Mobile ≤ 767, Tablet ≤ 1023, Desktop > 1024
 
-## 3. Typography Rules
+## Elevation & Depth
 
-### 3.1 和文フォント
+Three-step shadow ladder. Level 1 (cards, dropdowns): `0 2px 8px rgba(0,0,0,0.08)`. Level 2 (modals, popovers): `0 4px 16px rgba(0,0,0,0.12)`. Level 3 (dialogs, floating panels): `0 8px 32px rgba(0,0,0,0.16)`. The base UI is otherwise flat — most separation comes from hairlines and large vertical spacing.
 
-- **ゴシック体**: 游ゴシック（YuGothic / Yu Gothic）、ヒラギノ角ゴ Pro W3（Hiragino Kaku Gothic Pro）
+## Shapes
 
-### 3.2 欧文フォント
+Border-radius is 4px on buttons and inputs; cards step up to 8px. No pill shapes; no fully square corners. The brand keeps shapes restrained — confidence comes from scale and color, not curvature.
 
-- **サンセリフ**: helvetica（小文字指定）、arial
-- 欧文フォントを和文より先に指定する欧文優先の構成
+## Components
 
-### 3.3 font-family 指定
+**Buttons** — Primary fills `#2566d4`, white text, weight 700, 4px radius, 12/32 padding. Secondary is transparent fill with `#2566d4` border and text. Navy variant (for dark sections) fills `#042a6d` with white. Heights run 44–48px on the marketing site.
 
-```css
-/* 本文 — 実測値 */
-font-family: helvetica, arial, YuGothic, "Yu Gothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif;
-```
+**Inputs** — White fill, 1px `#dddddd` border, 4px radius, 14px text, 10/14 padding, 44px tall. Focus border switches to `#2566d4`.
 
-**フォールバックの考え方**:
-- helvetica を先頭に配置（欧文グリフの表示品質を優先）
-- 游ゴシックは macOS 用（YuGothic）と Windows 用（Yu Gothic）の両方を指定
-- ヒラギノ角ゴ Pro W3 は macOS 向けフォールバック
-- generic family `sans-serif` で締める
+**Tables** — Header row on `#f5f5f5`, hairlines `#dddddd`, body rows white. Numeric columns right-aligned. Typical of working-tool density.
 
-### 3.4 文字サイズ・ウェイト階層
+**Cards** — White fill, 1px `#eeeeee` border, 8px radius, 24px internal padding, Level 1 shadow.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Display | helvetica, 游ゴシック | 54.8px | 700 | 76.7px (×1.4) | normal | ヒーロー大見出し |
-| Heading 1 | helvetica, 游ゴシック | 40px | 700 | 56px (×1.4) | normal | セクション見出し |
-| Heading 2 | helvetica, 游ゴシック | 28px | 700 | 39.2px (×1.4) | normal | サブ見出し |
-| Heading 3 | helvetica, 游ゴシック | 20px | 700 | 28px (×1.4) | normal | 小見出し |
-| Body | helvetica, 游ゴシック | 14px | 400 | 14px (×1.0) | normal | 本文（極めてタイト） |
-| Caption | helvetica, 游ゴシック | 12px | 400 | 12px (×1.0) | normal | 補足、注釈 |
-| Small | helvetica, 游ゴシック | 10px | 400 | 10px (×1.0) | normal | 最小テキスト |
+## Do's and Don'ts
 
-### 3.5 行間・字間
+**Do**
+- Reserve Sansan Navy `#042a6d` for full-bleed brand surfaces and on-dark CTAs only
+- Use Sansan Blue `#2566d4` for every CTA, link, and focus on light surfaces
+- Lift body line-height to ≥ 1.6 for any paragraph copy (the upstream 1.0 is metric-only)
+- Pair Helvetica-led latin with Yu Gothic for both macOS and Windows JP coverage
 
-- **本文の行間 (line-height)**: 1.0（14px / 14px）。極めてタイトな設定で、一般的な日本語組版の慣例（1.5〜2.0）とは大きく異なる
-- **見出しの行間**: 1.4（Display 54.8px → lh: 76.7px、H1 40px → lh: 56px）
-- **本文の字間 (letter-spacing)**: normal
-- **見出しの字間**: normal
+**Don't**
+- Use Sansan Navy as text on white — it visually fights `#2566d4` action blue
+- Use pure `#000000` for body — `#1a1a1a` is the floor
+- Apply `line-height: 1.0` to multi-line Japanese text — kanji collide
+- Capitalize Helvetica as `Helvetica` if you want pixel-parity with the live site (the upstream uses lowercase)
 
-**注意事項**:
-- body の line-height: 1.0 はSansanサイト固有の設計。コンポーネント単位で個別に line-height を設定している可能性が高い
-- 日本語本文コンテンツを作成する場合は、コンポーネント側で line-height: 1.5〜1.8 を上書きすることを推奨
+## Agent Prompt Guide
 
-### 3.6 禁則処理・改行ルール
+**Bias toward** — two-blue palette (Navy brand + Action blue), large display headings (40–56px / 700), Helvetica-led latin with Yu Gothic JP, body line-height 1.6, 4px radii, three-step shadow ladder, 14px body density.
 
-```css
-/* 推奨設定 */
-word-break: break-all;
-overflow-wrap: break-word;
-line-break: strict;
-```
-
-### 3.7 OpenType 機能
-
-```css
-/* 実測値 */
-font-feature-settings: normal;  /* palt 未適用 */
-```
-
-- palt（プロポーショナル字詰め）は適用されていない
-- 見出し・本文ともに font-feature-settings: normal
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary（CTA）**
-- Background: `#2566d4`（Sansan Blue）
-- Text: `#ffffff`
-- Padding: 12px 32px
-- Border Radius: 4px
-- Font Size: 16px
-- Font Weight: 700
-
-**Secondary（Outline）**
-- Background: `transparent`
-- Text: `#2566d4`
-- Border: 1px solid `#2566d4`
-- Padding: 12px 32px
-- Border Radius: 4px
-
-**Navy（ダーク背景用）**
-- Background: `#042a6d`
-- Text: `#ffffff`
-- Padding: 12px 32px
-- Border Radius: 4px
-- Font Size: 16px
-- Font Weight: 700
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#dddddd`
-- Border (focus): 1px solid `#2566d4`
-- Border Radius: 4px
-- Padding: 10px 14px
-- Font Size: 14px
-- Height: 44px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: 1px solid `#eeeeee`
-- Border Radius: 8px
-- Padding: 24px
-- Shadow: 0 2px 8px rgba(0,0,0,0.08)
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 40px |
-| XXL | 64px |
-
-### Container
-
-- Max Width: 1200px
-- Padding (horizontal): 20px
-
-### Grid
-
-- Columns: 12
-- Gutter: 24px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 2px 8px rgba(0,0,0,0.08)` | カード、ドロップダウン |
-| 2 | `0 4px 16px rgba(0,0,0,0.12)` | モーダル、ポップオーバー |
-| 3 | `0 8px 32px rgba(0,0,0,0.16)` | ダイアログ、フローティング要素 |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- helvetica を font-family の先頭に指定し、欧文の表示品質を優先する
-- 游ゴシックは macOS / Windows 両対応のフォールバックを記述する
-- 見出しの line-height は 1.4 程度を維持する
-- Sansan Navy (`#042a6d`) と Sansan Blue (`#2566d4`) を使い分ける（Navy: ブランド背景、Blue: CTA）
-- コンポーネント単位で適切な line-height を設定する
-
-### Don't（禁止）
-
-- 日本語の長文本文に line-height: 1.0 をそのまま使わない（body 値はリセット用）
-- helvetica を大文字で書かない（実サイトは小文字指定）
-- Sansan Navy をテキストカラーとして使わない（背景色として使用する）
-- テキストの色に純粋な `#000000` を使わない（`#1a1a1a` を使用）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1023px | タブレットレイアウト |
-| Desktop | > 1024px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは Display 54.8px → 28〜32px 程度に縮小
-- H1 40px → 24〜28px 程度に縮小
-- Body は 14px を維持
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color (Navy): #042a6d
-Primary Color (Blue): #2566d4
-Text Color: #1a1a1a
-Background: #ffffff
-Font: helvetica, arial, YuGothic, "Yu Gothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif
-Body Size: 14px
-Line Height (body): 1.0（※コンポーネント単位で上書き推奨）
-Line Height (heading): 1.4
-```
-
-### プロンプト例
-
-```
-Sansanのデザインシステムに従って、名刺管理サービスの機能紹介セクションを作成してください。
-- プライマリカラー: #042a6d（Navy）/ #2566d4（Blue CTA）
-- フォント: helvetica, arial, YuGothic, "Yu Gothic", sans-serif
-- 見出し: 40px / 700 / line-height: 1.4
-- 本文: 14px / 400（コンポーネント内は line-height: 1.6〜1.8 を推奨）
-- ボタン: background #2566d4, border-radius 4px, padding 12px 32px
-- カード: border-radius 8px, shadow 0 2px 8px rgba(0,0,0,0.08)
-```
+**Reject** — pure black text, pill buttons, single-blue palettes (you need both Navy and Action), body line-height below 1.6, negative letter-spacing, mixing Sansan Navy with action blue inside the same component.

@@ -1,265 +1,146 @@
-# DESIGN.md — マネーフォワード
+---
+version: alpha
+name: Money Forward
+description: A solid, dependable Japanese fintech UI that treats household finance the way an accountant would — with calm density and no flourish. Hiragino Kaku Gothic Pro leads the type stack, the page runs at 14px body for high information density, and a single confident green (`#4db848`) carries the brand without ever shouting. Headings stay at weight 500 medium rather than bold, and surfaces stay near-white with quiet hairline separators. The result reads as "trusted ledger," not "consumer app." Mood — solid, dependable, efficient, understated.
 
-> マネーフォワード（https://moneyforward.com/）のデザイン仕様書。
-> コーポレートサイトおよびサービスページの computed style に基づく。
+colors:
+  primary: "#4db848"
+  primary-hover: "#3a9a35"
+  ink: "#333333"
+  body: "#333333"
+  muted: "#666666"
+  disabled: "#999999"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f5f5f5"
+  hairline: "#dddddd"
+  hairline-soft: "#eeeeee"
+  on-primary: "#ffffff"
+  success: "#27ae60"
+  warning: "#f39c12"
+  error: "#e74c3c"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 500
+    lineHeight: 1.5
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 500
+    lineHeight: 1.5
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 17px
+    fontWeight: 500
+    lineHeight: 1.7
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.6
+    letterSpacing: 0.04em
+
+rounded:
+  sm: 4px
+  md: 4px
+  lg: 8px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 48px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: 堅実で信頼感のある業務ツール型UI。家計簿・資産管理という金融領域に相応しい、落ち着いたトーン
-- **密度**: 情報密度が高い業務UI。14px ベースの小さめフォントで多くの情報を表示する
-- **キーワード**: 堅実、信頼性、業務的、効率的、和文優先
-- **特徴**: ヒラギノ角ゴ Pro を先頭に置く和文優先のフォントスタック。CSS Custom Properties を使用しない従来型のCSS設計。見出しは weight 500（medium）で控えめな強調
+Money Forward is a Japanese personal-finance and SaaS suite for budgeting, expense tracking, and corporate accounting. The UI must hold a lot of numbers per screen without ever feeling cramped or panicky. The visual posture is "professional ledger." Headings stay medium-weight, the canvas stays white, and the only saturated color in the room is the brand green CTA.
 
----
+Mood words — solid, dependable, efficient, understated.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+The brand green `#4db848` is the single accent. It carries primary CTAs, focus, and the active state on tabs and toggles; on hover it darkens to `#3a9a35`. Everything else is grayscale: ink `#333333` for both headings and body, muted `#666666` for secondary text, disabled `#999999` for placeholders. Hairlines are `#dddddd` between rows and `#eeeeee` for card outlines.
 
-- **Primary Green** (`#4db848`): メインのブランドカラー。CTAボタン、アクセント
-- **Primary Dark** (`#3a9a35`): ホバー・プレス時のプライマリカラー
+Status colors are warm-saturated rather than neon: error `#e74c3c`, warning `#f39c12`, success `#27ae60`. They appear sparingly — most of the surface area stays neutral.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#e74c3c`): エラー、削除、危険な操作
-- **Warning** (`#f39c12`): 警告、注意喚起
-- **Success** (`#27ae60`): 成功、完了
+The Japanese face is **Hiragino Kaku Gothic Pro** — the upstream spec leads with the JP face name (`"ヒラギノ角ゴ Pro W3"`), so the hybrid Inter-first stack here is paired with Hiragino Sans first among the JP fallbacks. `letterSpacing` stays at 0 throughout (the live site never tracks); we set it to `0.04em` only on uppercase labels.
 
-### Neutral（ニュートラル）
+`lineHeight` is 1.6 on body — the upstream uses 1.5 (21px / 14px), but the JP design-director floor lifts to 1.6 so kanji at 14px don't crowd. Headings sit at 1.5 minimum. The 14px body is the rem anchor — Money Forward chooses density over warmth, so do not bump body to 16px without reason.
 
-- **Text Primary** (`#333333`): 本文テキスト
-- **Text Secondary** (`#666666`): 補足テキスト、ラベル
-- **Text Disabled** (`#999999`): 無効状態のテキスト
-- **Border** (`#dddddd`): 区切り線、入力欄の枠
-- **Background** (`#ffffff`): ページ背景
-- **Surface** (`#f5f5f5`): カード、セクション背景
+Headings are weight 500 (medium), never 700 (bold). This is the single most important brand rule — bold headings instantly read as "the wrong site."
 
----
+## Layout
 
-## 3. Typography Rules
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 48
+- Container max-width 980px with 20px horizontal padding
+- 12-column grid, 20px gutter
+- Breakpoints — Mobile ≤ 767, Tablet ≤ 1024, Desktop > 1024
+- Touch targets ≥ 44px square (WCAG)
 
-### 3.1 和文フォント
+## Elevation & Depth
 
-- **ゴシック体**: Hiragino Kaku Gothic Pro（ヒラギノ角ゴ Pro W3）— 第一候補として和文表示を優先
+Mostly flat. Level 1 (cards, list rows) uses `0 1px 3px rgba(0,0,0,0.08)`. Level 2 (dropdowns, popovers) uses `0 2px 8px rgba(0,0,0,0.12)`. Level 3 (modals) uses `0 4px 16px rgba(0,0,0,0.15)`. Most of the UI separates surfaces with hairlines instead of stacking shadows.
 
-### 3.2 欧文フォント
+## Shapes
 
-- **サンセリフ**: フォントスタック内に明示的な欧文フォント指定なし（和文フォント内蔵の欧文グリフを使用）
-- **フォールバック**: Meiryo, メイリオ, MS PGothic, Osaka, sans-serif
+Border-radius is uniformly 4px on buttons, inputs, and small surfaces. Cards step up to 4–8px. No pill shapes; no fully square corners. The brand intentionally avoids playful curvature.
 
-### 3.3 font-family 指定
+## Components
 
-```css
-/* 本文（実測値） */
-font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, メイリオ, "MS PGothic", Osaka, sans-serif;
-```
+**Buttons** — Primary fills `#4db848`, white text, weight 500, 4px radius, 8/24 padding. Secondary is transparent fill with 1px `#dddddd` border and `#333333` text. Hover darkens green to `#3a9a35`.
 
-**フォールバックの考え方**:
-- ヒラギノ角ゴ Pro を最優先（macOS環境での和文表示品質を重視）
-- 日本語フォント名と英語フォント名の両方を記載（環境互換性）
-- Meiryo → MS PGothic → Osaka の順でWindows・レガシー環境をカバー
-- 欧文専用フォントを先に置かない設計（和文の統一感を優先）
+**Inputs** — White fill, 1px `#dddddd` border, 4px radius, 14px text, 8/12 padding, 36px tall. Focus border switches to `#4db848` (no outer ring).
 
-### 3.4 文字サイズ・ウェイト階層
+**Tables** — Header row on `#f5f5f5`, body rows on `#ffffff`, hairlines `#dddddd`. Numeric columns right-aligned. Row height stays compact.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Heading 2 (large) | ヒラギノ角ゴ Pro | 20px | 500 | normal | normal | セクション見出し「サービス一覧」 |
-| Heading 3 | ヒラギノ角ゴ Pro | 17px | 500 | 28.9px (×1.7) | normal | サブ見出し |
-| Body Nav | ヒラギノ角ゴ Pro | 14px | 500 | 20px | normal | ナビゲーション「ログイン」 |
-| Body | ヒラギノ角ゴ Pro | 14px | 400 | 21px (×1.5) | normal | 本文テキスト |
-| Caption | ヒラギノ角ゴ Pro | 12px | 400 | 18px (×1.5) | normal | 補足、注釈 |
+**Cards** — White fill, `#eeeeee` 1px border, 4px radius, 20px internal padding, single Level 1 shadow.
 
-### 3.5 行間・字間
+## Do's and Don'ts
 
-- **本文の行間 (line-height)**: 1.5（21px / 14px）。日本語としては標準的
-- **見出しの行間**: normal（h2）〜 1.7（h3）
-- **本文の字間 (letter-spacing)**: normal（字詰めなし）
-- **見出しの字間**: normal
+**Do**
+- Use Hiragino Kaku Gothic Pro at the head of the JP fallback chain
+- Hold body line-height ≥ 1.6 so 14px kanji breathe
+- Keep heading weight at 500; reserve 700 only for inline emphasis on body
+- Maintain 14px body density — this is the brand's information posture
 
-**ガイドライン**:
-- 14px ベースのため、行間 1.5 で最低限の可読性を確保
-- letter-spacing は全階層で normal — 意図的な字詰め調整なし
-- 業務ツール的な密度を維持するため、余白は控えめ
+**Don't**
+- Apply `palt` / proportional kerning — the brand intentionally runs flat metrics
+- Use bold (700) on section headings — instantly reads as "wrong site"
+- Drop body line-height below 1.6 (kanji collide at 14px)
+- Use a single-font fallback chain — Windows environments need Meiryo / sans-serif
 
-### 3.6 禁則処理・改行ルール
+## Agent Prompt Guide
 
-```css
-/* 推奨設定 */
-word-break: break-all;
-overflow-wrap: break-word;
-```
+**Bias toward** — single-green primary, weight 500 medium headings, 4px radii, hairline-separated tables, 14px body, line-height 1.6, near-white canvas, near-zero letter-spacing.
 
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal; /* palt 不使用 */
-```
-
-- **palt**: 未使用。本文・見出しともにプロポーショナル字詰めなし
-- 業務ツール的な等幅感を維持する設計
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary**
-- Background: `#4db848`
-- Text: `#ffffff`
-- Padding: 8px 24px
-- Border Radius: 4px
-- Font Size: 14px
-- Font Weight: 500
-
-**Secondary**
-- Background: `transparent`
-- Text: `#333333`
-- Border: 1px solid `#dddddd`
-- Padding: 8px 24px
-- Border Radius: 4px
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#dddddd`
-- Border (focus): 1px solid `#4db848`
-- Border Radius: 4px
-- Padding: 8px 12px
-- Font Size: 14px
-- Height: 36px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: 1px solid `#eeeeee`
-- Border Radius: 4px
-- Padding: 20px
-- Shadow: `0 1px 3px rgba(0,0,0,0.08)`
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 32px |
-| XXL | 48px |
-
-### Container
-
-- Max Width: 980px
-- Padding (horizontal): 20px
-
-### Grid
-
-- Columns: 12
-- Gutter: 20px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 1px 3px rgba(0,0,0,0.08)` | カード、リスト要素 |
-| 2 | `0 2px 8px rgba(0,0,0,0.12)` | ドロップダウン、ポップオーバー |
-| 3 | `0 4px 16px rgba(0,0,0,0.15)` | モーダル、ダイアログ |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- フォントは必ず和文・欧文のフォールバックチェーンを指定する
-- 日本語本文の line-height は 1.5 以上にする
-- 見出しの weight は 500 に統一する（bold ではなく medium）
-- 14px ベースの密度を維持する（業務ツールとしての視認性）
-- 色のコントラスト比は WCAG AA 以上を確保する
-
-### Don't（禁止）
-
-- `font-family` にヒラギノ角ゴ Pro 1つだけを指定しない（Windows環境で表示崩れ）
-- 日本語本文に `line-height: 1.2` 以下を使わない
-- 見出しに `font-weight: 700` (bold) を使わない（500 medium が基本）
-- `font-feature-settings: "palt"` を適用しない（サイト全体で未使用）
-- CSS Custom Properties を新たに導入しない（既存設計との一貫性）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1024px | タブレットレイアウト |
-| Desktop | > 1024px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px × 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 14px を維持（もとから小さいため縮小しない）
-- 見出しはデスクトップの 85–90% 程度に縮小
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #4db848
-Text Color: #333333
-Background: #ffffff
-Font: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, メイリオ, "MS PGothic", Osaka, sans-serif
-Body Size: 14px
-Line Height: 1.5
-Heading Weight: 500
-palt: なし
-CSS Custom Properties: なし
-```
-
-### プロンプト例
-
-```
-マネーフォワードのデザインシステムに従って、家計簿の収支一覧テーブルを作成してください。
-- プライマリカラー: #4db848
-- フォント: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, メイリオ, "MS PGothic", Osaka, sans-serif
-- 本文: 14px / weight 400 / line-height: 1.5
-- 見出し: weight 500（bold ではなく medium）
-- palt: 使用しない
-- ボーダー: #dddddd
-- テーブルヘッダー背景: #f5f5f5
-```
-
-### freee との主な違い
-
-| 項目 | マネーフォワード | freee |
-|------|-----------------|-------|
-| ブランドカラー | グリーン `#4db848` | ブルー `#2864f0` |
-| 本文サイズ | 14px（業務ツール的） | 16px（標準的） |
-| 見出し weight | 500 (medium) | 700 (bold) |
-| 和文フォント | ヒラギノ角ゴ Pro 優先 | Noto Sans JP / ヒラギノ角ゴ ProN |
-| CSS Custom Properties | なし | Vibes Design Systemで使用 |
-| palt | 未使用 | 見出しで使用 |
-| デザインシステム | 従来型CSS | Vibes（体系化済み） |
+**Reject** — bold (700) headings, neon status colors, pill buttons, heavy drop-shadows, `palt` kerning, negative letter-spacing, two saturated accents on the same view.

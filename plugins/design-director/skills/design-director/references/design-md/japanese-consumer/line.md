@@ -1,255 +1,145 @@
-# DESIGN.md — LINE
+---
+version: alpha
+name: LINE
+description: A Japanese messenger brand expressing trust through scale and saturation. LINE Green (`#06c755`) carries every CTA and accent while large body text (20px) and oversized headings (60–70px) give the marketing site a deliberate, friendly weight. The font chain leads with SFPro and Arial for Latin, then Noto Sans JP and Noto Sans KR — the Korean fallback acknowledges LINE's bilingual roots. Mood — bold, trustworthy, friendly, modern.
 
-> このファイルはAIエージェントが正確な日本語UIを生成するためのデザイン仕様書です。
-> セクションヘッダーは英語、値の説明は日本語で記述しています。
+colors:
+  primary: "#06c755"
+  primary-hover: "#05b34c"
+  ink: "#000000"
+  body: "#000000"
+  muted: "#666666"
+  disabled: "#999999"
+  canvas: "#ffffff"
+  surface: "#f7f8f9"
+  surface-card: "#ffffff"
+  hairline: "#e5e5e5"
+  on-primary: "#ffffff"
+  success: "#06c755"
+  warning: "#f9ab00"
+  error: "#d93025"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 60px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, Noto Sans JP, Noto Sans KR, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+
+rounded:
+  sm: 4px
+  md: 8px
+  lg: 12px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 40px
+  "6": 64px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: クリーン、信頼感、大きくシンプルなタイポグラフィ
-- **密度**: ゆったりとしたランディング型。body font-size 20px と大きめの設定
-- **キーワード**: グリーン、大胆、メッセンジャー、親しみやすい、モダン
-- **カテゴリ**: Messenger
+LINE is the messenger app that owns the JP / KR / TW market. The marketing surface is the opposite of the product UI — generous breathing room, oversized headlines, big body text. The site behaves like a brand statement, not a productivity tool. Every section gets a full-bleed visual, large heading, and short paragraph; buttons and forms are sized for comfortable thumb interaction at 48px height.
 
----
+Mood words — bold, trustworthy, friendly, modern.
 
-## 2. Color Palette & Roles
+## Colors
 
-<!-- CSS Custom Properties は使用していない -->
+**LINE Green `#06c755`** is the brand. It carries every primary action — "Start now," "Download," "Open in app" — and doubles as the success semantic. Hover state lands at `#05b34c`.
 
-### Primary（ブランドカラー）
+The neutral ladder is intentionally short: `#000000` for ink (LINE's marketing site does use full black, unlike most Japanese brands), `#666666` for muted, `#999999` for disabled. Page canvas is `#ffffff`, soft surface `#f7f8f9` for grouped content, hairlines at `#e5e5e5`.
 
-- **LINE Green** (`#06c755`): メインのブランドカラー。CTAボタン、アクセント等に使用
-- **LINE Green Dark** (`#05b34c`): ホバー・プレス時のプライマリカラー（推定）
+Status colors follow Material's neighborhood — `#d93025` for error, `#f9ab00` for warning. Both are restricted to status messaging; never used as decoration.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#d93025`): エラー、削除、危険な操作
-- **Warning** (`#f9ab00`): 警告、注意喚起
-- **Success** (`#06c755`): 成功、完了（LINE Green と共用）
+The chain is `Inter (sub for SFPro / Arial) → Noto Sans JP → Noto Sans KR → Hiragino Sans → Yu Gothic → system-ui`. Korean fallback is intentional: LINE's parent NHN / Naver is Korean, and the messenger crosses both kanji and hangul on the same surface. Letter-spacing is 0 throughout — LINE deliberately avoids tight kerning even on the giant headlines.
 
-### Neutral（ニュートラル）
+Type ladder — 14 / 16 / 20 / 24 / 40 / 60 px. Body sits at **20px** (`body-md`), which is unusually large. Display lifts to 60px / 700 with line-height 1.4; we floor body line-height to 1.6 even though the live site ships `normal` (≈1.2) — at 20px / 1.2 kanji still reads, but 1.6 is safer in this token system.
 
-- **Text Primary** (`#000000`): 本文テキスト
-- **Text Secondary** (`#666666`): 補足テキスト、ラベル
-- **Text Disabled** (`#999999`): 無効状態のテキスト
-- **Border** (`#e5e5e5`): 区切り線、入力欄の枠
-- **Background** (`#ffffff`): ページ背景
-- **Surface** (`#f7f8f9`): カード、モーダル等の面
+## Layout
 
----
+- 8-based spacing scale — 4 / 8 / 16 / 24 / 40 / 64
+- Container max-width 1120px with 24px horizontal padding
+- 12-column grid with 24px gutter
+- Section-to-section vertical rhythm uses the 64px slot for major breaks
+- Breakpoints — Mobile ≤ 767px, Tablet ≤ 1024px, Desktop > 1024px
 
-## 3. Typography Rules
+## Elevation & Depth
 
-### 3.1 和文フォント
+Soft, marketing-style shadows. Level-1 (`0 2px 8px rgba(0,0,0,0.08)`) for cards and dropdowns; level-2 (`0 4px 16px rgba(0,0,0,0.12)`) for modals and popovers; level-3 (`0 8px 24px rgba(0,0,0,0.16)`) for dialogs. The site is not flat — shadows are part of the brand softness.
 
-- **ゴシック体**: Noto Sans JP, Noto Sans KR（韓国語フォールバック）
+## Shapes
 
-### 3.2 欧文フォント
+Border radius is 8px on buttons and inputs, 12px on cards. The slightly larger radius scale gives surfaces a friendly, app-like feel — closer to iOS than to enterprise SaaS. No pill buttons.
 
-- **サンセリフ**: SFPro, Arial
+## Components
 
-### 3.3 font-family 指定
+**Buttons** — Primary fills `#06c755` with white text, weight 700, 8px radius, 12/32 padding, 48px tall. Secondary is transparent fill with 1px `#e5e5e5` border and black text — keeps the green CTA monopolized.
 
-```css
-/* 本文 */
-font-family: SFPro, Arial, "Noto Sans JP", "Noto Sans KR", sans-serif;
-```
+**Inputs** — White fill, 1px `#e5e5e5` border, 8px radius, 16px text, 12/16 padding, 48px tall. Focus border swaps to 1px `#06c755`. Touch-friendly at 48px height.
 
-**フォールバックの考え方**:
-- 欧文フォント（SFPro, Arial）を先に指定し、欧文グリフの品質を優先
-- 和文フォントは Noto Sans JP → Noto Sans KR の順
-- 韓国発のサービスのため Noto Sans KR が含まれる
-- 最後に generic family（sans-serif）を指定
+**Cards** — White fill, 1px `#e5e5e5` border, 12px radius, 24px padding, `0 2px 8px rgba(0,0,0,0.08)` shadow.
 
-### 3.4 文字サイズ・ウェイト階層
+## Do's and Don'ts
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Hero (EN) | SFPro | 70px | 700 | normal | normal | 英語ヒーロー "Life on LINE" |
-| Heading 2 (JP) | Noto Sans JP | 60px | 700 | 80.04px (x1.334) | normal | "コミュニケーションアプリ" |
-| Heading 2 (JP) | Noto Sans JP | 60px | 700 | 76.2px (x1.27) | normal | "LINEのサービス一覧" |
-| Body | SFPro/Noto Sans JP | 20px | 400 | normal | normal | 本文（非常に大きい） |
+**Do**
+- Use `#06c755` exclusively for primary actions
+- Hold body at 20px on the marketing site; this is the brand's posture
+- Lead the chain with Inter / SFPro and include Noto Sans KR for Korean fallback
+- Use 60–70px headings on hero sections — the scale is the point
+- Keep buttons and inputs at 48px height for thumb comfort
 
-### 3.5 行間・字間
+**Don't**
+- Use any green other than `#06c755` for CTAs
+- Drop body below 16px on the marketing surface
+- Add custom CSS variables — the live site doesn't use them
+- Apply `palt` to body — LINE explicitly disables proportional kerning
+- Stack two competing accents — the design carries on green alone
 
-- **本文の行間 (line-height)**: normal（ブラウザデフォルト、約1.2）
-- **見出しの行間**: 1.27〜1.334（見出しにより異なる）
-- **本文の字間 (letter-spacing)**: normal
-- **見出しの字間**: normal
+## Agent Prompt Guide
 
-**ガイドライン**:
-- body font-size が 20px と大きいため、line-height: normal でも一定の可読性を確保
-- 見出しは 60-70px と非常に大きく、インパクト重視のデザイン
-- letter-spacing は全体的に normal で統一
+**Bias toward** — LINE Green primary, oversized 60–70px headings, 20px body, Inter + Noto Sans JP + Noto Sans KR chain, 8px button radius, 12px card radius, 48px touch targets, soft `0 2px 8px` card shadow.
 
-### 3.6 禁則処理・改行ルール
-
-```css
-/* 推奨設定 */
-word-break: break-all;
-overflow-wrap: break-word;
-line-break: strict;
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: "palt" 0; /* palt は通常適用なし */
-```
-
-- **palt**: body では normal（未適用）。大きな見出しでの使用は任意
-- 全体的にプロポーショナル字詰めを使わないシンプルな設計
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary（LINE Green CTA）**
-- Background: `#06c755`
-- Text: `#ffffff`
-- Padding: 12px 32px
-- Border Radius: 8px
-- Font Size: 16px
-- Font Weight: 700
-
-**Secondary**
-- Background: `transparent`
-- Text: `#000000`
-- Border: 1px solid `#e5e5e5`
-- Padding: 12px 32px
-- Border Radius: 8px
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#e5e5e5`
-- Border (focus): 1px solid `#06c755`
-- Border Radius: 8px
-- Padding: 12px 16px
-- Font Size: 16px
-- Height: 48px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: 1px solid `#e5e5e5`
-- Border Radius: 12px
-- Padding: 24px
-- Shadow: 0 2px 8px rgba(0,0,0,0.08)
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 40px |
-| XXL | 64px |
-
-### Container
-
-- Max Width: 1120px
-- Padding (horizontal): 24px
-
-### Grid
-
-- Columns: 12
-- Gutter: 24px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 2px 8px rgba(0,0,0,0.08)` | カード、ドロップダウン |
-| 2 | `0 4px 16px rgba(0,0,0,0.12)` | モーダル、ポップオーバー |
-| 3 | `0 8px 24px rgba(0,0,0,0.16)` | ダイアログ、フローティング要素 |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- LINE Green `#06c755` をCTAやアクセントに一貫して使用する
-- body font-size は 20px を維持する（サービス特有の設定）
-- フォントは SFPro, Arial, Noto Sans JP, Noto Sans KR, sans-serif の順で指定する
-- 見出しは 60-70px の大きなサイズで大胆に表示する
-- 韓国語フォールバック（Noto Sans KR）を含める
-
-### Don't（禁止）
-
-- LINE Green 以外のブランドカラーをCTAに使わない
-- body font-size を 20px 未満に変更しない（ブランドの意図に反する）
-- CSS Custom Properties を独自に追加しない（実サイトでは未使用）
-- palt を本文に適用しない
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1024px | タブレットレイアウト |
-| Desktop | > 1024px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 16-18px、見出しは 36-42px 程度に縮小
-- body の 20px はデスクトップ基準
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #06c755 (LINE Green)
-Text Color: #000000
-Background: #ffffff
-Font: SFPro, Arial, "Noto Sans JP", "Noto Sans KR", sans-serif
-Body Size: 20px
-Line Height: normal
-CSS Custom Properties: なし
-```
-
-### プロンプト例
-
-```
-LINEのデザインシステムに従って、メッセージ一覧画面を作成してください。
-- プライマリカラー: #06c755（LINE Green）
-- フォント: SFPro, Arial, "Noto Sans JP", "Noto Sans KR", sans-serif
-- 本文サイズ: 20px
-- 行間: normal
-- ボタン背景: #06c755、テキスト白、border-radius: 8px
-- ボーダー: #e5e5e5
-- 見出しは大きく（60-70px）、font-weight: 700
-```
+**Reject** — alternative green tones, body smaller than 16px, pill buttons, additional brand accents, headings under 40px on hero sections, body line-height < 1.6.

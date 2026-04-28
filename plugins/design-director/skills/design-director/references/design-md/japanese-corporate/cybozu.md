@@ -1,190 +1,141 @@
-# DESIGN.md — サイボウズ (Cybozu)
+---
+version: alpha
+name: Cybozu
+description: A sincere, message-led Japanese corporate site for a teamwork and groupware company. Cybozu's site is intentionally restrained — there is no real palette beyond near-black ink on white, no shadows, no curved buttons, and no system of accent colors. What it does have is a luxuriously generous body line-height of 2.0, applied globally, so corporate copy and message essays read like a long-form magazine article rather than a SaaS landing page. Hiragino Kaku Gothic Pro W3 leads the type stack, with the Japanese name written first to bias macOS environments toward the JP face. Mood — sincere, warm, calm, message-led.
 
-> サイボウズ（https://cybozu.co.jp/）のデザイン仕様書。
-> コーポレートサイトの computed style に基づく。企業理念を前面に出したグループウェア / SaaS 企業のコーポレートサイト。
+colors:
+  primary: "#333333"
+  ink: "#333333"
+  body: "#333333"
+  muted: "#666666"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f7f7f7"
+  hairline: "#dddddd"
+  on-primary: "#ffffff"
+  success: "#2e8b57"
+  warning: "#e09b1c"
+  error: "#cc3333"
 
+typography:
+  display-xl:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+  display-lg:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 700
+    lineHeight: 1.7
+    letterSpacing: 0
+  body-md:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 2.0
+    letterSpacing: 0
+  body-sm:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.8
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.8
+    letterSpacing: 0
+  label:
+    fontFamily: "Inter, Hiragino Sans, Noto Sans JP, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0.04em
+
+rounded:
+  sm: 2px
+  md: 4px
+  lg: 4px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 32px
+  "6": 48px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: 企業理念「チームワークあふれる社会を創る」を反映した、誠実で温かみのあるコーポレートデザイン。装飾を抑え、メッセージとコンテンツを主役にする
-- **密度**: ゆったりとした余白。line-height: 2.0 をグローバル適用し、読みやすさを重視
-- **キーワード**: 誠実、チームワーク、読みやすい、ゆったり、信頼感
-- **特徴**: CSS Custom Properties を使用しない伝統的なCSS構成。ヒラギノ角ゴ Pro W3 を先頭に指定する和文優先のフォントスタック。line-height: 2.0 のグローバル適用は note の記事本文と同じ水準
+Cybozu is a Japanese groupware vendor whose corporate site uses design as a quiet vehicle for the brand's "teamwork-rich society" philosophy. The visual posture is "the message comes first, the chrome stays out of the way." There is no palette to speak of — the site runs on `#333333` ink and `#ffffff` canvas — and almost no UI furniture at the corporate level. The single distinctive choice is a globally applied `line-height: 2.0` on body copy, which makes long Japanese essays feel like a printed monthly rather than a marketing landing page.
 
----
+Mood words — sincere, warm, calm, message-led.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+The palette is effectively two values: ink (`#333333`) and canvas (`#ffffff`). Pure black `#000000` is intentionally avoided to keep the type from feeling severe. A soft surface `#f7f7f7` is used for occasional section backgrounds, and `#dddddd` provides hairlines when separation is needed. Status tokens (success, warning, error) are present for completeness but rarely surfaced on the corporate site itself.
 
-- **Text Primary** (`#333333`): 本文テキスト。純黒を避けた柔らかいダークグレー
-- **Background** (`#ffffff`): ページ背景
+There is no signature accent color. If a CTA needs to feel branded, it pulls from the imagery alongside it rather than introducing a saturated swatch into the type system.
 
-### Neutral（ニュートラル）
+## Typography
 
-- **Text Primary** (`#333`): 本文テキスト、見出し
-- **Background** (`#fff`): ページ背景
+The Japanese face is **Hiragino Kaku Gothic Pro W3** — *Pro*, not ProN, so this stack uses JIS90 glyphs. Upstream lists the Japanese-language face name first (`"ヒラギノ角ゴ Pro W3"`) to nudge macOS into the JP face on Japanese pages. The hybrid stack here keeps Inter at the head of the latin chain and Hiragino Sans at the head of the JP fallbacks.
 
-> 注: コーポレートサイトはシンプルなカラー構成。CSS Custom Properties による体系的なトークン定義は確認されていない
+`lineHeight: 2.0` on body is the brand's defining typographic choice. It is luxuriously wide — wider than SmartHR (1.6), wider than freee (1.5–1.6), wider than any standard SaaS — and matches the long-form reading rhythm used by note's article body. Headings sit at 1.6–1.7. `letterSpacing` is 0 throughout (no `palt` and no manual tracking). The 16px body is the rem anchor.
 
----
+## Layout
 
-## 3. Typography Rules
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 32 / 48
+- Center-justified content column with generous side gutters
+- No fixed max-width is published, but content rivers feel ~720–960px wide
+- Section spacing is generous: corporate-message essays separate by 48–96px vertical
+- Breakpoints — Mobile ≤ 767, Tablet ≤ 1024, Desktop > 1024
 
-### 3.1 和文フォント
+## Elevation & Depth
 
-- **ゴシック体**: ヒラギノ角ゴ Pro W3（和文の日本語名を先頭に配置。macOS / iOS 優先）
-- Meiryo / メイリオ を Windows フォールバックとして指定
+The corporate site is essentially flat — no shadow tokens, no card stacks, no popovers. Vertical separation comes from whitespace and an occasional hairline `#dddddd`. If shadows must be introduced for a downstream UI surface, keep them as a single subtle drop (`0 1px 2px rgba(0,0,0,0.06)`) so the elevation never breaks the editorial calm.
 
-### 3.2 欧文フォント
+## Shapes
 
-- 和文フォント内蔵の欧文グリフをそのまま使用（別途欧文フォントの先行指定なし）
+Border-radius is minimal — 2–4px when used at all. The site mostly uses square corners and hairlines rather than rounded chips. Pills and heavily rounded controls are intentionally avoided.
 
-### 3.3 font-family 指定
+## Components
 
-```css
-/* 本文（実測値） */
-font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, メイリオ, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-```
+**Buttons** — Primary uses ink fill `#333333` with white text, 4px radius, 12/24 padding. Secondary uses transparent fill with `#333333` text and a 1px `#dddddd` border. Hover lightens by ~5%. There is no canonical "cybozu blue button" — the site treats CTAs as quiet text destinations.
 
-**フォールバックの考え方**:
-- `"ヒラギノ角ゴ Pro W3"` → macOS / iOS 向け（日本語名が先）
-- `"Hiragino Kaku Gothic Pro"` → 英語ロケール環境向け
-- `Meiryo`, `メイリオ` → Windows 向け（英語名・日本語名の両方を指定）
-- `"ＭＳ Ｐゴシック"`, `"MS PGothic"` → レガシー Windows 向け
-- `sans-serif` → 最終フォールバック
+**Inputs** — White fill, 1px `#dddddd` border, 4px radius, 16px text. Focus thickens border to `#333333`.
 
-**特徴**:
-- ヒラギノ角ゴ Pro**N** ではなく **Pro** を使用（JIS2004 字形ではなくJIS90字形）
-- 日本語名を英語名より先に記述する和文優先のアプローチ
+**Cards** — White fill, optional 1px hairline, no shadow, no radius. Vertical rhythm carries the layout instead of card chrome.
 
-### 3.4 文字サイズ・ウェイト階層
+**Article body** — 16px / line-height 2.0 / weight 400. This is the core typographic unit and should be preserved unchanged in any page that hosts long Japanese copy.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Body | ヒラギノ角ゴ Pro W3 | 16px | 400 | 32px (2.0) | normal | 本文テキスト |
-| Body Bold | ヒラギノ角ゴ Pro W3 | 16px | 700 | 32px (2.0) | normal | 強調テキスト |
-| Heading 2 | ヒラギノ角ゴ Pro W3 | 16px | 400 | 32px (2.0) | normal | サブ見出し |
+## Do's and Don'ts
 
-### 3.5 行間・字間
+**Do**
+- Apply `line-height: 2.0` globally on body copy for long-form Japanese
+- Lead the JP fallback chain with Hiragino Kaku Gothic Pro (Pro, not ProN)
+- Keep ink at `#333333`; never use pure `#000000`
+- Use whitespace and hairlines for separation rather than card shadows
 
-- **本文の行間 (line-height)**: `2.0`（32px / 16px）。グローバルに適用。note の記事本文と同じ水準で、非常にゆったりとした読書体験
-- **字間 (letter-spacing)**: `normal`（ブラウザデフォルト）
+**Don't**
+- Drop body line-height below 1.8 — the brand's calm collapses below that floor
+- Mix Hiragino Pro and ProN in the same page (different glyph sets)
+- Apply `font-feature-settings: palt` to body — the site runs flat metrics on purpose
+- Introduce a saturated accent color into the corporate site without a strong reason
 
-**ガイドライン**:
-- line-height: 2.0 は日本語本文としてはかなり広い行間。長文コーポレートメッセージの可読性を重視した設計
-- SmartHR（1.5）や一般的な業務UI（1.4〜1.6）と比較して、明確にゆったりした組版
+## Agent Prompt Guide
 
-### 3.6 禁則処理・改行ルール
+**Bias toward** — two-color palette (ink + canvas), 16px body at line-height 2.0, Hiragino Pro JP-first stack, 4px radii, hairline separators, no card shadows, generous vertical rhythm.
 
-```css
-/* ブラウザデフォルトに依存 */
-```
-
-- 特別な禁則処理の CSS 指定は確認されていない
-
-### 3.7 OpenType 機能
-
-```css
-/* palt: 適用なし（normal） */
-font-feature-settings: normal;
-```
-
-- プロポーショナル字詰め（palt）は適用されていない
-- 本文の可読性を重視し、等幅のまま表示
-
-### 3.8 縦書き
-
-- 該当なし。サイボウズは横書きのみ
-
----
-
-## 4. Component Stylings
-
-> 注: コーポレートサイトのため、UIコンポーネントの体系的な定義は限定的。以下は実測による参考値
-
-### Buttons
-
-**Primary（CTA）**
-- 詳細なボタントークンは未抽出
-
-### Inputs
-
-- コーポレートサイトのため、フォーム要素の定義は限定的
-
----
-
-## 5. Layout Principles
-
-### Container
-
-- コーポレートサイト: コンテンツ幅は中央寄せ
-
-### Spacing
-
-- line-height: 2.0 のグローバル適用により、テキストブロック間の視覚的な余白が自然に確保される
-
----
-
-## 6. Depth & Elevation
-
-- コーポレートサイトのため、体系的なシャドウトークンは確認されていない
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- `line-height: 2.0` をグローバルに適用し、ゆったりとした読書体験を維持する
-- フォントスタックは和文名を先に記述する（`"ヒラギノ角ゴ Pro W3"` が先頭）
-- テキストカラーは `#333` を使い、純粋な `#000000` は避ける
-- コーポレートメッセージの可読性を最優先にする
-
-### Don't（禁止）
-
-- line-height を 1.5 以下に下げない（サイト全体の読みやすさが崩れる）
-- ヒラギノ角ゴ ProN と Pro を混在させない（字形が異なる）
-- `font-feature-settings: "palt"` を本文に適用しない（このサイトでは意図的に使用していない）
-- 全角フォント名（`"ＭＳ Ｐゴシック"`）のフォールバックを省略しない（レガシー環境対応）
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-- コーポレートサイトのため、詳細なブレークポイントトークンは未抽出
-
-### フォントサイズの調整
-
-- ベースフォントサイズ 16px はモバイルでもそのまま適用
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Text Color: #333
-Background: #fff
-Font: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, メイリオ, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif
-Body Size: 16px
-Line Height: 2.0
-Letter Spacing: normal
-palt: なし
-```
-
-### プロンプト例
-
-```
-サイボウズのコーポレートサイトのデザインに従って、企業理念ページを作成してください。
-- フォント: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, メイリオ, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif
-- テキスト色: #333
-- 背景: #fff
-- 行間: line-height: 2.0（グローバル適用）
-- 字間: normal（palt なし）
-- 見出しも本文も同じ line-height: 2.0 で統一
-```
+**Reject** — pure black text, pill buttons, drop-shadow card stacks, neon accents, `palt` kerning on body, body line-height below 1.8, mixing Pro and ProN glyph sets.

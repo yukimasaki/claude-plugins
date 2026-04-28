@@ -1,269 +1,154 @@
-# DESIGN.md — Toyota
+---
+version: alpha
+name: Toyota
+description: A premium Japanese automaker site that pairs Apple-system fonts with a strict letter-spacing rule for refined Japanese rendering. Toyota.jp leads with `SF Pro` for Latin and `Hiragino Kaku Gothic ProN` for kanji, applies a 0.04em letter-spacing globally, and chooses an off-black `#222222` for ink rather than pure black to keep the type from feeling severe. The signature Toyota Red (`#eb0a1e`) is reserved for logo and emphasis surfaces — never for body text or large flat backgrounds. Layout is image-led for vehicle pages and information-dense for news. Mood — premium, refined, trustworthy, precise.
 
-> トヨタ自動車（https://toyota.jp/）のデザイン仕様書。
-> 実サイトの CSS computed style に基づく。CSS Custom Properties 128件の独自トークン体系を持つ。
+colors:
+  primary: "#222222"
+  brand-red: "#eb0a1e"
+  brand-red-hover: "#cc0000"
+  ink: "#222222"
+  body: "#222222"
+  muted: "#666666"
+  disabled: "#999999"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  surface-soft: "#f5f5f5"
+  hairline: "#dddddd"
+  hairline-soft: "#eeeeee"
+  on-primary: "#ffffff"
+  on-brand: "#ffffff"
+  success: "#388e3c"
+  warning: "#f9a825"
+  error: "#d32f2f"
 
+typography:
+  display-xl:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0.04em
+  display-lg:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0.04em
+  title-lg:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0.04em
+  title-md:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0.04em
+  body-md:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0.04em
+  body-sm:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0.04em
+  caption:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: 0.04em
+  label:
+    fontFamily: "SF Pro, Inter, Noto Sans JP, Hiragino Sans, Yu Gothic, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 700
+    lineHeight: 1.6
+    letterSpacing: 0.1em
+
+rounded:
+  sm: 4px
+  md: 4px
+  lg: 8px
+
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 16px
+  "4": 24px
+  "5": 40px
+  "6": 64px
 ---
 
-## 1. Visual Theme & Atmosphere
+## Overview
 
-- **デザイン方針**: 自動車メーカーとして信頼感と先進性を両立させた、クリーンでプロフェッショナルなデザイン。車種情報を主役にした構成
-- **密度**: 車種紹介ページはビジュアル重視のゆったりしたレイアウト。お知らせ・ナビゲーションは情報密度が高い
-- **キーワード**: 信頼、先進的、クリーン、プロフェッショナル、日本品質
-- **特徴**: SF Pro を font-family の先頭に置く Apple 寄りのアプローチ。テキスト色は純黒ではなく `#222222` を採用し、柔らかい印象を確保。letter-spacing: 0.04em をグローバルに適用
+Toyota's corporate site is a premium-feeling automaker presence — vehicle hero photography over generous white surfaces, with a typographic system that treats type as part of the product polish rather than UI chrome. The design posture is "Apple-adjacent restraint with Japanese-engineering precision."
 
----
+Mood words — premium, refined, trustworthy, precise.
 
-## 2. Color Palette & Roles
+## Colors
 
-### Primary（ブランドカラー）
+Ink is intentionally `#222222`, not `#000000` — the off-black keeps long Japanese sentences from feeling oppressive. Body text, secondary text (`#666666`), and disabled (`#999999`) form a neutral ladder. Surfaces stay near-white: page `#ffffff`, soft band `#f5f5f5`, hairlines `#dddddd` (default) and `#eeeeee` (cards).
 
-- **Toyota Red** (`#eb0a1e`): トヨタブランドカラー。ロゴ、重要なアクセントに使用
-- **Toyota Red Dark** (`#cc0000`): ホバー・プレス時
+**Toyota Red `#eb0a1e`** is the signature accent. It appears on the logo, key emphasis surfaces, and brand-led CTAs. It is *not* used for body text, large filled backgrounds, or generic action buttons — those default to ink-filled `#222222` instead. Status colors are warm-saturated (error `#d32f2f`, warning `#f9a825`, success `#388e3c`) and appear sparingly.
 
-### Semantic（意味的な色）
+## Typography
 
-- **Danger** (`#d32f2f`): エラー、削除、危険な操作
-- **Warning** (`#f9a825`): 警告、注意喚起
-- **Success** (`#388e3c`): 成功、完了
+The Latin face is **SF Pro** (Apple's system font), with `-apple-system` and `system-ui` as direct fallbacks. The Japanese face is **Hiragino Kaku Gothic ProN**, with Meiryo as Windows fallback. The hybrid stack here keeps SF Pro at the head, falling through Inter for non-Apple environments, then into the JP cascade.
 
-### Neutral（ニュートラル）
+Toyota's signature typographic move is `letter-spacing: 0.04em` applied globally — this slightly opens up kanji and katakana for a more refined feel, and it carries through every level of the type ladder. Body line-height is 1.5 in upstream spec but lifted to 1.6 here for the JP design-director floor. Heading line-height is 1.5 (upstream) lifted to 1.5–1.6 across the board.
 
-- **Text Primary** (`#222222`): 本文テキスト
-- **Text Secondary** (`#666666`): 補足テキスト、ラベル
-- **Text Disabled** (`#999999`): 無効状態のテキスト
-- **Border** (`#dddddd`): 区切り線、入力欄の枠
-- **Background** (`#ffffff`): ページ背景
-- **Surface** (`#f5f5f5`): カード、セクション背景
+The 40px display is reserved for vehicle name headings (e.g. "bZ4X"). Section headings sit at 20–28px. The 16px body is the rem anchor.
 
----
+## Layout
 
-## 3. Typography Rules
+- 4px-based spacing scale — 4 / 8 / 16 / 24 / 40 / 64
+- Container max-width 1200px with 20px horizontal padding
+- 12-column grid, 20px gutter
+- Touch targets ≥ 44px (WCAG)
+- Breakpoints — Mobile ≤ 767, Tablet ≤ 1024, Desktop > 1024
 
-### 3.1 和文フォント
+## Elevation & Depth
 
-- **ゴシック体**: Hiragino Kaku Gothic ProN, Meiryo
+Three-step ladder. Level 1: `0 2px 8px rgba(0,0,0,0.08)` — vehicle thumbnail cards, news cards. Level 2: `0 4px 16px rgba(0,0,0,0.12)` — dropdowns, popovers. Level 3: `0 8px 32px rgba(0,0,0,0.16)` — modals, dialogs. Most surfaces are flat with hairlines; shadows are reserved for genuine elevation moments.
 
-### 3.2 欧文フォント
+## Shapes
 
-- **サンセリフ**: SF Pro, -apple-system, system-ui
-- **等幅**: SFMono-Regular, Consolas, Menlo
+Border-radius is restrained: 4px on buttons and inputs, 8px on cards. No pill buttons, no fully square corners. The brand reads "precise machined component," not "playful consumer app."
 
-### 3.3 font-family 指定
+## Components
 
-```css
-/* 本文 */
-font-family: "SF Pro", -apple-system, "system-ui", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+**Buttons** — Primary fills `#222222` (ink), white text, weight 700, 4px radius, 12/32 padding. Secondary uses transparent fill with `#222222` border and text. Brand variant fills `#eb0a1e` Toyota Red with white — used for signature CTAs only.
 
-/* 等幅（コード等） */
-font-family: SFMono-Regular, Consolas, Menlo, monospace;
-```
+**Inputs** — White fill, 1px `#dddddd` border, 4px radius, 16px text, 10/12 padding, 44px tall. Focus border switches to `#222222`.
 
-**フォールバックの考え方**:
-- SF Pro（Apple 環境向け）を先頭に配置
-- -apple-system, system-ui でシステムフォントにフォールバック
-- 和文は Hiragino Kaku Gothic ProN → Meiryo の順
-- 欧文フォントを先に指定し、欧文グリフの品質を優先するアプローチ
+**Cards** — White fill, 1px `#eeeeee` border, 8px radius, 24px internal padding, Level 1 shadow. Vehicle thumbnails use this card pattern with full-bleed imagery on top.
 
-### 3.4 文字サイズ・ウェイト階層
+**Heading scale** — vehicle names use display-xl (40px / 700 / lh 1.5), section headings use 20–28px / 700, body sits at 16px / 400 / lh 1.6 with `0.04em` letter-spacing inherited.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | 備考 |
-|------|------|------|--------|-------------|----------------|------|
-| Display | SF Pro 系 | 40px | 700 | 60px (×1.5) | 0.04em | 車種名見出し（bZ4X 等） |
-| Heading 1 | SF Pro 系 | 16px | 400 | 24px (×1.5) | 0.04em | ロゴ（非表示テキスト） |
-| Heading 2 | SF Pro 系 | 20px | 700 | 30px (×1.5) | 0.04em | セクション見出し |
-| Heading 3 | SF Pro 系 | 16px | 700 | 24px (×1.5) | 0.04em | 小見出し・お知らせ |
-| Body | SF Pro 系 | 16px | 400 | 24px (×1.5) | 0.64px (0.04em) | 本文 |
-| Caption | SF Pro 系 | 12px | 400 | 18px (×1.5) | 0.04em | 補足、注釈 |
-| Small | SF Pro 系 | 10px | 400 | 15px (×1.5) | 0.04em | 最小テキスト |
+## Do's and Don'ts
 
-### 3.5 行間・字間
+**Do**
+- Apply `letter-spacing: 0.04em` globally — this is the brand's signature typographic move
+- Use ink `#222222`, not pure `#000000` — the off-black is intentional
+- Reserve Toyota Red `#eb0a1e` for logo, signature CTAs, and emphasis surfaces only
+- Lead the Latin chain with SF Pro / system-ui for Apple-environment quality
 
-- **本文の行間 (line-height)**: 1.5（24px / 16px）
-- **見出しの行間**: 1.5（全体的に統一）
-- **本文の字間 (letter-spacing)**: 0.64px（0.04em）— グローバルに適用
-- **見出しの字間**: 0.04em（本文と共通）
+**Don't**
+- Use pure `#000000` text — too severe for the brand
+- Use Toyota Red as a body text color or as a flat large-area background
+- Set `letter-spacing` to 0 — drops the brand's signature refinement
+- Drop body line-height below 1.6 — kanji crowd at 16px otherwise
 
-**ガイドライン**:
-- toyota.jp は line-height: 1.5 を全体で統一的に適用
-- letter-spacing: 0.04em がグローバルに適用され、和文の可読性を向上
-- 車種名の大型見出し（40px）でも同じ比率を維持
+## Agent Prompt Guide
 
-### 3.6 禁則処理・改行ルール
+**Bias toward** — SF Pro Latin + Hiragino ProN JP stack, ink `#222222` (not pure black), `letter-spacing: 0.04em` globally, 4px button radii, restrained palette with Toyota Red as accent only, large vehicle-name display (40px / 700), 16px body at line-height 1.6.
 
-```css
-word-break: break-all;
-overflow-wrap: break-word;
-line-break: strict;
-```
-
-**禁則対象**:
-- 行頭禁止: `）」』】〕〉》」】、。，．・：；？！`
-- 行末禁止: `（「『【〔〈《「【`
-
-### 3.7 OpenType 機能
-
-```css
-font-feature-settings: normal; /* palt 未適用 */
-```
-
-- toyota.jp では palt（プロポーショナル字詰め）は適用されていない
-- letter-spacing: 0.04em のグローバル指定で字間を調整するアプローチ
-
-### 3.8 縦書き
-
-該当なし
-
----
-
-## 4. Component Stylings
-
-### Buttons
-
-**Primary（CTA）**
-- Background: `#222222`
-- Text: `#ffffff`
-- Padding: 12px 32px
-- Border Radius: 4px
-- Font Size: 16px
-- Font Weight: 700
-
-**Secondary（アウトライン）**
-- Background: `transparent`
-- Text: `#222222`
-- Border: 1px solid `#222222`
-- Padding: 12px 32px
-- Border Radius: 4px
-
-**Brand（トヨタレッド）**
-- Background: `#eb0a1e`
-- Text: `#ffffff`
-- Padding: 12px 32px
-- Border Radius: 4px
-- Font Size: 16px
-- Font Weight: 700
-
-### Inputs
-
-- Background: `#ffffff`
-- Border: 1px solid `#dddddd`
-- Border (focus): 1px solid `#222222`
-- Border Radius: 4px
-- Padding: 10px 12px
-- Font Size: 16px
-- Height: 44px
-
-### Cards
-
-- Background: `#ffffff`
-- Border: 1px solid `#eeeeee`
-- Border Radius: 8px
-- Padding: 24px
-- Shadow: 0 2px 8px rgba(0,0,0,0.08)
-
----
-
-## 5. Layout Principles
-
-### Spacing Scale
-
-| Token | Value |
-|-------|-------|
-| XS | 4px |
-| S | 8px |
-| M | 16px |
-| L | 24px |
-| XL | 40px |
-| XXL | 64px |
-
-### Container
-
-- Max Width: 1200px
-- Padding (horizontal): 20px
-
-### Grid
-
-- Columns: 12
-- Gutter: 20px
-
----
-
-## 6. Depth & Elevation
-
-| Level | Shadow | 用途 |
-|-------|--------|------|
-| 0 | none | フラットな要素 |
-| 1 | `0 2px 8px rgba(0,0,0,0.08)` | カード、車種サムネイル |
-| 2 | `0 4px 16px rgba(0,0,0,0.12)` | ドロップダウン、ポップオーバー |
-| 3 | `0 8px 32px rgba(0,0,0,0.16)` | モーダル、ダイアログ |
-
----
-
-## 7. Do's and Don'ts
-
-### Do（推奨）
-
-- フォントは SF Pro → system-ui → 和文フォント → sans-serif のフォールバックチェーンを維持する
-- 日本語本文の line-height は 1.5 以上にする
-- letter-spacing: 0.04em をグローバルに適用する
-- テキスト色は `#222222` を使用し、純黒を避ける
-- 車種名見出しは 40px / 700 で存在感を出す
-
-### Don't（禁止）
-
-- `font-family` から SF Pro / system-ui を省略しない（Apple 環境での品質が落ちる）
-- テキストの色に純粋な `#000000` を使わない（コントラストが強すぎる）
-- 日本語本文に `line-height: 1.2` 以下を使わない
-- letter-spacing を 0 にしない（toyota.jp の 0.04em は意図的な設計）
-- 車種名見出しのウェイトを 400 以下にしない
-
----
-
-## 8. Responsive Behavior
-
-### Breakpoints
-
-| Name | Width | 説明 |
-|------|-------|------|
-| Mobile | ≤ 767px | モバイルレイアウト |
-| Tablet | ≤ 1024px | タブレットレイアウト |
-| Desktop | > 1024px | デスクトップレイアウト |
-
-### タッチターゲット
-
-- 最小サイズ: 44px x 44px（WCAG基準）
-
-### フォントサイズの調整
-
-- モバイルでは本文 14-16px、車種名見出しはデスクトップの 60-70% 程度（24-28px）に縮小
-- line-height: 1.5 はレスポンシブでも維持
-
----
-
-## 9. Agent Prompt Guide
-
-### クイックリファレンス
-
-```
-Primary Color: #eb0a1e (Toyota Red)
-Text Color: #222222
-Background: #ffffff
-Font: "SF Pro", -apple-system, "system-ui", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif
-Body Size: 16px
-Line Height: 1.5
-Letter Spacing: 0.04em
-```
-
-### プロンプト例
-
-```
-トヨタのデザインシステムに従って、車種一覧ページを作成してください。
-- プライマリカラー: #eb0a1e（Toyota Red）
-- テキスト色: #222222
-- フォント: "SF Pro", -apple-system, "system-ui", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif
-- 行間: line-height: 1.5
-- 字間: letter-spacing: 0.04em
-- 車種名見出し: 40px / 700
-- カードの影: 0 2px 8px rgba(0,0,0,0.08)
-- ボーダー: #dddddd
-```
+**Reject** — pure black text, pill buttons, Toyota Red on body or large backgrounds, zero letter-spacing, line-height below 1.6, garish status colors, drop-shadow heavy cards.
