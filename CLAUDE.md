@@ -24,12 +24,21 @@ chore(plan): Phase 3.7 を追加
 
 このリポは [release-please](https://github.com/googleapis/release-please) で SemVer リリースを自動化しています。**コミットの `type` が直接リリース挙動を決める**ので、選択を慎重に。
 
-| type | 例 | release-please の挙動 |
+現在は **v0.x 系（pre-1.0）** で、`release-please-config.json` に以下 2 フラグが入っています:
+
+- `bump-minor-pre-major: true` — pre-1.0 では BREAKING を MAJOR ではなく **MINOR** に格下げ
+- `bump-patch-for-minor-pre-major: true` — pre-1.0 では `feat` を MINOR ではなく **PATCH** に格下げ
+
+その結果、pre-1.0 の bump は次のとおりです:
+
+| type | 例 | release-please の挙動（pre-1.0） |
 |---|---|---|
-| `feat` | 新プラグイン追加、subcommand 追加、UI 機能追加 | **MINOR bump（v0.X.0）** Release PR 生成 |
-| `fix` | プラグインの不具合修正 | **PATCH bump（v0.0.X）** Release PR 生成 |
-| `feat!` または body に `BREAKING CHANGE:` | 非互換な変更（subcommand 削除、引数仕様変更等） | **MAJOR bump（vX.0.0）** |
+| `feat` | 新プラグイン追加、subcommand 追加、UI 機能追加 | **PATCH bump（v0.X.Y → v0.X.Y+1）** Release PR 生成 |
+| `fix` | プラグインの不具合修正 | **PATCH bump** Release PR 生成 |
+| `feat!` または body に `BREAKING CHANGE:` | 非互換な変更（subcommand 削除、引数仕様変更等） | **MINOR bump（v0.X → v0.X+1.0）** Release PR 生成 |
 | `chore` / `docs` / `ci` / `refactor` / `style` / `test` / `build` | 内部整備、CI、ドキュメント、リファクタ | **何もしない**（Unreleased に蓄積） |
+
+v1.0 リリース後は上記フラグの効果が外れ、`feat` → MINOR / BREAKING → MAJOR に昇格する想定です。
 
 ### type 選択のチェックリスト
 
