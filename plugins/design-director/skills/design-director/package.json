@@ -2,8 +2,15 @@
   "name": "design-director-scripts",
   "private": true,
   "type": "module",
+  "scripts": {
+    "extract": "bun scripts/extract-url.ts",
+    "test": "vitest run"
+  },
   "devDependencies": {
     "@types/node": "^20",
     "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "playwright": "^1.59.1"
   }
 }
