@@ -29,10 +29,10 @@
 - **License**: MIT License (CLI / リポジトリ部分) — Copyright (c) 2026 VoltAgent
 - **License text**: [`licenses/getdesign-LICENSE`](./licenses/getdesign-LICENSE)
 - **取得日**: 2026-04-28
-- **Vendored paths** (19 サイト):
-  - `plugins/design-director/skills/design-director/references/design-md/{warm,editorial,data-dense,cinematic,playful,glass,terminal}/*.md` のうち getdesign.md カタログにある分
+- **Vendored paths** (70 サイト、getdesign.md カタログ全件カバー):
+  - `plugins/design-director/skills/design-director/references/design-md/{warm,editorial,data-dense,cinematic,playful,glass,brutalist,indie,terminal}/*.md` （family 振り分けはメンテナの主観判断）
 - **取得方法**: `https://getdesign.md/design-md/{site}/DESIGN.md` から HTTP fetch（または `npx getdesign@latest add {site}` CLI）
-- **配信形式の補足**: getdesign.md は 2026-04 時点で DESIGN.md 公式仕様（フロントマター付き Markdown）への移行を進めており、配信される 19 サイトのうち 5 サイトは新仕様、14 サイトは依然 legacy prose（`# 見出し` + `## 1. Visual Theme & Atmosphere` 構造）。本リポジトリは upstream の状態を忠実に vendor している。新仕様化が進めば自動追従する
+- **配信形式の補足**: getdesign.md は 2026-04 時点で DESIGN.md 公式仕様（フロントマター付き Markdown）への移行を進めており、配信される 70 サイトのうち約 12 サイトは新仕様、約 58 サイトは依然 legacy prose（`# 見出し` + `## 1. Visual Theme & Atmosphere` 構造）。本リポジトリは upstream の状態を忠実に vendor している。新仕様化が進めば `bun run scripts/check-diff-upstream.ts getdesign-md` で SHA 不一致を検知して PR で取り込み追従できる
 - **利用根拠**: [getdesign.md Terms of Service](https://getdesign.md/terms) Section 5「Free Content」 が public directory の DESIGN.md ファイルに対し "free to browse, download, and use in your projects" を許諾。Section 7 の再配布禁止は paid deliverables（Catalog DESIGN.md / Vibecoder kit 等）のみが対象で、本プラグインが利用する free public DESIGN.md は対象外
 - **Modifications**: 無改変。getdesign.md からの取得時の SHA256 と vendored ファイルの SHA256 が一致することを `scripts/check-diff-upstream.ts getdesign-md` で検証可能
 - **Trademark notice**: vendored 各 DESIGN.md は対応するブランド（Apple / Linear / Vercel 等）の **公開ページから推定された design tokens** であり、当該ブランドのロゴ・著作物の複製ではありません。本プラグインは特定ブランドの impersonation 目的で使用しません
@@ -50,13 +50,13 @@
 - **Source**: <https://github.com/rohitg00/awesome-claude-design>
 - **License**: MIT License — Copyright (c) 2026 Rohit Ghumare
 - **License text**: [`licenses/awesome-claude-design-LICENSE`](./licenses/awesome-claude-design-LICENSE)
-- **Status**: PR #2-1（2026-04-28）で **upstream 参照を終了**。`design-md/` は getdesign.md（DESIGN.md 公式仕様準拠）由来 19 サイト + 自前手動変換 16 サイトに置き換え済み
+- **Status**: PR #2-1（2026-04-28）で **upstream 参照を終了**。`design-md/` は getdesign.md（DESIGN.md 公式仕様準拠）由来 70 サイト + 自前手動変換 15 サイトに置き換え済み（PR #2-2 で 51 サイト追加 + the-verge を upstream 由来に切替）
 - **継承**: rohitg00 由来の **prompt-packs / recipes** および **family 分類体系**（warm / editorial / data-dense / cinematic / playful / glass / brutalist / indie / terminal / **remix**）は本プラグインで継続利用。特に **remix family の 8 サイト**（`linear-x-claude` / `vercel-x-pitchfork` / `mercury-x-linear` / `ollama-x-elevenlabs` / `warp-x-sentry` / `stripe-x-a24` / `notion-x-duolingo` / `granola-x-criterion`）は rohitg00 が hand-crafted した 2 ブランド aesthetic の blend で、本リポジトリで DESIGN.md 公式仕様に変換のうえ継承している
 - **Vendored paths** (継承分):
   - `plugins/design-director/skills/design-director/references/prompt-packs/`
   - `plugins/design-director/skills/design-director/references/recipes/`
   - `plugins/design-director/skills/design-director/references/design-md/remix/` （8 サイトの hand-crafted blend、DESIGN.md 仕様に変換済み）
-  - `plugins/design-director/skills/design-director/references/design-md/{family}/` の getdesign.md カタログ外 8 サイト（mercury / datadog / tavus / canva / toss / arc / the-verge / granola）— rohitg00 由来の prose を本リポジトリで DESIGN.md 仕様に変換
+  - `plugins/design-director/skills/design-director/references/design-md/{family}/` の getdesign.md カタログ外 7 サイト（mercury / datadog / tavus / canva / toss / arc / granola）— rohitg00 由来の prose を本リポジトリで DESIGN.md 仕様に変換。**the-verge は PR #2-2 で getdesign.md `theverge` 由来に置き換え**（vendored ファイル名は `the-verge.md` を維持）
 - **Modifications**: `references/recipes/` には本リポジトリ独自の recipe を追加しています:
   - `references/recipes/social-preview-image.md` — GitHub SPI と README hero を 1 つの hero HTML から作る手順（[Issue #12](https://github.com/yukimasaki/claude-plugins/issues/12) B-1）
   - `references/recipes/github-readme-rendering.md` — github.com で確実に表示される画像 / 動画形式の選び方（B-2）
