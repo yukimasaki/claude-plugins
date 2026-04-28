@@ -38,8 +38,24 @@ export type ExtractOptions = {
 
 export type ColorEntry = {
   value: string;
+  srgb: string | null;
+  srgb_hex: string | null;
   count: number;
   samples: string[];
+};
+
+export type ResolvedColor = {
+  value: string;
+  srgb: string | null;
+  srgb_hex: string | null;
+};
+
+export type CjkSignals = {
+  font_loaded: boolean;
+  lang_attr: boolean;
+  og_locale: string | null;
+  tld_jp: boolean;
+  font_chain_jp: boolean;
 };
 
 export type RadiusEntry = {
@@ -79,10 +95,14 @@ export type RawElementObservation = {
   textTransform: string;
   fontVariantNumeric: string;
   color: string;
+  colorSrgb: string | null;
   backgroundColor: string;
+  backgroundColorSrgb: string | null;
   ancestorBackground: string;
+  ancestorBackgroundSrgb: string | null;
   borderRadius: string;
   borderTopColor: string;
+  borderTopColorSrgb: string | null;
   borderTopWidth: string;
   paddingTop: string;
   paddingRight: string;
@@ -92,7 +112,7 @@ export type RawElementObservation = {
 };
 
 export type BucketedColors = {
-  bg_of_body: string;
+  bg_of_body: ResolvedColor;
   text_on_canvas: ColorEntry[];
   text_on_non_canvas: ColorEntry[];
   button_backgrounds: ColorEntry[];
@@ -106,6 +126,7 @@ export type ObservedYaml = {
   extracted_at: string;
   viewport: string;
   custom_properties: Record<string, string>;
+  custom_properties_srgb: Record<string, string>;
   colors: BucketedColors;
   typography: TypographyCluster[];
   radius_observed: RadiusEntry[];
@@ -114,6 +135,8 @@ export type ObservedYaml = {
     gaps: string[];
   };
   fonts_resolved: string[];
+  is_cjk: boolean;
+  is_cjk_signals: CjkSignals;
   exemplar_hints: string[];
   warnings: string[];
 };
@@ -194,30 +217,86 @@ function roundTo(n: number, step: number): number {
 }
 
 /**
+ * "rgb(r, g, b)" / "rgba(r, g, b, a)" を sRGB hex 文字列に変換する。
+ * alpha が 1 のときは 6 桁、それ以外は 8 桁。受理できない入力は null。
+ */
+export function rgbStringToHex(s: string): string | null {
+  if (!s) return null;
+  const m = /^rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*(?:,\s*([\d.]+)\s*)?\)$/.exec(
+    s.trim(),
+  );
+  if (!m) return null;
+  const clamp255 = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
+  const r = clamp255(parseFloat(m[1]));
+  const g = clamp255(parseFloat(m[2]));
+  const b = clamp255(parseFloat(m[3]));
+  const toHex = (n: number) => n.toString(16).padStart(2, "0");
+  const base = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  if (m[4] === undefined) return base;
+  const a = parseFloat(m[4]);
+  if (!Number.isFinite(a)) return null;
+  const alpha = clamp255(a * 255);
+  if (alpha === 255) return base;
+  return base + toHex(alpha);
+}
+
+const CJK_FONT_REGEX =
+  /noto.*(cjk|jp|kr|sc|tc)|hiragino|yu[\s-]?gothic|meiryo|ms[\s-]?p?gothic|source han/i;
+
+/**
+ * CJK サイト判定。5 経路の signal を OR で合算し、判定根拠も返す。
+ *
+ * - font_loaded: document.fonts に CJK フォント family が含まれる
+ * - lang_attr: <html lang="ja|zh|ko"> （ja-JP / zh-Hans 等のサブタグも許容）
+ * - og_locale: <meta property="og:locale"> の値が CJK ロケールなら値そのものを保持
+ * - tld_jp: hostname が .jp で終わる
+ * - font_chain_jp: observed font-family chain や CP 値に CJK フォント名
+ */
+export function computeIsCjk(opts: {
+  fontsResolved: string[];
+  langAttr: string;
+  ogLocale: string | null;
+  hostname: string;
+  fontChains: string[];
+}): { is_cjk: boolean; is_cjk_signals: CjkSignals } {
+  const font_loaded = opts.fontsResolved.some((f) => CJK_FONT_REGEX.test(f ?? ""));
+  const lang_attr = /^(ja|zh|ko)(-|$)/i.test((opts.langAttr ?? "").trim());
+  const ogTrim = opts.ogLocale ? opts.ogLocale.trim() : "";
+  const og_locale = ogTrim && /^(ja|zh|ko)/i.test(ogTrim) ? ogTrim : null;
+  const tld_jp = /\.jp$/i.test(opts.hostname);
+  const font_chain_jp = opts.fontChains.some((f) => CJK_FONT_REGEX.test(f ?? ""));
+  const is_cjk = font_loaded || lang_attr || !!og_locale || tld_jp || font_chain_jp;
+  return {
+    is_cjk,
+    is_cjk_signals: { font_loaded, lang_attr, og_locale, tld_jp, font_chain_jp },
+  };
+}
+
+type ColorBucket = Map<string, { srgb: string | null; count: number; samples: Set<string> }>;
+
+/**
  * raw observation から色を role-context バケットに分類する。
  * whole-page frequency ではなく、要素の役割（canvas / button / link / border）で
  * 別バケットに入れる。
  */
 export function bucketColorsByRole(
   observations: RawElementObservation[],
-  bodyBg: string,
+  bodyBg: ResolvedColor,
 ): BucketedColors {
-  const textOnCanvas = new Map<string, { count: number; samples: Set<string> }>();
-  const textOnNonCanvas = new Map<string, { count: number; samples: Set<string> }>();
-  const buttonBg = new Map<string, { count: number; samples: Set<string> }>();
-  const linkColor = new Map<string, { count: number; samples: Set<string> }>();
-  const borderColor = new Map<string, { count: number; samples: Set<string> }>();
+  const textOnCanvas: ColorBucket = new Map();
+  const textOnNonCanvas: ColorBucket = new Map();
+  const buttonBg: ColorBucket = new Map();
+  const linkColor: ColorBucket = new Map();
+  const borderColor: ColorBucket = new Map();
 
-  const bump = (
-    map: Map<string, { count: number; samples: Set<string> }>,
-    key: string,
-    sample: string,
-  ) => {
-    if (!key || isTransparent(key)) return;
-    const cur = map.get(key) ?? { count: 0, samples: new Set<string>() };
+  const bump = (map: ColorBucket, value: string, srgb: string | null, sample: string) => {
+    if (!value || isTransparent(value)) return;
+    const cur = map.get(value) ?? { srgb, count: 0, samples: new Set<string>() };
     cur.count += 1;
     if (cur.samples.size < 5) cur.samples.add(sample);
-    map.set(key, cur);
+    // 同一 value で srgb が後から取れたら採用する（先勝ちで null なら更新）
+    if (cur.srgb === null && srgb !== null) cur.srgb = srgb;
+    map.set(value, cur);
   };
 
   for (const o of observations) {
@@ -228,23 +307,23 @@ export function bucketColorsByRole(
     const sample = describeSelector(o);
 
     if (isLikelyButton) {
-      bump(buttonBg, o.backgroundColor, sample);
+      bump(buttonBg, o.backgroundColor, o.backgroundColorSrgb, sample);
     }
     if (isLikelyLink) {
-      bump(linkColor, o.color, sample);
+      bump(linkColor, o.color, o.colorSrgb, sample);
     }
 
     // border (1〜3px のみを hairline 候補に)
     const bw = parsePx(o.borderTopWidth);
     if (bw !== null && bw >= 0.5 && bw <= 3) {
-      bump(borderColor, o.borderTopColor, sample);
+      bump(borderColor, o.borderTopColor, o.borderTopColorSrgb, sample);
     }
 
     // text bucket: canvas vs non-canvas
-    if (sameColor(o.ancestorBackground, bodyBg)) {
-      bump(textOnCanvas, o.color, sample);
+    if (sameColor(o.ancestorBackground, bodyBg.value)) {
+      bump(textOnCanvas, o.color, o.colorSrgb, sample);
     } else {
-      bump(textOnNonCanvas, o.color, sample);
+      bump(textOnNonCanvas, o.color, o.colorSrgb, sample);
     }
   }
 
@@ -258,12 +337,12 @@ export function bucketColorsByRole(
   };
 }
 
-function toColorEntries(
-  m: Map<string, { count: number; samples: Set<string> }>,
-): ColorEntry[] {
+function toColorEntries(m: ColorBucket): ColorEntry[] {
   return Array.from(m.entries())
-    .map(([value, { count, samples }]) => ({
+    .map(([value, { srgb, count, samples }]) => ({
       value,
+      srgb,
+      srgb_hex: srgb ? rgbStringToHex(srgb) : null,
       count,
       samples: Array.from(samples),
     }))
@@ -482,8 +561,20 @@ export function formatObservedYaml(data: ObservedYaml): string {
     }
   }
   push("");
+  push("custom_properties_srgb:");
+  const cpSrgbKeys = Object.keys(data.custom_properties_srgb).sort();
+  if (cpSrgbKeys.length === 0) push("  {}");
+  else {
+    for (const k of cpSrgbKeys) {
+      push(`  ${yamlKey(k)}: ${yamlString(data.custom_properties_srgb[k])}`);
+    }
+  }
+  push("");
   push("colors:");
-  push(`  bg_of_body: ${yamlString(data.colors.bg_of_body)}`);
+  push("  bg_of_body:");
+  push(`    value: ${yamlString(data.colors.bg_of_body.value)}`);
+  push(`    srgb: ${yamlNullableString(data.colors.bg_of_body.srgb)}`);
+  push(`    srgb_hex: ${yamlNullableString(data.colors.bg_of_body.srgb_hex)}`);
   emitColorList("text_on_canvas", data.colors.text_on_canvas, push);
   emitColorList("text_on_non_canvas", data.colors.text_on_non_canvas, push);
   emitColorList("button_backgrounds", data.colors.button_backgrounds, push);
@@ -524,6 +615,14 @@ export function formatObservedYaml(data: ObservedYaml): string {
   if (data.fonts_resolved.length === 0) push("  []");
   for (const f of data.fonts_resolved) push(`  - ${yamlString(f)}`);
   push("");
+  push(`is_cjk: ${data.is_cjk}`);
+  push("is_cjk_signals:");
+  push(`  font_loaded: ${data.is_cjk_signals.font_loaded}`);
+  push(`  lang_attr: ${data.is_cjk_signals.lang_attr}`);
+  push(`  og_locale: ${yamlNullableString(data.is_cjk_signals.og_locale)}`);
+  push(`  tld_jp: ${data.is_cjk_signals.tld_jp}`);
+  push(`  font_chain_jp: ${data.is_cjk_signals.font_chain_jp}`);
+  push("");
   push("exemplar_hints:");
   if (data.exemplar_hints.length === 0) push("  []");
   for (const e of data.exemplar_hints) push(`  - ${yamlString(e)}`);
@@ -542,9 +641,11 @@ function emitColorList(name: string, entries: ColorEntry[], push: (s: string) =>
   }
   push(`  ${name}:`);
   for (const e of entries) {
-    push(
-      `    - { value: ${yamlString(e.value)}, count: ${e.count}, samples: [${e.samples.map(yamlString).join(", ")}] }`,
-    );
+    push(`    - value: ${yamlString(e.value)}`);
+    push(`      srgb: ${yamlNullableString(e.srgb)}`);
+    push(`      srgb_hex: ${yamlNullableString(e.srgb_hex)}`);
+    push(`      count: ${e.count}`);
+    push(`      samples: [${e.samples.map(yamlString).join(", ")}]`);
   }
 }
 
@@ -553,6 +654,11 @@ function yamlString(s: string): string {
   if (s === "") return '""';
   // Always quote with double quotes and escape minimally.
   return '"' + String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+}
+
+function yamlNullableString(s: string | null | undefined): string {
+  if (s === null || s === undefined) return "null";
+  return yamlString(s);
 }
 
 function yamlKey(k: string): string {
@@ -687,7 +793,13 @@ export async function extractUrl(opts: ExtractOptions): Promise<ExtractResult> {
     await fs.writeFile(path.join(outputDir, "page.html"), html, "utf-8");
 
     // Stage F: aggregate to ObservedYaml
-    const bodyBg = evidence.bodyBackground ?? "rgb(255, 255, 255)";
+    const bodyBgRaw = evidence.bodyBackground?.value ?? "rgb(255, 255, 255)";
+    const bodyBgSrgb = evidence.bodyBackground?.srgb ?? null;
+    const bodyBg: ResolvedColor = {
+      value: bodyBgRaw,
+      srgb: bodyBgSrgb,
+      srgb_hex: bodyBgSrgb ? rgbStringToHex(bodyBgSrgb) : null,
+    };
     const colors = bucketColorsByRole(evidence.observations, bodyBg);
     const typography = clusterTypography(evidence.observations);
     const radius_observed = aggregateRadius(
@@ -702,20 +814,34 @@ export async function extractUrl(opts: ExtractOptions): Promise<ExtractResult> {
       0.10,
     );
 
-    const isCjk = evidence.fontsResolved.some((f) =>
-      /noto.*(cjk|jp|kr)|hiragino|yu[\s-]?gothic|meiryo|ms[\s-]?(p|)gothic|source han/i.test(f),
-    );
     const hostname = opts.url ? safeHostname(opts.url) : slug;
+    const fontChains = [
+      ...evidence.observations.map((o) => o.fontFamily),
+      ...Object.entries(evidence.customProperties)
+        .filter(([k]) => /font-?family/i.test(k))
+        .map(([, v]) => v),
+    ];
+    const { is_cjk, is_cjk_signals } = computeIsCjk({
+      fontsResolved: evidence.fontsResolved,
+      langAttr: evidence.langAttr,
+      ogLocale: evidence.ogLocale,
+      hostname,
+      fontChains,
+    });
     const exemplarFiles = await listFrontmatterDesignMdFiles().catch(() => [] as string[]);
     const exemplar_hints = pickNearestExemplars({
       hostname,
-      isCjk,
+      isCjk: is_cjk,
       availableFiles: exemplarFiles,
     });
 
-    if (!isCjk && /(\.jp$|note\.com|qiita\.com|zenn\.dev|smarthr|cookpad)/i.test(hostname)) {
+    if (
+      is_cjk &&
+      !is_cjk_signals.font_loaded &&
+      /(\.jp$|note\.com|qiita\.com|zenn\.dev|smarthr|cookpad)/i.test(hostname)
+    ) {
       warnings.push(
-        "日本語サイトと推測されますが Noto CJK 等の resolved フォントが検出できませんでした。`sudo apt install fonts-noto-cjk` を検討してください。",
+        "日本語サイトと判定しましたが Noto CJK 等の resolved フォントが検出できませんでした。`sudo apt install fonts-noto-cjk` を検討してください。",
       );
     }
 
@@ -725,11 +851,14 @@ export async function extractUrl(opts: ExtractOptions): Promise<ExtractResult> {
       extracted_at: new Date().toISOString(),
       viewport: `${viewport.width}x${viewport.height}`,
       custom_properties: evidence.customProperties,
+      custom_properties_srgb: evidence.customPropertiesSrgb,
       colors,
       typography,
       radius_observed,
       spacing_observed: { paddings_clustered, gaps },
       fonts_resolved: evidence.fontsResolved,
+      is_cjk,
+      is_cjk_signals,
       exemplar_hints,
       warnings,
     };
@@ -790,8 +919,11 @@ async function listFrontmatterDesignMdFiles(): Promise<string[]> {
 type PageEvidence = {
   observations: RawElementObservation[];
   customProperties: Record<string, string>;
+  customPropertiesSrgb: Record<string, string>;
   fontsResolved: string[];
-  bodyBackground: string;
+  bodyBackground: { value: string; srgb: string | null };
+  langAttr: string;
+  ogLocale: string | null;
 };
 
 async function collectEvidence(
@@ -800,39 +932,44 @@ async function collectEvidence(
 ): Promise<PageEvidence> {
   return await page.evaluate(
     ({ targetSelectors, viewportH }) => {
-      type Obs = {
-        selector: string;
-        tag: string;
-        classNames: string[];
-        rect: { width: number; height: number; x: number; y: number };
-        inFirstViewport: boolean;
-        fontFamily: string;
-        fontSize: string;
-        fontWeight: string;
-        lineHeight: string;
-        letterSpacing: string;
-        fontFeatureSettings: string;
-        fontVariationSettings: string;
-        textTransform: string;
-        fontVariantNumeric: string;
-        color: string;
-        backgroundColor: string;
-        ancestorBackground: string;
-        borderRadius: string;
-        borderTopColor: string;
-        borderTopWidth: string;
-        paddingTop: string;
-        paddingRight: string;
-        paddingBottom: string;
-        paddingLeft: string;
-        gap: string;
-      };
       const isTransparent = (c: string) => {
         if (!c) return true;
         const s = c.replace(/\s+/g, "").toLowerCase();
         if (s === "transparent") return true;
         return /^rgba\([^)]*?,0(\.0+)?\)$/.test(s);
       };
+
+      // sRGB resolver: 1x1 canvas に CSS color を塗って getImageData で
+      // gamut-mapped rgba を読む。これでブラウザに lab/oklch/oklab/color() 等の
+      // CSS Color Module 4 値を sRGB 整数に変換させる。
+      const probeCanvas = document.createElement("canvas");
+      probeCanvas.width = 1;
+      probeCanvas.height = 1;
+      const probeCtx = probeCanvas.getContext("2d", { willReadFrequently: true });
+      const toSrgb = (color: string): string | null => {
+        if (!probeCtx) return null;
+        if (!color) return null;
+        const c = color.trim();
+        if (c === "" || c === "transparent") return null;
+        if (typeof CSS === "undefined" || !CSS.supports("color", c)) return null;
+        try {
+          probeCtx.clearRect(0, 0, 1, 1);
+          // 透明初期化のあと不正値で fillStyle が拒否されても
+          // CSS.supports 側で弾いているので probeCtx は信頼できる
+          probeCtx.fillStyle = "rgba(0, 0, 0, 0)";
+          probeCtx.fillStyle = c;
+          probeCtx.fillRect(0, 0, 1, 1);
+          const data = probeCtx.getImageData(0, 0, 1, 1).data;
+          const r = data[0], g = data[1], b = data[2], a = data[3];
+          if (a === 0) return null;
+          if (a === 255) return `rgb(${r}, ${g}, ${b})`;
+          const alpha = Math.round((a / 255) * 1000) / 1000;
+          return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        } catch {
+          return null;
+        }
+      };
+
       const resolveBg = (el: Element | null): string => {
         let cur: Element | null = el;
         while (cur) {
@@ -844,19 +981,25 @@ async function collectEvidence(
         return getComputedStyle(document.body).backgroundColor;
       };
 
-      // :root custom properties
+      // :root custom properties (raw + sRGB-resolved for color-like values)
       const customProperties: Record<string, string> = {};
+      const customPropertiesSrgb: Record<string, string> = {};
       const rootStyle = getComputedStyle(document.documentElement);
       for (let i = 0; i < rootStyle.length; i++) {
         const name = rootStyle[i];
         if (name && name.startsWith("--")) {
           const v = rootStyle.getPropertyValue(name).trim();
-          if (v) customProperties[name] = v;
+          if (!v) continue;
+          customProperties[name] = v;
+          if (typeof CSS !== "undefined" && CSS.supports("color", v)) {
+            const srgb = toSrgb(v);
+            if (srgb !== null) customPropertiesSrgb[name] = srgb;
+          }
         }
       }
 
       const seen = new Set<Element>();
-      const obs: Obs[] = [];
+      const obs: any[] = [];
       for (const sel of targetSelectors as string[]) {
         let nodes: Element[];
         try {
@@ -878,6 +1021,10 @@ async function collectEvidence(
             .split(/\s+/)
             .filter(Boolean)
             .slice(0, 3);
+          const color = cs.getPropertyValue("color");
+          const backgroundColor = cs.getPropertyValue("background-color");
+          const ancestorBackground = resolveBg(el.parentElement ?? el);
+          const borderTopColor = cs.getPropertyValue("border-top-color");
           obs.push({
             selector: tag + (classNames[0] ? `.${classNames[0]}` : ""),
             tag,
@@ -898,11 +1045,15 @@ async function collectEvidence(
             fontVariationSettings: cs.getPropertyValue("font-variation-settings"),
             textTransform: cs.getPropertyValue("text-transform"),
             fontVariantNumeric: cs.getPropertyValue("font-variant-numeric"),
-            color: cs.getPropertyValue("color"),
-            backgroundColor: cs.getPropertyValue("background-color"),
-            ancestorBackground: resolveBg(el.parentElement ?? el),
+            color,
+            colorSrgb: toSrgb(color),
+            backgroundColor,
+            backgroundColorSrgb: toSrgb(backgroundColor),
+            ancestorBackground,
+            ancestorBackgroundSrgb: toSrgb(ancestorBackground),
             borderRadius: cs.getPropertyValue("border-radius"),
-            borderTopColor: cs.getPropertyValue("border-top-color"),
+            borderTopColor,
+            borderTopColorSrgb: toSrgb(borderTopColor),
             borderTopWidth: cs.getPropertyValue("border-top-width"),
             paddingTop: cs.getPropertyValue("padding-top"),
             paddingRight: cs.getPropertyValue("padding-right"),
@@ -914,15 +1065,23 @@ async function collectEvidence(
       }
 
       const bodyBg = resolveBg(document.body);
+      const bodyBgSrgb = toSrgb(bodyBg);
       const fontsResolved = Array.from(
         new Set(Array.from((document as any).fonts ?? []).map((f: any) => f.family)),
       ) as string[];
 
+      const langAttr = (document.documentElement.getAttribute("lang") ?? "").trim();
+      const ogMeta = document.querySelector('meta[property="og:locale"]');
+      const ogLocale = ogMeta?.getAttribute("content")?.trim() || null;
+
       return {
         observations: obs as unknown as RawElementObservation[],
         customProperties,
+        customPropertiesSrgb,
         fontsResolved,
-        bodyBackground: bodyBg,
+        bodyBackground: { value: bodyBg, srgb: bodyBgSrgb },
+        langAttr,
+        ogLocale,
       };
     },
     { targetSelectors: TARGET_SELECTORS, viewportH: viewport.height },
