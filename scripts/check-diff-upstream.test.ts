@@ -40,11 +40,11 @@ describe("REPOS マッピング関数", () => {
     ).toBe("design-skills/heroes.jsx");
   });
 
-  it("getdesign-md は HTTP backend で 19 サイトの vendoredToUpstream を持つ", () => {
+  it("getdesign-md は HTTP backend で 70 サイトの vendoredToUpstream を持つ（getdesign.md カタログ全件）", () => {
     const config = REPOS["getdesign-md"];
     if (config.kind !== "http") throw new Error("expected http config");
     expect(config.baseUrl).toBe("https://getdesign.md");
-    expect(Object.keys(config.vendoredToUpstream).length).toBe(19);
+    expect(Object.keys(config.vendoredToUpstream).length).toBe(70);
   });
 
   it("getdesign-md は TLD 付きサイトを vendoredToUpstream で正規化", () => {

@@ -163,10 +163,10 @@ skill は呼び出し元プロジェクトのルート直下に `.design-studio/
 `references/` 配下の vendored 資産:
 
 - `prompts/`, `design-skills/`, `builtin-skills/` — [OpenCoworkAI/open-codesign](https://github.com/OpenCoworkAI/open-codesign) より（無改変）
-- `design-md/` — [DESIGN.md 公式仕様](https://github.com/google-labs-code/design.md)（Google Labs / Apache-2.0）準拠のフロントマター付き Markdown。19 サイトは [getdesign.md](https://getdesign.md)（VoltAgent team / MIT）から取得、16 サイト（8 単体 + remix family 8）は本リポジトリで仕様準拠に手動変換
+- `design-md/` — [DESIGN.md 公式仕様](https://github.com/google-labs-code/design.md)（Google Labs / Apache-2.0）準拠のフロントマター付き Markdown と一部 legacy prose の混在。**70 サイト**は [getdesign.md](https://getdesign.md)（VoltAgent team / MIT）から取得しカタログ全件をカバー、**15 サイト**（7 単体 + remix family 8）は本リポジトリで仕様準拠に手動変換。合計 85 サイト
 - `prompt-packs/`, `recipes/` — [rohitg00/awesome-claude-design](https://github.com/rohitg00/awesome-claude-design) より（無改変、family 分類体系も継承）
 
-vendored ファイルは無改変で保持する。getdesign.md 由来 19 サイトの更新追従はメンテナが
+vendored ファイルは無改変で保持する。getdesign.md 由来 70 サイトの更新追従はメンテナが
 [`scripts/check-diff-upstream.ts`](../../../../scripts/check-diff-upstream.ts)
 で差分を検出して PR で取り込む（ユーザー向けの取り込みコマンドは提供しない）。
 詳細な帰属表示・利用根拠はリポジトリルートの [ATTRIBUTIONS.md](../../../../ATTRIBUTIONS.md) を参照。

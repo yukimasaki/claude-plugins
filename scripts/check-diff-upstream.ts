@@ -39,29 +39,89 @@ export const REPOS: Record<UpstreamRepo, RepoConfig> = {
   "getdesign-md": {
     kind: "http",
     baseUrl: "https://getdesign.md",
-    // 19 サイト: rohitg00 由来 35 サイトのうち getdesign.md カタログに存在する分。
-    // 残り 16 サイト（8 単体ブランド + 8 remix）は getdesign.md に無いため
-    // 本 PR では自前で DESIGN.md 公式仕様に手動変換し、ここでは追跡しない。
-    // 後続 PR #2-2 で 24 件追加予定（合計 43 エントリ）。
+    // 70 サイト: getdesign.md カタログ全件をカバー（sitemap.xml 起源、2026-04-28 時点）。
+    // family 分類はメンテナの主観判断で rohitg00 流の 10 family に振り分け。
+    // 別途 16 サイト（8 単体 + 8 remix、getdesign.md に無いもの）は自前変換で
+    // vendor 済み（design-md/{family}/{slug}.md 形式、本マップには含めない）。
     vendoredToUpstream: {
+      // warm (3)
       "design-md/warm/claude.md": "design-md/claude/DESIGN.md",
+      "design-md/warm/coinbase.md": "design-md/coinbase/DESIGN.md",
+      "design-md/warm/uber.md": "design-md/uber/DESIGN.md",
+      // editorial (14)
+      "design-md/editorial/cal.md": "design-md/cal/DESIGN.md",
+      "design-md/editorial/ibm.md": "design-md/ibm/DESIGN.md",
+      "design-md/editorial/kraken.md": "design-md/kraken/DESIGN.md",
       "design-md/editorial/linear.md": "design-md/linear.app/DESIGN.md",
+      "design-md/editorial/mintlify.md": "design-md/mintlify/DESIGN.md",
+      "design-md/editorial/mistral.md": "design-md/mistral.ai/DESIGN.md",
+      "design-md/editorial/revolut.md": "design-md/revolut/DESIGN.md",
+      "design-md/editorial/sanity.md": "design-md/sanity/DESIGN.md",
+      "design-md/editorial/stripe.md": "design-md/stripe/DESIGN.md",
+      "design-md/editorial/superhuman.md": "design-md/superhuman/DESIGN.md",
       "design-md/editorial/vercel.md": "design-md/vercel/DESIGN.md",
-      "design-md/data-dense/mongodb.md": "design-md/mongodb/DESIGN.md",
+      "design-md/editorial/vodafone.md": "design-md/vodafone/DESIGN.md",
+      "design-md/editorial/wise.md": "design-md/wise/DESIGN.md",
+      "design-md/editorial/x.md": "design-md/x.ai/DESIGN.md",
+      // data-dense (8)
+      "design-md/data-dense/airtable.md": "design-md/airtable/DESIGN.md",
+      "design-md/data-dense/clay.md": "design-md/clay/DESIGN.md",
       "design-md/data-dense/clickhouse.md": "design-md/clickhouse/DESIGN.md",
+      "design-md/data-dense/hashicorp.md": "design-md/hashicorp/DESIGN.md",
+      "design-md/data-dense/meta.md": "design-md/meta/DESIGN.md",
+      "design-md/data-dense/mongodb.md": "design-md/mongodb/DESIGN.md",
       "design-md/data-dense/posthog.md": "design-md/posthog/DESIGN.md",
+      "design-md/data-dense/sentry.md": "design-md/sentry/DESIGN.md",
+      // cinematic (16)
       "design-md/cinematic/bmw.md": "design-md/bmw/DESIGN.md",
+      "design-md/cinematic/bmw-m.md": "design-md/bmw-m/DESIGN.md",
+      "design-md/cinematic/bugatti.md": "design-md/bugatti/DESIGN.md",
       "design-md/cinematic/cohere.md": "design-md/cohere/DESIGN.md",
+      "design-md/cinematic/elevenlabs.md": "design-md/elevenlabs/DESIGN.md",
       "design-md/cinematic/ferrari.md": "design-md/ferrari/DESIGN.md",
       "design-md/cinematic/lamborghini.md": "design-md/lamborghini/DESIGN.md",
       "design-md/cinematic/minimax.md": "design-md/minimax/DESIGN.md",
+      "design-md/cinematic/nike.md": "design-md/nike/DESIGN.md",
       "design-md/cinematic/nvidia.md": "design-md/nvidia/DESIGN.md",
+      "design-md/cinematic/playstation.md": "design-md/playstation/DESIGN.md",
       "design-md/cinematic/renault.md": "design-md/renault/DESIGN.md",
       "design-md/cinematic/runway.md": "design-md/runwayml/DESIGN.md",
+      "design-md/cinematic/spacex.md": "design-md/spacex/DESIGN.md",
+      "design-md/cinematic/spotify.md": "design-md/spotify/DESIGN.md",
+      "design-md/cinematic/tesla.md": "design-md/tesla/DESIGN.md",
+      // playful (9)
+      "design-md/playful/airbnb.md": "design-md/airbnb/DESIGN.md",
+      "design-md/playful/expo.md": "design-md/expo/DESIGN.md",
       "design-md/playful/figma.md": "design-md/figma/DESIGN.md",
+      "design-md/playful/framer.md": "design-md/framer/DESIGN.md",
+      "design-md/playful/intercom.md": "design-md/intercom/DESIGN.md",
+      "design-md/playful/miro.md": "design-md/miro/DESIGN.md",
+      "design-md/playful/pinterest.md": "design-md/pinterest/DESIGN.md",
+      "design-md/playful/shopify.md": "design-md/shopify/DESIGN.md",
+      "design-md/playful/zapier.md": "design-md/zapier/DESIGN.md",
+      // glass (5)
       "design-md/glass/apple.md": "design-md/apple/DESIGN.md",
+      "design-md/glass/lovable.md": "design-md/lovable/DESIGN.md",
+      "design-md/glass/mastercard.md": "design-md/mastercard/DESIGN.md",
+      "design-md/glass/notion.md": "design-md/notion/DESIGN.md",
+      "design-md/glass/starbucks.md": "design-md/starbucks/DESIGN.md",
+      // brutalist (3)
+      "design-md/brutalist/binance.md": "design-md/binance/DESIGN.md",
+      "design-md/brutalist/the-verge.md": "design-md/theverge/DESIGN.md",
+      "design-md/brutalist/wired.md": "design-md/wired/DESIGN.md",
+      // indie (3)
+      "design-md/indie/composio.md": "design-md/composio/DESIGN.md",
+      "design-md/indie/resend.md": "design-md/resend/DESIGN.md",
+      "design-md/indie/webflow.md": "design-md/webflow/DESIGN.md",
+      // terminal (9)
+      "design-md/terminal/cursor.md": "design-md/cursor/DESIGN.md",
       "design-md/terminal/ollama.md": "design-md/ollama/DESIGN.md",
       "design-md/terminal/opencode.md": "design-md/opencode.ai/DESIGN.md",
+      "design-md/terminal/raycast.md": "design-md/raycast/DESIGN.md",
+      "design-md/terminal/replicate.md": "design-md/replicate/DESIGN.md",
+      "design-md/terminal/supabase.md": "design-md/supabase/DESIGN.md",
+      "design-md/terminal/together.md": "design-md/together.ai/DESIGN.md",
+      "design-md/terminal/voltagent.md": "design-md/voltagent/DESIGN.md",
       "design-md/terminal/warp.md": "design-md/warp/DESIGN.md",
     },
   },
