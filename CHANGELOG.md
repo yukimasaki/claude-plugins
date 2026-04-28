@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.4](https://github.com/yukimasaki/claude-plugins/compare/v0.4.3...v0.4.4) (2026-04-28)
+
+
+### Features
+
+* **design-director:** extract に sRGB hex 変換と多経路 CJK 検出を追加 ([#37](https://github.com/yukimasaki/claude-plugins/issues/37)) ([56c6df8](https://github.com/yukimasaki/claude-plugins/commit/56c6df847818deb4d2058a9c4393fc797b585ec2)), closes [#34](https://github.com/yukimasaki/claude-plugins/issues/34)
+
 ## [0.4.3](https://github.com/yukimasaki/claude-plugins/compare/v0.4.2...v0.4.3) (2026-04-28)
 
 
