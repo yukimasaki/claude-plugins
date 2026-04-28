@@ -1,194 +1,168 @@
-# Design System Inspired by SpaceX
+---
+version: alpha
+name: SpaceX
+description: |
+  SpaceX's website is a full-screen cinematic experience that treats aerospace engineering like a film — every section is a scene, every photograph is a frame, and the interface disappears entirely behind the imagery. The design is pure black (`#000000`) with photography of rockets, space, and planets occupying 100% of the viewport. Text overlays sit directly on these photographs with no background panels, cards, or containers — just type on image, bold and unapologetic. The typography uses D-DIN, an industrial geometric typeface with DIN heritage (the German industrial standard). The defining characteristic is that virtually ALL text is uppercase with positive letter-spacing (0.96px–1.17px), creating a military/aerospace labeling system where every word feels stenciled onto a spacecraft hull. D-DIN-Bold at 48px with uppercase and 0.96px tracking for the hero creates headlines that feel like mission briefing titles. What makes SpaceX distinctive is its radical minimalism: no shadows, no borders (except one ghost button border), no color (only black and a spectral near-white `#f0f0fa`), no cards, no grids. The single ghost button — `rgba(240,240,250,0.1)` background with spectral border — is the sole interactive element. This isn't a design system in the traditional sense — it's a photographic exhibition with a type system and one button. Mood — aerospace-cinematic, austere, mission-briefing, void-floating.
 
-## 1. Visual Theme & Atmosphere
+colors:
+  primary: "#f0f0fa"
+  ink: "#f0f0fa"
+  body: "#f0f0fa"
+  canvas: "#000000"
+  on-primary: "#000000"
+  on-dark: "#f0f0fa"
 
-SpaceX's website is a full-screen cinematic experience that treats aerospace engineering like a film — every section is a scene, every photograph is a frame, and the interface disappears entirely behind the imagery. The design is pure black (`#000000`) with photography of rockets, space, and planets occupying 100% of the viewport. Text overlays sit directly on these photographs with no background panels, cards, or containers — just type on image, bold and unapologetic.
+typography:
+  display-hero:
+    fontFamily: "'D-DIN-Bold', 'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 48px
+    fontWeight: 700
+    lineHeight: 1.0
+    letterSpacing: 0.96px
+  body:
+    fontFamily: "'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  nav-bold:
+    fontFamily: "'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 13px
+    fontWeight: 700
+    lineHeight: 0.94
+    letterSpacing: 1.17px
+  nav-link:
+    fontFamily: "'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 2.0
+    letterSpacing: 0
+  caption-bold:
+    fontFamily: "'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 13px
+    fontWeight: 700
+    lineHeight: 0.94
+    letterSpacing: 1.17px
+  caption:
+    fontFamily: "'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.0
+    letterSpacing: 0
+  micro:
+    fontFamily: "'D-DIN', Arial, Verdana, sans-serif"
+    fontSize: 10px
+    fontWeight: 400
+    lineHeight: 0.94
+    letterSpacing: 1px
 
-The typography system uses D-DIN, an industrial geometric typeface with DIN heritage (the German industrial standard). The defining characteristic is that virtually ALL text is uppercase with positive letter-spacing (0.96px–1.17px), creating a military/aerospace labeling system where every word feels stenciled onto a spacecraft hull. D-DIN-Bold at 48px with uppercase and 0.96px tracking for the hero creates headlines that feel like mission briefing titles. Even body text at 16px maintains the uppercase/tracked treatment at smaller scales.
+rounded:
+  none: 0px
+  sm: 4px
+  ghost: 32px
 
-What makes SpaceX distinctive is its radical minimalism: no shadows, no borders (except one ghost button border at `rgba(240,240,250,0.35)`), no color (only black and a spectral near-white `#f0f0fa`), no cards, no grids. The only visual element is photography + text. The ghost button with `rgba(240,240,250,0.1)` background and 32px radius is the sole interactive element — barely visible, floating over the imagery like a heads-up display. This isn't a design system in the traditional sense — it's a photographic exhibition with a type system and a single button.
+spacing:
+  xxs: 3px
+  xs: 5px
+  sm: 12px
+  md: 15px
+  lg: 18px
+  xl: 24px
+  xxl: 30px
+  section: 48px
 
-**Key Characteristics:**
-- Pure black canvas with full-viewport cinematic photography — the interface is invisible
-- D-DIN / D-DIN-Bold — industrial DIN-heritage typeface
-- Universal uppercase + positive letter-spacing (0.96px–1.17px) — aerospace stencil aesthetic
-- Near-white spectral text (`#f0f0fa`) — not pure white, a slight blue-violet tint
-- Zero shadows, zero cards, zero containers — text on image only
-- Single ghost button: `rgba(240,240,250,0.1)` background with spectral border
-- Full-viewport sections — each section is a cinematic "scene"
-- No decorative elements — every pixel serves the photography
+components:
+  button-ghost:
+    backgroundColor: "{colors.on-dark}"
+    textColor: "{colors.on-dark}"
+    typography: "{typography.body}"
+    rounded: "{rounded.ghost}"
+    padding: 18px
+  hero:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.on-dark}"
+    typography: "{typography.display-hero}"
+    padding: 48px
+  nav-top:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.on-dark}"
+    typography: "{typography.nav-bold}"
+    height: 64px
+---
 
-## 2. Color Palette & Roles
+## Overview
 
-### Primary
-- **Space Black** (`#000000`): Page background, the void of space — at 50% opacity for overlay gradient
-- **Spectral White** (`#f0f0fa`): Text color — not pure white, a slight blue-violet tint that mimics starlight
+SpaceX's website is a full-screen cinematic experience treating aerospace engineering like a film. Every section is a scene; every photograph is a frame; the interface disappears entirely behind the imagery. The design is **pure black** (`#000000`) with photography of rockets, space, and planets occupying 100% of the viewport. Text overlays sit directly on these photographs — no background panels, cards, or containers, just type on image, bold and unapologetic.
 
-### Interactive
-- **Ghost Surface** (`rgba(240, 240, 250, 0.1)`): Button background — nearly invisible, 10% opacity
-- **Ghost Border** (`rgba(240, 240, 250, 0.35)`): Button border — spectral, 35% opacity
-- **Hover White** (`var(--white-100)`): Link hover state — full spectral white
+D-DIN — industrial geometric with DIN heritage — defines the typographic voice. Virtually ALL text is uppercase with positive letter-spacing (0.96–1.17px), creating a military/aerospace labeling system where every word feels stenciled onto a spacecraft hull.
 
-### Gradient
-- **Dark Overlay** (`rgba(0, 0, 0, 0.5)`): Gradient overlay on photographs to ensure text legibility
+Mood — aerospace-cinematic, austere, mission-briefing, void-floating.
 
-## 3. Typography Rules
+## Colors
 
-### Font Families
-- **Display**: `D-DIN-Bold` — bold industrial geometric
-- **Body / UI**: `D-DIN`, fallbacks: `Arial, Verdana`
+The palette is extreme: **two colors only**. **Space Black** (`#000000`) is the page background — the void of space. **Spectral White** (`#f0f0fa`) is the text color — not pure white, a slight blue-violet tint that mimics starlight.
 
-### Hierarchy
+Note: the ghost button uses `rgba(240,240,250,0.1)` background and `rgba(240,240,250,0.35)` border — these are alpha applications of `#f0f0fa`. The DESIGN.md frontmatter records the unfiltered hex; the alpha values are component-level treatments. Dark overlay gradients (`rgba(0,0,0,0.5)`) are similarly composition rules atop photography.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| Display Hero | D-DIN-Bold | 48px (3.00rem) | 700 | 1.00 (tight) | 0.96px | `text-transform: uppercase` |
-| Body | D-DIN | 16px (1.00rem) | 400 | 1.50–1.70 | normal | Standard reading text |
-| Nav Link Bold | D-DIN | 13px (0.81rem) | 700 | 0.94 (tight) | 1.17px | `text-transform: uppercase` |
-| Nav Link | D-DIN | 12px (0.75rem) | 400 | 2.00 (relaxed) | normal | `text-transform: uppercase` |
-| Caption Bold | D-DIN | 13px (0.81rem) | 700 | 0.94 (tight) | 1.17px | `text-transform: uppercase` |
-| Caption | D-DIN | 12px (0.75rem) | 400 | 1.00 (tight) | normal | `text-transform: uppercase` |
-| Micro | D-DIN | 10px (0.63rem) | 400 | 0.94 (tight) | 1px | `text-transform: uppercase` |
+## Typography
 
-### Principles
-- **Universal uppercase**: Nearly every text element uses `text-transform: uppercase`. This creates a systematic military/aerospace voice where all communication feels like official documentation.
-- **Positive letter-spacing as identity**: 0.96px on display, 1.17px on nav — the wide tracking creates the stenciled, industrial feel that connects to DIN's heritage as a German engineering standard.
-- **Two weights, strict hierarchy**: D-DIN-Bold (700) for headlines and nav emphasis, D-DIN (400) for body. No medium or semibold weights exist in the system.
-- **Tight line-heights**: 0.94–1.00 across most text — compressed, efficient, mission-critical communication.
+**D-DIN-Bold** (700) for headlines and nav emphasis; **D-DIN** (400) for body. **No medium or semibold weights** exist in the system — strict two-weight binary.
 
-## 4. Component Stylings
+**Universal uppercase**: nearly every text element uses `text-transform: uppercase`. This creates a systematic military/aerospace voice where all communication feels like official documentation. **Positive letter-spacing as identity**: 0.96px on display, 1.17px on nav — the wide tracking creates the stenciled, industrial feel that connects to DIN's heritage as a German engineering standard. Tight line-heights (0.94–1.00) — compressed, efficient, mission-critical communication.
 
-### Buttons
+## Layout
 
-**Ghost Button**
-- Background: `rgba(240, 240, 250, 0.1)` (barely visible)
-- Text: Spectral White (`#f0f0fa`)
-- Padding: 18px
-- Radius: 32px
-- Border: `1px solid rgba(240, 240, 250, 0.35)`
-- Hover: background brightens, text to `var(--white-100)`
-- Use: The only button variant — "LEARN MORE" CTAs on photography
+8px base spacing with minimal scale (3, 5, 12, 15, 18, 20, 24, 30). Spacing is not the organizing principle; **photography is**. No traditional grid — each section is a full-viewport cinematic frame. Text positioned absolutely or with generous padding over imagery; left-aligned text blocks on photography backgrounds; no max-width container — content bleeds to viewport edges.
 
-### Cards & Containers
-- **None.** SpaceX does not use cards, panels, or containers. All content is text directly on full-viewport photographs. The absence of containers IS the design.
+Whitespace philosophy: **photography IS the whitespace**. Empty space is never empty — it's filled with the dark expanse of space, the curve of a planet, or the flame of a rocket engine. Vertical pacing through viewport: each section is exactly one viewport tall, creating a rhythmic scroll where each "page" reveals a new scene.
 
-### Inputs & Forms
-- Not present on the homepage. The site is purely presentational.
-
-### Navigation
-- Transparent overlay nav on photography
-- D-DIN 13px weight 700, uppercase, 1.17px tracking
-- Spectral white text on dark imagery
-- Logo: SpaceX wordmark at 147x19px
-- Mobile: hamburger collapse
-
-### Image Treatment
-- Full-viewport (100vh) photography sections
-- Professional aerospace photography: rockets, Mars, space
-- Dark gradient overlays (`rgba(0,0,0,0.5)`) for text legibility
-- Each section = one full-screen photograph with text overlay
-- No border radius, no frames — edge-to-edge imagery
-
-## 5. Layout Principles
-
-### Spacing System
-- Base unit: 8px
-- Scale: 3px, 5px, 12px, 15px, 18px, 20px, 24px, 30px
-- Minimal scale — spacing is not the organizing principle; photography is
-
-### Grid & Container
-- No traditional grid — each section is a full-viewport cinematic frame
-- Text is positioned absolutely or with generous padding over imagery
-- Left-aligned text blocks on photography backgrounds
-- No max-width container — content bleeds to viewport edges
-
-### Whitespace Philosophy
-- **Photography IS the whitespace**: Empty space in the design is never empty — it's filled with the dark expanse of space, the curve of a planet, or the flame of a rocket engine. Traditional whitespace concepts don't apply.
-- **Vertical pacing through viewport**: Each section is exactly one viewport tall, creating a rhythmic scroll where each "page" reveals a new scene.
-
-### Border Radius Scale
-- Sharp (4px): Small dividers, utility elements
-- Button (32px): Ghost buttons — the only rounded element
-
-## 6. Depth & Elevation
+## Elevation & Depth
 
 | Level | Treatment | Use |
-|-------|-----------|-----|
-| Photography (Level 0) | Full-viewport imagery | Background layer — always present |
-| Overlay (Level 1) | `rgba(0, 0, 0, 0.5)` gradient | Text legibility layer over photography |
-| Text (Level 2) | Spectral white text, no shadow | Content layer — text floats directly on image |
-| Ghost (Level 3) | `rgba(240, 240, 250, 0.1)` surface | Barely-visible interactive layer |
+|---|---|---|
+| 0 (Photography) | Full-viewport imagery | Background layer — always present |
+| 1 (Overlay) | `rgba(0,0,0,0.5)` gradient | Text legibility over photography |
+| 2 (Text) | Spectral white text, no shadow | Content layer — floats directly on image |
+| 3 (Ghost) | `rgba(240,240,250,0.1)` surface | Barely-visible interactive layer |
 
-**Shadow Philosophy**: SpaceX uses ZERO shadows. In a design built entirely on photography, shadows are meaningless — every surface is already a photograph with natural lighting. Depth comes from the photographic content itself: the receding curvature of Earth, the diminishing trail of a rocket, the atmospheric haze around Mars.
+SpaceX uses **ZERO shadows**. In a design built entirely on photography, shadows are meaningless — every surface is already a photograph with natural lighting. Depth comes from the photographic content itself: receding curvature of Earth, diminishing trail of a rocket, atmospheric haze around Mars.
 
-## 7. Do's and Don'ts
+## Shapes
 
-### Do
+Two radius values total: **4px** for small dividers and utility, and **32px** for the ghost button — the only rounded element.
+
+## Components
+
+**Button ghost**: `rgba(240,240,250,0.1)` fill (barely visible), spectral white text, `1px solid rgba(240,240,250,0.35)` border, 32px radius, 18px padding. The ONLY button variant — "LEARN MORE" CTAs on photography. (The frontmatter `components.button-ghost` records the base spectral white reference; the alpha is applied at runtime.)
+
+**Cards & Containers**: NONE. SpaceX does not use cards, panels, or containers. The absence of containers IS the design.
+
+**Hero**: full-viewport (100vh) section, photography background with dark gradient overlay, 48px D-DIN-Bold uppercase headline + 16px D-DIN body + ghost button.
+
+**Nav top**: transparent overlay on photography. D-DIN 13px / 700 / 1.17px tracking uppercase. Spectral white text. SpaceX wordmark left-aligned.
+
+## Do's and Don'ts
+
+**Do**
 - Use full-viewport photography as the primary design element — every section is a scene
 - Apply uppercase + positive letter-spacing to ALL text — the aerospace stencil voice
 - Use D-DIN exclusively — no other fonts exist in the system
 - Keep the color palette to black + spectral white (`#f0f0fa`) only
 - Use ghost buttons (`rgba(240,240,250,0.1)`) as the sole interactive element
 - Apply dark gradient overlays for text legibility on photographs
-- Let photography carry the emotional weight — the type system is functional, not expressive
+- Let photography carry emotional weight — type system is functional, not expressive
 
-### Don't
+**Don't**
 - Don't add cards, panels, or containers — text sits directly on photography
-- Don't use shadows — they have no meaning in a photographic context
-- Don't introduce colors — the palette is strictly achromatic with spectral tint
+- Don't use shadows — meaningless in a photographic context
+- Don't introduce colors — palette is strictly achromatic with spectral tint
 - Don't use sentence case — everything is uppercase
-- Don't use negative letter-spacing — all tracking is positive (0.96px–1.17px)
+- Don't use negative letter-spacing — all tracking is positive (0.96–1.17px)
 - Don't reduce photography to thumbnails — every image is full-viewport
-- Don't add decorative elements (icons, badges, dividers) — the design is photography + type + one button
+- Don't add decorative elements (icons, badges, dividers) — design is photography + type + one button
 
-## 8. Responsive Behavior
+## Agent Prompt Guide
 
-### Breakpoints
-| Name | Width | Key Changes |
-|------|-------|-------------|
-| Mobile | <600px | Stacked, reduced padding, smaller type |
-| Tablet Small | 600–960px | Adjusted layout |
-| Tablet | 960–1280px | Standard scaling |
-| Desktop | 1280–1350px | Full layout |
-| Large Desktop | 1350–1500px | Expanded |
-| Ultra-wide | >1500px | Maximum viewport |
+**Bias toward** — full-viewport (100vh) photography sections, uppercase + positive letter-spacing on ALL text (0.96–1.17px), D-DIN binary weights (400/700), spectral white `#f0f0fa` (not pure white), single ghost button, dark `rgba(0,0,0,0.5)` overlay for text legibility, zero cards.
 
-### Touch Targets
-- Ghost buttons: 18px padding provides adequate touch area
-- Navigation links: uppercase with generous letter-spacing aids readability
-
-### Collapsing Strategy
-- Photography: maintains full-viewport at all sizes, content reposition
-- Hero text: 48px → scales down proportionally
-- Navigation: horizontal → hamburger
-- Text blocks: reposition but maintain overlay-on-photography pattern
-- Full-viewport sections maintained on mobile
-
-### Image Behavior
-- Edge-to-edge photography at all viewport sizes
-- Background-size: cover with center focus
-- Dark overlay gradients adapt to content position
-- No art direction changes — same photographs, responsive positioning
-
-## 9. Agent Prompt Guide
-
-### Quick Color Reference
-- Background: Space Black (`#000000`)
-- Text: Spectral White (`#f0f0fa`)
-- Button background: Ghost (`rgba(240, 240, 250, 0.1)`)
-- Button border: Ghost Border (`rgba(240, 240, 250, 0.35)`)
-- Overlay: `rgba(0, 0, 0, 0.5)`
-
-### Example Component Prompts
-- "Create a full-viewport hero: background-image covering 100vh, dark gradient overlay rgba(0,0,0,0.5). Headline at 48px D-DIN-Bold, uppercase, letter-spacing 0.96px, spectral white (#f0f0fa) text. Ghost CTA button: rgba(240,240,250,0.1) bg, 1px solid rgba(240,240,250,0.35) border, 32px radius, 18px padding."
-- "Design a navigation: transparent over photography. D-DIN 13px weight 700, uppercase, letter-spacing 1.17px, spectral white text. SpaceX wordmark left-aligned."
-- "Build a content section: full-viewport height, background photography with dark overlay. Left-aligned text block with 48px D-DIN-Bold uppercase heading, 16px D-DIN body text, and ghost button below."
-- "Create a micro label: D-DIN 10px, uppercase, letter-spacing 1px, spectral white, line-height 0.94."
-
-### Iteration Guide
-1. Start with photography — the image IS the design
-2. All text is uppercase with positive letter-spacing — no exceptions
-3. Only two colors: black and spectral white (#f0f0fa)
-4. Ghost buttons are the only interactive element — transparent, spectral-bordered
-5. Zero shadows, zero cards, zero decorative elements
-6. Every section is full-viewport (100vh) — cinematic pacing
+**Reject** — cards/panels/containers, shadows, additional colors, sentence case, negative letter-spacing, sub-viewport image thumbnails, decorative icons or dividers, multiple button variants.

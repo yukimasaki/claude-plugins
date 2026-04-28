@@ -1,266 +1,254 @@
-# Design System Inspired by MongoDB
+---
+version: alpha
+name: MongoDB
+description: |
+  MongoDB's design system is a deep-forest-meets-terminal experience — rooted in the darkest teal-black (`#001e2b`) that evokes both the density of a database and the depth of a forest canopy. Against this near-black canvas, neon green `#00ed64` pulses as the brand accent — bright enough to feel electric, organic enough to feel bioluminescent — never the cold neon of cyberpunk. The typography is architecturally ambitious: MongoDB Value Serif for editorial 96px hero headlines, Euclid Circular A as the geometric body workhorse with weight 300 (light) as a distinctive default body voice, and Source Code Pro with very wide uppercase letter-spacing (1px–3px) as technical signpost labels — like database field markers. The shadow system uses teal-tinted `rgba(0,30,43,0.12)` shadows that carry the forest color even on white surfaces, and pill buttons (100px radius) with green borders `#00684a` complete the LeafyGreen-derived component vocabulary. Mood — forest, technical, bioluminescent, editorial.
 
-## 1. Visual Theme & Atmosphere
+colors:
+  primary: "#00684a"
+  primary-bright: "#00ed64"
+  primary-hover: "#1eaedb"
+  ink: "#000000"
+  body: "#001e2b"
+  muted: "#5c6c75"
+  canvas: "#ffffff"
+  surface-app: "#001e2b"
+  surface-app-alt: "#1c2d38"
+  on-app: "#ffffff"
+  on-app-soft: "#e8edeb"
+  on-app-muted: "#5c6c75"
+  hairline: "#b8c4c2"
+  hairline-app: "#3d4f58"
+  on-primary: "#ffffff"
+  link: "#006cfa"
+  link-hover: "#3860be"
+  link-dark: "#21313c"
+  code-yellow: "#dcdcaa"
 
-MongoDB's website is a deep-forest-meets-terminal experience — a design system rooted in the darkest teal-black (`#001e2b`) that evokes both the density of a database and the depth of a forest canopy. Against this near-black canvas, a striking neon green (`#00ed64`) pulses as the brand accent — bright enough to feel electric, organic enough to feel alive. This isn't the cold neon of cyberpunk; it's the bioluminescent green of something growing in the dark.
+typography:
+  display-hero:
+    fontFamily: "'MongoDB Value Serif', 'Akzidenz-Grotesk Std', Times, Georgia, serif"
+    fontSize: 96px
+    fontWeight: 400
+    lineHeight: 1.20
+    letterSpacing: 0
+  display-secondary:
+    fontFamily: "'MongoDB Value Serif', 'Akzidenz-Grotesk Std', Times, Georgia, serif"
+    fontSize: 64px
+    fontWeight: 400
+    lineHeight: 1.00
+    letterSpacing: 0
+  section-heading:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 36px
+    fontWeight: 500
+    lineHeight: 1.33
+    letterSpacing: 0
+  sub-heading:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 500
+    lineHeight: 1.33
+    letterSpacing: 0
+  body-large:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 400
+    lineHeight: 1.60
+    letterSpacing: 0
+  body:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.33
+    letterSpacing: 0
+  body-light:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 300
+    lineHeight: 1.50
+    letterSpacing: 0
+  nav:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0.16px
+  button:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.00
+    letterSpacing: 0.16px
+  caption:
+    fontFamily: "'Euclid Circular A', 'Akzidenz-Grotesk Std', Arial, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.71
+    letterSpacing: 0
+  code-heading:
+    fontFamily: "'Source Code Pro', ui-monospace, monospace"
+    fontSize: 40px
+    fontWeight: 400
+    lineHeight: 1.60
+    letterSpacing: 0
+  code-body:
+    fontFamily: "'Source Code Pro', ui-monospace, monospace"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: 0
+  code-label:
+    fontFamily: "'Source Code Pro', ui-monospace, monospace"
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.14
+    letterSpacing: 2px
 
-The typography system is architecturally ambitious: MongoDB Value Serif for massive hero headlines (96px) creates an editorial, authoritative presence — serif type at database-company scale is a bold choice that says "we're not just another tech company." Euclid Circular A handles the heavy lifting of body and UI text with an unusually wide weight range (300–700), while Source Code Pro serves as the code and label font with distinctive uppercase treatments featuring very wide letter-spacing (1px–3px). This three-font system creates a hierarchy that spans editorial elegance → geometric professionalism → engineering precision.
+rounded:
+  none: 0px
+  xs: 2px
+  sm: 4px
+  md: 8px
+  lg: 16px
+  xl: 24px
+  "2xl": 32px
+  "3xl": 48px
+  pill: 100px
+  full: 9999px
 
-What makes MongoDB distinctive is its dual-mode design: a dark hero/feature section world (`#001e2b` with neon green accents) and a light content world (white with teal-gray borders `#b8c4c2`). The transition between these modes creates dramatic contrast. The shadow system uses teal-tinted dark shadows (`rgba(0, 30, 43, 0.12)`) that maintain the forest-dark atmosphere even on light surfaces. Buttons use pill shapes (100px–999px radius) with MongoDB Green borders (`#00684a`), and the entire component system references the LeafyGreen design system.
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "5": 20px
+  "6": 24px
+  "8": 32px
 
-**Key Characteristics:**
-- Deep teal-black backgrounds (`#001e2b`) — forest-dark, not space-dark
-- Neon MongoDB Green (`#00ed64`) as the singular brand accent — electric and organic
-- MongoDB Value Serif for hero headlines — editorial authority at tech scale
-- Euclid Circular A for body with weight 300 (light) as a distinctive body weight
-- Source Code Pro with wide uppercase letter-spacing (1px–3px) for technical labels
-- Teal-tinted shadows: `rgba(0, 30, 43, 0.12)` — shadows carry the forest color
-- Dual-mode: dark teal hero sections + light white content sections
-- Pill buttons (100px radius) with green borders (`#00684a`)
-- Link Blue (`#006cfa`) and hover transition to `#3860be`
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.pill}"
+    padding: 12px 24px
+  button-dark:
+    backgroundColor: "{colors.surface-app-alt}"
+    textColor: "{colors.muted}"
+    typography: "{typography.button}"
+    rounded: "{rounded.pill}"
+    padding: 12px 24px
+  button-outlined:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.body}"
+    typography: "{typography.button}"
+    rounded: "{rounded.md}"
+    padding: 10px 20px
+  card:
+    backgroundColor: "{colors.canvas}"
+    rounded: "{rounded.lg}"
+    padding: 24px
+  card-dark:
+    backgroundColor: "{colors.surface-app}"
+    rounded: "{rounded.lg}"
+    padding: 24px
+  card-hero:
+    backgroundColor: "{colors.canvas}"
+    rounded: "{rounded.3xl}"
+    padding: 48px
+  input:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.body}"
+    typography: "{typography.body}"
+    rounded: "{rounded.sm}"
+    padding: 12px
+  code-label-pill:
+    backgroundColor: "{colors.surface-app}"
+    textColor: "{colors.primary-bright}"
+    typography: "{typography.code-label}"
+    rounded: "{rounded.sm}"
+    padding: 4px 8px
+---
 
-## 2. Color Palette & Roles
+## Overview
 
-### Primary Brand
-- **Forest Black** (`#001e2b`): Primary dark background — the deepest teal-black
-- **MongoDB Green** (`#00ed64`): Primary brand accent — neon green for highlights, underlines, gradients
-- **Dark Green** (`#00684a`): Button borders, link text on light — muted green for functional use
+MongoDB's site lives in two worlds: deep forest-black (`#001e2b`) hero and feature sections illuminated by neon green `#00ed64` accents, and crisp white content sections separated by silver-teal `#b8c4c2` hairlines. The transition between modes creates dramatic contrast — the dark sections feel grown rather than designed. MongoDB Value Serif provides editorial authority at 96px hero scale; Euclid Circular A handles UI at weight 300–500; Source Code Pro carries technical labels in uppercase with very wide tracking — the database field-label voice.
 
-### Interactive
-- **Action Blue** (`#006cfa`): Secondary accent — links, interactive highlights
-- **Hover Blue** (`#3860be`): All link hover states transition to this blue
-- **Teal Active** (`#1eaedb`): Button hover background — bright teal
+Mood — forest, technical, bioluminescent, editorial.
 
-### Neutral Scale
-- **Deep Teal** (`#1c2d38`): Dark button backgrounds, secondary dark surfaces
-- **Teal Gray** (`#3d4f58`): Dark borders on dark surfaces
-- **Dark Slate** (`#21313c`): Dark link text variant
-- **Cool Gray** (`#5c6c75`): Muted text on dark, secondary button text
-- **Silver Teal** (`#b8c4c2`): Borders on light surfaces, dividers
-- **Light Input** (`#e8edeb`): Input text on dark surfaces
-- **Pure White** (`#ffffff`): Light section background, button text on dark
-- **Black** (`#000000`): Text on light surfaces, darkest elements
+## Colors
 
-### Shadows
-- **Forest Shadow** (`rgba(0, 30, 43, 0.12) 0px 26px 44px, rgba(0, 0, 0, 0.13) 0px 7px 13px`): Primary card elevation — teal-tinted
-- **Standard Shadow** (`rgba(0, 0, 0, 0.15) 0px 3px 20px`): General elevation
-- **Subtle Shadow** (`rgba(0, 0, 0, 0.1) 0px 2px 4px`): Light card lift
+Forest-black `#001e2b` is the primary dark surface — never pure black. Secondary dark surface `#1c2d38` (deep teal) and `#3d4f58` (teal-gray) handle borders. Light mode uses `#ffffff` canvas with silver-teal `#b8c4c2` hairlines.
 
-## 3. Typography Rules
+Brand green operates in two registers: muted `#00684a` for functional use (button borders, link text on light) and electric `#00ed64` for accent (highlights, underlines, gradient glows). Action blue `#006cfa` handles links; all link hover states transition to `#3860be`. Teal `#1eaedb` is the bright button hover. Light input text uses `#e8edeb`.
 
-### Font Families
-- **Display Serif**: `MongoDB Value Serif` — editorial hero headlines
-- **Body / UI**: `Euclid Circular A` — geometric sans-serif workhorse
-- **Code / Labels**: `Source Code Pro` — monospace with uppercase label treatments
-- **Fallbacks**: `Akzidenz-Grotesk Std` (with CJK: Noto Sans KR/SC/JP), `Times`, `Arial`, `system-ui`
+The shadow system is unique — primary elevation uses teal-tinted `rgba(0,30,43,0.12) 0px 26px 44px` so even on white surfaces depth feels MongoDB-colored.
 
-### Hierarchy
+## Typography
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| Display Hero | MongoDB Value Serif | 96px (6.00rem) | 400 | 1.20 (tight) | normal | Serif authority |
-| Display Secondary | MongoDB Value Serif | 64px (4.00rem) | 400 | 1.00 (tight) | normal | Serif sub-hero |
-| Section Heading | Euclid Circular A | 36px (2.25rem) | 500 | 1.33 | normal | Geometric precision |
-| Sub-heading | Euclid Circular A | 24px (1.50rem) | 500 | 1.33 | normal | Feature titles |
-| Body Large | Euclid Circular A | 20px (1.25rem) | 400 | 1.60 (relaxed) | normal | Introductions |
-| Body | Euclid Circular A | 18px (1.13rem) | 400 | 1.33 | normal | Standard body |
-| Body Light | Euclid Circular A | 16px (1.00rem) | 300 | 1.50–2.00 | normal | Light-weight reading text |
-| Nav / UI | Euclid Circular A | 16px (1.00rem) | 500 | 1.00–1.88 | 0.16px | Navigation, emphasized |
-| Body Bold | Euclid Circular A | 15px (0.94rem) | 700 | 1.50 | normal | Strong emphasis |
-| Button | Euclid Circular A | 13.5px–16px | 500–700 | 1.00 | 0.135px–0.9px | CTA labels |
-| Caption | Euclid Circular A | 14px (0.88rem) | 400 | 1.71 (relaxed) | normal | Metadata |
-| Small | Euclid Circular A | 11px (0.69rem) | 600 | 1.82 (relaxed) | 0.2px | Tags, annotations |
-| Code Heading | Source Code Pro | 40px (2.50rem) | 400 | 1.60 (relaxed) | normal | Code showcase titles |
-| Code Body | Source Code Pro | 16px (1.00rem) | 400 | 1.50 | normal | Code blocks |
-| Code Label | Source Code Pro | 14px (0.88rem) | 400–500 | 1.14 (tight) | 1px–2px | `text-transform: uppercase` |
-| Code Micro | Source Code Pro | 9px (0.56rem) | 600 | 2.67 (relaxed) | 2.5px | `text-transform: uppercase` |
+**Serif for authority** — MongoDB Value Serif at 96px / weight 400 / 1.20 line-height creates an editorial presence rare in tech. Used only for hero/display headings.
 
-### Principles
-- **Serif for authority**: MongoDB Value Serif at hero scale creates an editorial presence unusual in tech — it communicates that MongoDB is an institution, not a startup.
-- **Weight 300 as body default**: Euclid Circular A uses light (300) for body text, creating an airy reading experience that contrasts with the dense, dark backgrounds.
-- **Wide-tracked monospace labels**: Source Code Pro uppercase at 1px–3px letter-spacing creates technical signposts that feel like database field labels — systematic, structured, classified.
-- **Four-weight range**: 300 (light body) → 400 (standard) → 500 (UI/nav) → 700 (bold CTA) — a wider range than most systems, enabling fine-grained hierarchy.
+**Weight 300 as body default** — Euclid Circular A uses light (300) for body text, an airy reading experience that contrasts with dense dark backgrounds. Four-weight range: 300 (light body) → 400 (standard) → 500 (UI/nav) → 700 (bold CTA).
 
-## 4. Component Stylings
+**Wide-tracked monospace labels** — Source Code Pro uppercase at 1–3px letter-spacing creates technical signposts. The "database field label" aesthetic.
 
-### Buttons
+## Layout
 
-**Primary Green (Dark Surface)**
-- Background: `#00684a` (muted MongoDB green)
-- Text: `#000000`
-- Radius: 50% (circular) or 100px (pill)
-- Border: `1px solid #00684a`
-- Shadow: `rgba(0,0,0,0.06) 0px 1px 6px`
-- Hover: scale 1.1
-- Active: scale 0.85
+8px base, scale 4/8/12/16/20/24/32px. Max content width centered. Card grids 2–3 columns. Dark hero sections get 80px+ vertical padding to let the forest-dark breathe; white content sections are denser.
 
-**Dark Teal Button**
-- Background: `#1c2d38`
-- Text: `#5c6c75`
-- Radius: 100px (pill)
-- Border: `1px solid #3d4f58`
-- Hover: background `#1eaedb`, text white, translateX(5px)
+## Elevation & Depth
 
-**Outlined Button (Light Surface)**
-- Background: transparent
-- Text: `#001e2b`
-- Border: `1px solid #b8c4c2`
-- Radius: 4px–8px
-- Hover: background tint
+Five-tier depth system, all using teal-tinted shadows on dark surfaces:
 
-### Cards & Containers
-- Light mode: white background with `1px solid #b8c4c2` border
-- Dark mode: `#001e2b` or `#1c2d38` background with `1px solid #3d4f58`
-- Radius: 16px (standard), 24px (medium), 48px (large/hero)
-- Shadow: `rgba(0,30,43,0.12) 0px 26px 44px` (forest-tinted)
-- Image containers: 30px–32px radius
+- **Subtle** — `rgba(0,0,0,0.1) 0px 2px 4px` for light card lift
+- **Standard** — `rgba(0,0,0,0.15) 0px 3px 9px` for standard cards
+- **Prominent** — `rgba(0,0,0,0.15) 0px 3px 20px` for elevated panels
+- **Forest** — `rgba(0,30,43,0.12) 0px 26px 44px, rgba(0,0,0,0.13) 0px 7px 13px` for hero cards (signature teal-tint)
 
-### Inputs & Forms
-- Textarea: text `#e8edeb`, padding 12px 12px 12px 8px
-- Borders: `1px solid #b8c4c2` on light, `1px solid #3d4f58` on dark
-- Input radius: 4px
+The neon green accent underline (`0px 2px 2px 0px solid #00ed64` bottom + right) is the signature decorative element on feature headings.
 
-### Navigation
-- Dark header on forest-black background
-- Euclid Circular A 16px weight 500 for nav links
-- MongoDB logo (leaf icon + wordmark) left-aligned
-- Green CTA pill buttons right-aligned
-- Mega-menu dropdowns with product categories
+## Shapes
 
-### Image Treatment
-- Dashboard screenshots on dark backgrounds
-- Green-accented UI elements in screenshots
-- 30px–32px radius on image containers
-- Full-width dark sections for product showcases
+2px (small spans, badges) → 4px (inputs, small buttons) → 8px (cards, links) → 16px (standard cards) → 24px (large panels) → 32px (image containers) → 48px (hero cards) → 100px / 9999px (pills, navigation).
 
-### Distinctive Components
+## Components
 
-**Neon Green Accent Underlines**
-- `0px 2px 2px 0px solid #00ed64` — bottom + right border creating accent underlines
-- Used on feature headings and highlighted text
-- Also appears as `#006cfa` (blue) variant
+**Primary green** — `#00684a` fill, black text, 100px pill radius, `1px solid #00684a` border, light shadow `rgba(0,0,0,0.06) 0px 1px 6px`, hover `scale(1.1)` / active `scale(0.85)`.
 
-**Source Code Label System**
-- 14px uppercase Source Code Pro with 1px–2px letter-spacing
-- Used as section category markers above headings
-- Creates a "database field label" aesthetic
+**Dark teal** — `#1c2d38` fill, `#5c6c75` text, 100px radius, `1px solid #3d4f58` border, hover `#1eaedb` background with white text and `translateX(5px)`.
 
-## 5. Layout Principles
+**Outlined (light surface)** — transparent fill, `#001e2b` text, `1px solid #b8c4c2` border, 4–8px radius.
 
-### Spacing System
-- Base unit: 8px
-- Scale: 1px, 4px, 7px, 8px, 10px, 12px, 14px, 15px, 16px, 18px, 20px, 24px, 32px
+**Cards** — white fill on light with `1px solid #b8c4c2` border, `#001e2b` or `#1c2d38` on dark with `1px solid #3d4f58`, 16px standard / 24px medium / 48px hero radius. Forest-tinted shadow `rgba(0,30,43,0.12) 0px 26px 44px`.
 
-### Grid & Container
-- Max content width centered
-- Dark hero section with contained content
-- Light content sections below
-- Card grids: 2–3 columns
-- Full-width dark footer
+**Source Code Pro labels** — 14px uppercase / weight 500 / 2px tracking — placed above headings as section category markers.
 
-### Whitespace Philosophy
-- **Dramatic mode transitions**: The shift from dark teal sections to white content creates built-in visual breathing through contrast, not just space.
-- **Generous dark sections**: Dark hero and feature areas use extra vertical padding (80px+) to let the forest-dark background breathe.
-- **Compact light sections**: White content areas are denser, with tighter card grids and less vertical spacing.
+## Do's and Don'ts
 
-### Border Radius Scale
-- Minimal (1px–2px): Small spans, badges
-- Subtle (4px): Inputs, small buttons
-- Standard (8px): Cards, links
-- Card (16px): Standard cards, containers
-- Toggle (20px): Switch elements
-- Large (24px): Large panels
-- Image (30px–32px): Image containers
-- Hero (48px): Hero cards
-- Pill (100px–999px): Buttons, navigation pills
-- Full (9999px): Maximum pill
-
-## 6. Depth & Elevation
-
-| Level | Treatment | Use |
-|-------|-----------|-----|
-| Flat (Level 0) | No shadow | Default surfaces |
-| Subtle (Level 1) | `rgba(0,0,0,0.1) 0px 2px 4px` | Light card lift |
-| Standard (Level 2) | `rgba(0,0,0,0.15) 0px 3px 9px` | Standard cards |
-| Prominent (Level 3) | `rgba(0,0,0,0.15) 0px 3px 20px` | Elevated panels |
-| Forest (Level 4) | `rgba(0,30,43,0.12) 0px 26px 44px, rgba(0,0,0,0.13) 0px 7px 13px` | Hero cards — teal-tinted |
-
-**Shadow Philosophy**: MongoDB's shadow system is unique in that the primary elevation shadow uses `rgba(0, 30, 43, 0.12)` — a teal-tinted shadow that carries the forest-dark brand color into the depth system. This means even on white surfaces, shadows feel like they belong to the MongoDB color world rather than being generic neutral black.
-
-## 7. Do's and Don'ts
-
-### Do
-- Use `#001e2b` (forest-black) for dark sections — not pure black
-- Apply MongoDB Green (`#00ed64`) sparingly for maximum electric impact
-- Use MongoDB Value Serif ONLY for hero/display headings — Euclid Circular A for everything else
-- Apply Source Code Pro uppercase with wide tracking (1px–3px) for technical labels
-- Use teal-tinted shadows (`rgba(0,30,43,0.12)`) for primary card elevation
-- Maintain the dark/light section duality — dramatic contrast between modes
-- Use weight 300 for body text — the light weight is the readable voice
+**Do**
+- Use forest-black `#001e2b` for dark sections — never pure black
+- Apply neon green `#00ed64` sparingly for maximum electric impact (highlights, underlines, small accents)
+- Use MongoDB Value Serif ONLY for hero/display — Euclid Circular A for everything else
+- Use weight 300 for body text — the airy light voice is the readable default
+- Apply Source Code Pro uppercase with 1–3px tracking for technical labels
+- Use teal-tinted `rgba(0,30,43,0.12)` shadows for primary card elevation
 - Apply pill radius (100px) to primary action buttons
+- Maintain dramatic dark-mode / light-mode duality between sections
 
-### Don't
-- Don't use pure black (`#000000`) for dark backgrounds — always use teal-black (`#001e2b`)
-- Don't use MongoDB Green (`#00ed64`) on backgrounds — it's an accent for text, underlines, and small highlights
-- Don't use standard gray shadows — always use teal-tinted (`rgba(0,30,43,...)`)
-- Don't apply serif font to body text — MongoDB Value Serif is hero-only
-- Don't use narrow letter-spacing on Source Code Pro labels — the wide tracking IS the identity
-- Don't mix dark and light section treatments within the same section
-- Don't use warm colors — the palette is strictly cool (teal, green, blue)
-- Don't forget the green accent underlines — they're the signature decorative element
+**Don't**
+- Use pure black `#000000` for dark backgrounds — always teal-black `#001e2b`
+- Apply neon green to large background fills — it's accent-only
+- Use standard gray shadows — always teal-tinted
+- Apply MongoDB Value Serif to body text — hero scale only
+- Use narrow letter-spacing on Source Code Pro labels — wide tracking IS the identity
+- Mix dark and light section treatments within the same section
+- Introduce warm colors — the palette is strictly cool (teal, green, blue)
+- Forget the green accent underlines — they're the signature decorative element
 
-## 8. Responsive Behavior
+## Agent Prompt Guide
 
-### Breakpoints
-| Name | Width | Key Changes |
-|------|-------|-------------|
-| Mobile Small | <425px | Tight single column |
-| Mobile | 425–768px | Standard mobile |
-| Tablet | 768–1024px | 2-column grids begin |
-| Desktop | 1024–1280px | Standard layout |
-| Large Desktop | 1280–1440px | Expanded layout |
-| Ultra-wide | >1440px | Maximum width, generous margins |
+**Bias toward** — forest-black `#001e2b` dark sections, neon green `#00ed64` electric accents, MongoDB Value Serif for hero, Euclid Circular A weight 300 body, Source Code Pro uppercase labels with 2px tracking, pill (100px) primary buttons, teal-tinted forest shadows, dramatic dark/light mode duality.
 
-### Touch Targets
-- Pill buttons with generous padding
-- Navigation links at 16px with adequate spacing
-- Card surfaces as full-area touch targets
-
-### Collapsing Strategy
-- Hero: MongoDB Value Serif 96px → 64px → scales further
-- Navigation: horizontal mega-menu → hamburger
-- Feature cards: multi-column → stacked
-- Dark/light sections maintain their mode at all sizes
-- Source Code Pro labels maintain uppercase treatment
-
-### Image Behavior
-- Dashboard screenshots scale proportionally
-- Dark section backgrounds maintained full-width
-- Image radius maintained across breakpoints
-
-## 9. Agent Prompt Guide
-
-### Quick Color Reference
-- Dark background: Forest Black (`#001e2b`)
-- Brand accent: MongoDB Green (`#00ed64`)
-- Functional green: Dark Green (`#00684a`)
-- Link blue: Action Blue (`#006cfa`)
-- Text on light: Black (`#000000`)
-- Text on dark: White (`#ffffff`) or Light Input (`#e8edeb`)
-- Border light: Silver Teal (`#b8c4c2`)
-- Border dark: Teal Gray (`#3d4f58`)
-
-### Example Component Prompts
-- "Create a hero on forest-black (#001e2b) background. Headline at 96px MongoDB Value Serif weight 400, line-height 1.20, white text with 'potential' highlighted in MongoDB Green (#00ed64). Subtitle at 18px Euclid Circular A weight 400. Green pill CTA (#00684a, 100px radius). Neon green gradient glow behind product screenshot."
-- "Design a card on white background: 1px solid #b8c4c2 border, 16px radius, shadow rgba(0,30,43,0.12) 0px 26px 44px. Title at 24px Euclid Circular A weight 500. Body at 16px weight 300. Source Code Pro 14px uppercase label above title with 2px letter-spacing."
-- "Build a dark section: #001e2b background, 1px solid #3d4f58 border on cards. White text. MongoDB Green (#00ed64) accent underlines on headings using bottom-border 2px solid."
-- "Create technical label: Source Code Pro 14px, text-transform uppercase, letter-spacing 2px, weight 500, #00ed64 color on dark background."
-- "Design a pill button: #1c2d38 background, 1px solid #3d4f58 border, 100px radius, #5c6c75 text. Hover: #1eaedb background, white text, translateX(5px)."
-
-### Iteration Guide
-1. Start with the mode decision: dark (#001e2b) for hero/features, white for content
-2. MongoDB Green (#00ed64) is electric — use once per section for maximum impact
-3. Serif headlines (MongoDB Value Serif) create the editorial authority — never use for body
-4. Weight 300 body text creates the airy reading experience — don't default to 400
-5. Source Code Pro uppercase with wide tracking for technical labels — the database voice
-6. Teal-tinted shadows keep everything in the MongoDB color world
+**Reject** — pure black backgrounds, MongoDB Value Serif on body text, neon green on large surfaces, narrow tracking on Source Code Pro labels, warm palette, generic neutral shadows, 4px-only sharp button radii.
