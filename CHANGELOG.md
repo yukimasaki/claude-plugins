@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3](https://github.com/yukimasaki/claude-plugins/compare/v0.4.2...v0.4.3) (2026-04-28)
+
+
+### Features
+
+* **design-director:** /design-director extract &lt;url&gt; サブコマンドを追加 ([#32](https://github.com/yukimasaki/claude-plugins/issues/32)) ([bd93f69](https://github.com/yukimasaki/claude-plugins/commit/bd93f693cc16104652bf77d7cf8f292fd2ce20c9)), closes [#17](https://github.com/yukimasaki/claude-plugins/issues/17)
+
 ## [0.4.2](https://github.com/yukimasaki/claude-plugins/compare/v0.4.1...v0.4.2) (2026-04-28)
 
 
