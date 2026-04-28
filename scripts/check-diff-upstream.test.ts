@@ -10,6 +10,7 @@ import {
   enumerateVendoredFilesGit,
   enumerateVendoredFilesHttp,
   type HttpFetcher,
+  KZHRKNT_FAMILY_MAP,
   REPOS,
   type UpstreamFile,
 } from "./check-diff-upstream";
@@ -62,6 +63,56 @@ describe("REPOS マッピング関数", () => {
     expect(config.vendoredToUpstream["design-md/cinematic/runway.md"]).toBe(
       "design-md/runwayml/DESIGN.md",
     );
+  });
+
+  it("awesome-design-md-jp は git backend で kzhrknt/awesome-design-md-jp を指す", () => {
+    const config = REPOS["awesome-design-md-jp"];
+    if (config.kind !== "git") throw new Error("expected git config");
+    expect(config.url).toBe(
+      "https://github.com/kzhrknt/awesome-design-md-jp.git",
+    );
+    expect(config.mappings.length).toBe(1);
+    expect(config.mappings[0].vendoredPrefix).toBe("design-md");
+  });
+
+  it("awesome-design-md-jp は KZHRKNT_FAMILY_MAP に基づき japanese-* family へマップ", () => {
+    const config = REPOS["awesome-design-md-jp"];
+    if (config.kind !== "git") throw new Error("expected git config");
+    const mapping = config.mappings[0];
+    expect(mapping.toLocalPath("design-md/smarthr/DESIGN.md")).toBe(
+      "design-md/japanese-corporate/smarthr.md",
+    );
+    expect(mapping.toLocalPath("design-md/muji/DESIGN.md")).toBe(
+      "design-md/japanese-consumer/muji.md",
+    );
+    expect(mapping.toLocalPath("design-md/note/DESIGN.md")).toBe(
+      "design-md/japanese-editorial/note.md",
+    );
+    expect(mapping.toLocalPath("design-md/studio/DESIGN.md")).toBe(
+      "design-md/japanese-creative/studio.md",
+    );
+  });
+
+  it("awesome-design-md-jp は KZHRKNT_FAMILY_MAP 未登録のサイトを null で skip", () => {
+    const config = REPOS["awesome-design-md-jp"];
+    if (config.kind !== "git") throw new Error("expected git config");
+    expect(
+      config.mappings[0].toLocalPath("design-md/unknown-site/DESIGN.md"),
+    ).toBeNull();
+  });
+
+  it("KZHRKNT_FAMILY_MAP は 25 エントリで全て japanese-* family を指す", () => {
+    const validFamilies = new Set([
+      "japanese-corporate",
+      "japanese-consumer",
+      "japanese-editorial",
+      "japanese-creative",
+    ]);
+    const entries = Object.entries(KZHRKNT_FAMILY_MAP);
+    expect(entries.length).toBe(25);
+    for (const [, family] of entries) {
+      expect(validFamilies.has(family)).toBe(true);
+    }
   });
 });
 
