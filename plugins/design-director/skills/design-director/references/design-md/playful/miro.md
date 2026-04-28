@@ -1,108 +1,216 @@
-# Design System Inspired by Miro
+---
+version: alpha
+name: Miro
+description: |
+  Miro's website is a clean, collaborative-tool-forward platform that communicates "visual thinking" through generous whitespace, pastel accent colors, and a confident geometric font. The design uses a predominantly white canvas with near-black `#1c1c1e` text and a distinctive pastel color palette — coral, rose, teal, orange, yellow, moss — each light/dark pair representing different collaboration contexts. Roobert PRO Medium is the primary display font with multiple OpenType character variants (`"blwf", "cv03", "cv04", "cv09", "cv11"`) and negative letter-spacing (-1.68px at 56px), while Noto Sans handles body text with its own stylistic set (`"liga" 0, "ss01", "ss04", "ss05"`). Blue 450 `#5b76fe` is the primary interactive color. The system uses generous border-radius (8px–50px) and a ring-shadow border `rgb(224,226,232) 0px 0px 0px 1px` instead of traditional CSS borders. Built with Framer for smooth motion. Mood — collaborative, pastel-warm, geometric, generous.
 
-## 1. Visual Theme & Atmosphere
+colors:
+  primary: "#5b76fe"
+  primary-pressed: "#2a41b6"
+  ink: "#1c1c1e"
+  body: "#555a6a"
+  muted: "#a5a8b5"
+  canvas: "#ffffff"
+  surface-coral-light: "#ffc6c6"
+  surface-coral-dark: "#600000"
+  surface-rose-light: "#ffd8f4"
+  surface-teal-light: "#c3faf5"
+  surface-teal-dark: "#187574"
+  surface-orange-light: "#ffe6cd"
+  surface-yellow-dark: "#746019"
+  surface-pink: "#fde0f0"
+  surface-red-light: "#fbd4d4"
+  surface-red-muted: "#e3c5c5"
+  hairline: "#c7cad5"
+  hairline-soft: "#e9eaef"
+  hairline-ring: "#e0e2e8"
+  on-primary: "#ffffff"
+  success: "#00b473"
 
-Miro's website is a clean, collaborative-tool-forward platform that communicates "visual thinking" through generous whitespace, pastel accent colors, and a confident geometric font. The design uses a predominantly white canvas with near-black text (`#1c1c1e`) and a distinctive pastel color palette — coral, rose, teal, orange, yellow, moss — each representing different collaboration contexts.
+typography:
+  display-hero:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 56px
+    fontWeight: 400
+    lineHeight: 1.15
+    letterSpacing: -1.68px
+  section-heading:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 48px
+    fontWeight: 400
+    lineHeight: 1.15
+    letterSpacing: -1.44px
+  card-title:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 400
+    lineHeight: 1.15
+    letterSpacing: -0.72px
+  sub-heading:
+    fontFamily: "'Noto Sans', system-ui, sans-serif"
+    fontSize: 22px
+    fontWeight: 400
+    lineHeight: 1.35
+    letterSpacing: -0.44px
+  feature:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 600
+    lineHeight: 1.35
+    letterSpacing: 0
+  body-large:
+    fontFamily: "'Noto Sans', system-ui, sans-serif"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.45
+    letterSpacing: 0
+  body:
+    fontFamily: "'Noto Sans', system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: -0.16px
+  button:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 17px
+    fontWeight: 700
+    lineHeight: 1.29
+    letterSpacing: 0.175px
+  caption:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.71
+    letterSpacing: 0
+  small:
+    fontFamily: "'Roobert PRO Medium', 'Roobert PRO', system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.15
+    letterSpacing: -0.36px
 
-The typography uses Roobert PRO Medium as the primary display font with OpenType character variants (`"blwf", "cv03", "cv04", "cv09", "cv11"`) and negative letter-spacing (-1.68px at 56px). Noto Sans handles body text with its own stylistic set (`"liga" 0, "ss01", "ss04", "ss05"`). The design is built with Framer, giving it smooth animations and modern component patterns.
+rounded:
+  none: 0px
+  sm: 8px
+  md: 12px
+  lg: 20px
+  xl: 24px
+  "2xl": 40px
+  "3xl": 50px
+  full: 9999px
 
-**Key Characteristics:**
-- White canvas with near-black (`#1c1c1e`) text
-- Roobert PRO Medium with multiple OpenType character variants
-- Pastel accent palette: coral, rose, teal, orange, yellow, moss (light + dark pairs)
-- Blue 450 (`#5b76fe`) as primary interactive color
-- Success green (`#00b473`) for positive states
-- Generous border-radius: 8px–50px range
-- Framer-built with smooth motion patterns
-- Ring shadow border: `rgb(224,226,232) 0px 0px 0px 1px`
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "5": 24px
+  "6": 32px
+  "7": 48px
+  "8": 64px
+  "9": 80px
 
-## 2. Color Palette & Roles
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.button}"
+    rounded: "{rounded.sm}"
+    padding: 12px 24px
+  button-outlined:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.sm}"
+    padding: 7px 12px
+  button-circle:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: 12px
+  card:
+    backgroundColor: "{colors.canvas}"
+    rounded: "{rounded.md}"
+    padding: 24px
+  card-pastel-coral:
+    backgroundColor: "{colors.surface-coral-light}"
+    rounded: "{rounded.lg}"
+    padding: 32px
+  card-pastel-teal:
+    backgroundColor: "{colors.surface-teal-light}"
+    rounded: "{rounded.lg}"
+    padding: 32px
+  input:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.sm}"
+    padding: 16px
+---
 
-### Primary
-- **Near Black** (`#1c1c1e`): Primary text
-- **White** (`#ffffff`): `--tw-color-white`, primary surface
-- **Blue 450** (`#5b76fe`): `--tw-color-blue-450`, primary interactive
-- **Actionable Pressed** (`#2a41b6`): `--tw-color-actionable-pressed`
+## Overview
 
-### Pastel Accents (Light/Dark pairs)
-- **Coral**: Light `#ffc6c6` / Dark `#600000`
-- **Rose**: Light `#ffd8f4` / Dark (implied)
-- **Teal**: Light `#c3faf5` / Dark `#187574`
-- **Orange**: Light `#ffe6cd`
-- **Yellow**: Dark `#746019`
-- **Moss**: Dark `#187574`
-- **Pink** (`#fde0f0`): Soft pink surface
-- **Red** (`#fbd4d4`): Light red surface
-- **Dark Red** (`#e3c5c5`): Muted red
+Miro's site is built around generous whitespace, a confident geometric headline font (Roobert PRO Medium with multiple OpenType variants), and a distinctive pastel palette where each light/dark pair represents a different collaboration context — coral, rose, teal, orange, yellow, moss. Blue 450 `#5b76fe` carries the primary interactive moment, while a ring shadow `rgb(224,226,232) 0px 0px 0px 1px` substitutes for traditional CSS borders. Framer-built smooth motion completes the visual thinking aesthetic.
 
-### Semantic
-- **Success** (`#00b473`): `--tw-color-success-accent`
+Mood — collaborative, pastel-warm, geometric, generous.
 
-### Neutral
-- **Slate** (`#555a6a`): Secondary text
-- **Input Placeholder** (`#a5a8b5`): `--tw-color-input-placeholder`
-- **Border** (`#c7cad5`): Button borders
-- **Ring** (`rgb(224,226,232)`): Shadow-as-border
+## Colors
 
-## 3. Typography Rules
+The canvas is white `#ffffff` with near-black `#1c1c1e` text and slate `#555a6a` for body. Blue 450 `#5b76fe` is the primary interactive color (CTAs, links), with `#2a41b6` as the pressed/actionable state. Success green `#00b473`.
 
-### Font Families
-- **Display**: `Roobert PRO Medium`, fallback: Placeholder — `"blwf", "cv03", "cv04", "cv09", "cv11"`
-- **Display Variants**: `Roobert PRO SemiBold`, `Roobert PRO SemiBold Italic`, `Roobert PRO`
-- **Body**: `Noto Sans` — `"liga" 0, "ss01", "ss04", "ss05"`
+The pastel system uses light/dark pairs for feature sections — Coral light `#ffc6c6` / dark `#600000`, Rose light `#ffd8f4`, Teal light `#c3faf5` / dark `#187574`, Orange light `#ffe6cd`, Yellow dark `#746019`, plus soft pinks and reds. Each section can pick one pair and own that context.
 
-### Hierarchy
+Borders use `#c7cad5` (default) and `#e9eaef` (soft input border). The signature ring shadow `rgb(224,226,232) 0px 0px 0px 1px` is the shadow-as-border substitute.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing |
-|------|------|------|--------|-------------|----------------|
-| Display Hero | Roobert PRO Medium | 56px | 400 | 1.15 | -1.68px |
-| Section Heading | Roobert PRO Medium | 48px | 400 | 1.15 | -1.44px |
-| Card Title | Roobert PRO Medium | 24px | 400 | 1.15 | -0.72px |
-| Sub-heading | Noto Sans | 22px | 400 | 1.35 | -0.44px |
-| Feature | Roobert PRO Medium | 18px | 600 | 1.35 | normal |
-| Body | Noto Sans | 18px | 400 | 1.45 | normal |
-| Body Standard | Noto Sans | 16px | 400–600 | 1.50 | -0.16px |
-| Button | Roobert PRO Medium | 17.5px | 700 | 1.29 | 0.175px |
-| Caption | Roobert PRO Medium | 14px | 400 | 1.71 | normal |
-| Small | Roobert PRO Medium | 12px | 400 | 1.15 | -0.36px |
-| Micro Uppercase | Roobert PRO | 10.5px | 400 | 0.90 | uppercase |
+## Typography
 
-## 4. Component Stylings
+Roobert PRO Medium with OpenType character variants (`"blwf", "cv03", "cv04", "cv09", "cv11"`) handles display from 56px hero (-1.68px tracking) down to 12px small. Noto Sans handles body text with its own stylistic set (`"liga" 0, "ss01", "ss04", "ss05"`). Negative letter-spacing scales with size on Roobert (-1.68px hero → -0.36px small). Buttons use Roobert at 17.5px / weight 700 / 0.175px tracking.
 
-### Buttons
-- Outlined: transparent bg, `1px solid #c7cad5`, 8px radius, 7px 12px padding
-- White circle: 50% radius, white bg with shadow
-- Blue primary (implied from interactive color)
+## Layout
 
-### Cards: 12px–24px radius, pastel backgrounds
-### Inputs: white bg, `1px solid #e9eaef`, 8px radius, 16px padding
+8px base, scale 4/8/12/16/24/32/48/64/80px. Generous radius range and pastel surface contrast define section rhythm.
 
-## 5. Layout Principles
-- Spacing: 1–24px base scale
-- Radius: 8px (buttons), 10px–12px (cards), 20px–24px (panels), 40px–50px (large containers)
-- Ring shadow: `rgb(224,226,232) 0px 0px 0px 1px`
+## Elevation & Depth
 
-## 6. Depth & Elevation
-Minimal — ring shadow + pastel surface contrast
+Minimal — ring shadow `rgb(224,226,232) 0px 0px 0px 1px` substitutes for borders, and pastel surface contrast carries section hierarchy. No heavy drop shadows.
 
-## 7. Do's and Don'ts
-### Do
-- Use pastel light/dark pairs for feature sections
-- Apply Roobert PRO with OpenType character variants
-- Use Blue 450 (#5b76fe) for interactive elements
-### Don't
-- Don't use heavy shadows
-- Don't mix more than 2 pastel accents per section
+## Shapes
 
-## 8. Responsive Behavior
-Breakpoints: 425px, 576px, 768px, 896px, 1024px, 1200px, 1280px, 1366px, 1700px, 1920px
+8px (buttons, inputs) → 12px (cards) → 20–24px (panels) → 40–50px (large containers, hero blocks) → 9999px (circular action buttons).
 
-## 9. Agent Prompt Guide
-### Quick Color Reference
-- Text: Near Black (`#1c1c1e`)
-- Background: White (`#ffffff`)
-- Interactive: Blue 450 (`#5b76fe`)
-- Success: `#00b473`
-- Border: `#c7cad5`
-### Example Component Prompts
-- "Create hero: white background. Roobert PRO Medium 56px, line-height 1.15, letter-spacing -1.68px. Blue CTA (#5b76fe). Outlined secondary (1px solid #c7cad5, 8px radius)."
+## Components
+
+**Primary blue** — `#5b76fe` fill, white text, 8px radius, Roobert 17.5px / weight 700 / 0.175px tracking.
+
+**Outlined** — transparent fill, `1px solid #c7cad5`, 8px radius, 7/12 padding.
+
+**Circle white** — white fill, 9999px radius, with ring shadow.
+
+**Cards** — 12px radius standard; 20–24px for feature pastel cards. Pastel light surfaces (coral, rose, teal, orange) define section context.
+
+**Inputs** — white fill, `1px solid #e9eaef`, 8px radius, 16px padding.
+
+## Do's and Don'ts
+
+**Do**
+- Use pastel light/dark pairs for feature sections — one pair per section
+- Apply Roobert PRO Medium with OpenType character variants for display
+- Use Blue 450 `#5b76fe` as the primary interactive color
+- Apply ring shadow `rgb(224,226,232) 0px 0px 0px 1px` instead of CSS borders
+- Maintain generous radius scale (8–50px) for the friendly geometric feel
+- Use Noto Sans with `"liga" 0, "ss01", "ss04", "ss05"` for body
+
+**Don't**
+- Use heavy drop shadows — ring shadow + pastel surface is the depth system
+- Mix more than 2 pastel accents per section — one pair owns the context
+- Use sharp 0–4px radii — generous rounding is part of the brand
+- Skip the OpenType features on Roobert — character variants are the identity
+- Replace pastel feature sections with monochrome — the spectrum is the system
+
+## Agent Prompt Guide
+
+**Bias toward** — white canvas with pastel feature sections (coral / teal / rose / orange light + dark pairs), Roobert PRO Medium with OpenType character variants, Noto Sans body with stylistic sets, Blue 450 `#5b76fe` primary CTAs, ring-shadow borders, generous radii (8–50px), Framer-style smooth motion.
+
+**Reject** — heavy drop shadows, monochrome feature sections, sharp 0–4px radii, plain Roobert without OpenType features, two competing pastel pairs in one section.

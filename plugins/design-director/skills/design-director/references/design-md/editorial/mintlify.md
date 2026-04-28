@@ -1,326 +1,313 @@
-# Design System Inspired by Mintlify
+---
+version: alpha
+name: Mintlify
+description: |
+  Mintlify's website is documentation-as-product design — a white, airy, information-rich surface that treats clarity as its highest aesthetic value. The page opens with luminous white (`#ffffff`) canvas, near-black ink (`#0d0d0d`), and a signature **brand green** (`#18E299`) that signals freshness and intelligence without dominating. Atmospheric green-to-white gradient washes behind the hero create a sense of ethereal documentation that floats above the noise. Below that, the page settles into a disciplined alternation of white sections separated by ultra-subtle 5%-opacity borders (`rgba(0,0,0,0.05)`). Type runs **Inter** with tight negative tracking at display sizes (-0.8px to -1.28px) and **Geist Mono** uppercase for technical labels — terminal voice inside the marketing page. Buttons are **full-pill** (9999px radius) — Mintlify's signature shape — paired with cards using **16–24px** generous radii. Depth is almost entirely border-driven; shadows when they appear are atmospheric whispers (`rgba(0,0,0,0.03) 0px 2px 4px`). The system is paper-like and quiet, calibrated for fast scanning by developers. Mood — airy, documentation-grade, fresh, paper-quiet.
 
-## 1. Visual Theme & Atmosphere
+colors:
+  primary: "#0d0d0d"
+  primary-hover: "#000000"
+  brand-green: "#18E299"
+  brand-green-light: "#d4fae8"
+  brand-green-deep: "#0fa76e"
+  ink: "#0d0d0d"
+  body: "#333333"
+  muted: "#666666"
+  placeholder: "#888888"
+  hairline: "#e5e5e5"
+  surface-soft: "#f5f5f5"
+  surface-tint: "#fafafa"
+  canvas: "#ffffff"
+  surface: "#ffffff"
+  on-primary: "#ffffff"
+  on-brand: "#0d0d0d"
+  link: "#0d0d0d"
+  link-hover: "#18E299"
+  focus: "#18E299"
+  warning: "#c37d0d"
+  info: "#3772cf"
+  error: "#d45656"
 
-Mintlify's website is a study in documentation-as-product design — a white, airy, information-rich surface that treats clarity as its highest aesthetic value. The page opens with a luminous white (`#ffffff`) background, near-black (`#0d0d0d`) text, and a signature green brand accent (`#18E299`) that signals freshness and intelligence without dominating the palette. The overall mood is calm, confident, and engineered for legibility — a design system that whispers "we care about your developer experience" in every pixel.
+typography:
+  display-hero:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 64px
+    fontWeight: 600
+    lineHeight: 1.15
+    letterSpacing: -1.28px
+  section-heading:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 40px
+    fontWeight: 600
+    lineHeight: 1.10
+    letterSpacing: -0.8px
+  sub-heading:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 24px
+    fontWeight: 500
+    lineHeight: 1.30
+    letterSpacing: -0.24px
+  card-title:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 20px
+    fontWeight: 600
+    lineHeight: 1.30
+    letterSpacing: -0.2px
+  body-lg:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: 0
+  body:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: 0
+  body-medium:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0
+  button:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 15px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0
+  link:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0
+  caption:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: 0
+  label-uppercase:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 13px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0.65px
+  small:
+    fontFamily: "Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: -0.26px
+  mono-code:
+    fontFamily: "'Geist Mono', 'Geist Mono Fallback', ui-monospace, SFMono-Regular, monospace"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0.6px
+  mono-badge:
+    fontFamily: "'Geist Mono', 'Geist Mono Fallback', ui-monospace, SFMono-Regular, monospace"
+    fontSize: 12px
+    fontWeight: 600
+    lineHeight: 1.50
+    letterSpacing: 0.6px
+  mono-micro:
+    fontFamily: "'Geist Mono', 'Geist Mono Fallback', ui-monospace, SFMono-Regular, monospace"
+    fontSize: 10px
+    fontWeight: 500
+    lineHeight: 1.50
+    letterSpacing: 0
 
-The Inter font family carries the entire typographic load. At display sizes (40–64px), it uses tight negative letter-spacing (-0.8px to -1.28px) and semibold weight (600), creating headlines that feel focused and compressed like well-written documentation headers. Body text at 16–18px with 150% line-height provides generous reading comfort. Geist Mono appears exclusively for code and technical labels — uppercase, tracked-out, small — the voice of the terminal inside the marketing page.
+rounded:
+  none: 0px
+  xs: 4px
+  sm: 8px
+  md: 16px
+  lg: 24px
+  full: 9999px
+  pill: 9999px
 
-What distinguishes Mintlify from other documentation platforms is its atmospheric gradient hero. A soft, cloud-like green-to-white gradient wash behind the hero content creates a sense of ethereal intelligence — documentation that floats above the noise. Below the hero, the page settles into a disciplined alternation of white sections separated by subtle 5% opacity borders. Cards use generous padding (24px+) with large radii (16px–24px) and whisper-thin borders, creating containers that feel open rather than boxed.
+spacing:
+  "0": 0px
+  "1": 4px
+  "2": 8px
+  "3": 12px
+  "4": 16px
+  "5": 24px
+  "6": 32px
+  "7": 48px
+  "8": 64px
+  "9": 96px
+  section: 64px
+  section-lg: 96px
 
-**Key Characteristics:**
-- Inter with tight negative tracking at display sizes (-0.8px to -1.28px) — compressed yet readable
-- Geist Mono for code labels: uppercase, 12px, tracked-out, the terminal voice
-- Brand green (`#18E299`) used sparingly — CTAs, hover states, focus rings, and accent touches
-- Atmospheric gradient hero with cloud-like green-white wash
-- Ultra-round corners: 16px for containers, 24px for featured cards, full-round (9999px) for buttons and pills
-- Subtle 5% opacity borders (`rgba(0,0,0,0.05)`) creating barely-there separation
-- 8px base spacing system with generous section padding (48px–96px)
-- Clean white canvas — no gray backgrounds, no color sections, depth through borders and whitespace alone
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: 8px 24px
+  button-secondary:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: 4px 12px
+  button-nav:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.sm}"
+    padding: 5px 6px
+  button-brand:
+    backgroundColor: "{colors.brand-green}"
+    textColor: "{colors.on-brand}"
+    typography: "{typography.button}"
+    rounded: "{rounded.full}"
+    padding: 8px 24px
+  card:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.md}"
+    padding: 24px
+  card-featured:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.lg}"
+    padding: 32px
+  card-trust:
+    backgroundColor: "{colors.surface-tint}"
+    textColor: "{colors.ink}"
+    typography: "{typography.caption}"
+    rounded: "{rounded.md}"
+    padding: 24px
+  input-email:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.full}"
+    padding: 0px 12px
+    height: 40px
+  badge-pill:
+    backgroundColor: "{colors.brand-green-light}"
+    textColor: "{colors.brand-green-deep}"
+    typography: "{typography.label-uppercase}"
+    rounded: "{rounded.full}"
+    padding: 4px 12px
+---
 
-## 2. Color Palette & Roles
+## Overview
 
-### Primary
-- **Near Black** (`#0d0d0d`): Primary text, headings, dark surfaces. Not pure black — the micro-softness improves reading comfort.
-- **Pure White** (`#ffffff`): Page background, card surfaces, input backgrounds.
-- **Brand Green** (`#18E299`): The signature accent — CTAs, links on hover, focus rings, brand identity.
+Mintlify's marketing surface is calm, confident, engineered for legibility — every pixel whispers "we care about your developer experience." White canvas, near-black ink, brand green used sparingly, ultra-subtle 5%-opacity borders for separation. The atmospheric gradient hero (cloud-like green-to-white wash) is the system's only decorative gesture; everything below is disciplined white sections separated by hairline borders.
 
-### Secondary Accents
-- **Brand Green Light** (`#d4fae8`): Tinted green surface for badges, hover states, subtle backgrounds.
-- **Brand Green Deep** (`#0fa76e`): Darker green for text on light-green badges, hover states on brand elements.
-- **Warm Amber** (`#c37d0d`): Warning states, caution badges — `--twoslash-warn-bg`.
-- **Soft Blue** (`#3772cf`): Tag backgrounds, informational annotations — `--twoslash-tag-bg`.
-- **Error Red** (`#d45656`): Error states, destructive actions — `--twoslash-error-bg`.
+Mood — airy, documentation-grade, fresh, paper-quiet.
 
-### Neutral Scale
-- **Gray 900** (`#0d0d0d`): Primary heading text, nav links.
-- **Gray 700** (`#333333`): Secondary text, descriptions, body copy.
-- **Gray 500** (`#666666`): Tertiary text, muted labels.
-- **Gray 400** (`#888888`): Placeholder text, disabled states, code annotations.
-- **Gray 200** (`#e5e5e5`): Borders, dividers, card outlines.
-- **Gray 100** (`#f5f5f5`): Subtle surface backgrounds, hover states.
-- **Gray 50** (`#fafafa`): Near-white surface tint.
+## Colors
 
-### Interactive
-- **Link Default** (`#0d0d0d`): Links match text color, relying on underline/context.
-- **Link Hover** (`#18E299`): Brand green on hover — `var(--color-brand)`.
-- **Focus Ring** (`#18E299`): Brand green focus outline for inputs and interactive elements.
+The palette is **near-monochromatic + brand green**:
 
-### Surface & Overlay
-- **Card Background** (`#ffffff`): White cards on white background, separated by borders.
-- **Border Subtle** (`rgba(0,0,0,0.05)`): 5% black opacity borders — the primary separation mechanism.
-- **Border Medium** (`rgba(0,0,0,0.08)`): Slightly stronger borders for interactive elements.
-- **Input Border Focus** (`var(--color-brand)`): Green ring on focused inputs.
+- **Ink** (`#0d0d0d`): primary text, headings, primary CTA — not pure black for micro-softness
+- **Brand Green** (`#18E299`): the signature accent — CTAs, links on hover, focus rings, brand identity
+- **Brand Green Light** (`#d4fae8`) and **Brand Green Deep** (`#0fa76e`): tinted surface and text for badges
+- **Body** (`#333333`) and **Muted** (`#666666`): secondary and tertiary text
+- **Hairline** (`#e5e5e5`): explicit border tone (originally `rgba(0,0,0,0.05)` / `0.08` for the ultra-subtle borders that drive the system's separation)
+- **Surface Soft** (`#f5f5f5`) and **Surface Tint** (`#fafafa`): barely-there secondary surfaces for trust cards / hover states
 
-### Shadows & Depth
-- **Card Shadow** (`rgba(0,0,0,0.03) 0px 2px 4px`): Barely-there ambient shadow for subtle lift.
-- **Button Shadow** (`rgba(0,0,0,0.06) 0px 1px 2px`): Micro-shadow for button depth.
-- **No heavy shadows**: Mintlify relies on borders, not shadows, for depth.
+Semantic accents (warning amber `#c37d0d`, info blue `#3772cf`, error red `#d45656`) appear in twoslash code annotations only — never on hero CTAs.
 
-## 3. Typography Rules
+The signature 5%-opacity borders (`rgba(0,0,0,0.05)`) are the **primary separation mechanism** — translated as `#e5e5e5` here for hex compatibility. The 8%-opacity variant (`rgba(0,0,0,0.08)`) is used for interactive borders on inputs and secondary buttons.
 
-### Font Family
-- **Primary**: `Inter`, with fallback: `Inter Fallback, system-ui, -apple-system, sans-serif`
-- **Monospace**: `Geist Mono`, with fallback: `Geist Mono Fallback, ui-monospace, SFMono-Regular, monospace`
+## Typography
 
-### Hierarchy
+**Inter** carries everything except code, where **Geist Mono** takes over. Two-font discipline is strict: no Inter in code blocks, no Mono in body copy.
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| Display Hero | Inter | 64px (4.00rem) | 600 | 1.15 (tight) | -1.28px | Maximum impact, hero headlines |
-| Section Heading | Inter | 40px (2.50rem) | 600 | 1.10 (tight) | -0.8px | Feature section titles |
-| Sub-heading | Inter | 24px (1.50rem) | 500 | 1.30 (tight) | -0.24px | Card headings, sub-sections |
-| Card Title | Inter | 20px (1.25rem) | 600 | 1.30 (tight) | -0.2px | Feature card titles |
-| Card Title Light | Inter | 20px (1.25rem) | 500 | 1.30 (tight) | -0.2px | Secondary card headings |
-| Body Large | Inter | 18px (1.13rem) | 400 | 1.50 | normal | Hero descriptions, introductions |
-| Body | Inter | 16px (1.00rem) | 400 | 1.50 | normal | Standard reading text |
-| Body Medium | Inter | 16px (1.00rem) | 500 | 1.50 | normal | Navigation, emphasized text |
-| Button | Inter | 15px (0.94rem) | 500 | 1.50 | normal | Button labels |
-| Link | Inter | 14px (0.88rem) | 500 | 1.50 | normal | Navigation links, small CTAs |
-| Caption | Inter | 14px (0.88rem) | 400–500 | 1.50–1.71 | normal | Metadata, descriptions |
-| Label Uppercase | Inter | 13px (0.81rem) | 500 | 1.50 | 0.65px | `text-transform: uppercase`, section labels |
-| Small | Inter | 13px (0.81rem) | 400–500 | 1.50 | -0.26px | Small body text |
-| Mono Code | Geist Mono | 12px (0.75rem) | 500 | 1.50 | 0.6px | `text-transform: uppercase`, technical labels |
-| Mono Badge | Geist Mono | 12px (0.75rem) | 600 | 1.50 | 0.6px | `text-transform: uppercase`, status badges |
-| Mono Micro | Geist Mono | 10px (0.63rem) | 500 | 1.50 | normal | `text-transform: uppercase`, tiny labels |
+**Tight tracking at display** (-1.28px at 64px, -0.8px at 40px, -0.24px at 24px) creates compressed documentation-style headlines. **Body** at 16–18px / weight 400 / 1.50 line-height provides generous reading lanes. **Three weights only**: 400 (body), 500 (UI / nav), 600 (headings) — no bold (700).
 
-### Principles
-- **Tight tracking at display sizes**: Inter at 40–64px uses -0.8px to -1.28px letter-spacing. This compression creates headlines that feel deliberate and space-efficient — documentation headings, not billboard copy.
-- **Relaxed reading at body sizes**: 16–18px body text uses normal tracking with 150% line-height, creating generous reading lanes. Documentation demands comfort.
-- **Two-font system**: Inter for all human-readable content, Geist Mono exclusively for technical/code contexts. The boundary is strict — no mixing.
-- **Uppercase as hierarchy signal**: Section labels and technical tags use uppercase + positive tracking (0.6px–0.65px) as a clear visual delimiter between content types.
-- **Three weights**: 400 (body/reading), 500 (UI/navigation/emphasis), 600 (headings/titles). No bold (700) in the system.
+**Uppercase labels** (Inter `text-transform: uppercase` with positive 0.65px tracking, or Geist Mono with 0.6px tracking) signal section markers and technical tags — a clear visual delimiter between human and machine voices.
 
-## 4. Component Stylings
+## Layout
 
-### Buttons
+8px base. Section padding lands at 48–96px vertical (96px desktop hero, 48px mobile). Cards use 24–32px internal padding. Component gaps sit at 8–16px.
 
-**Primary Brand (Full-round)**
-- Background: `#0d0d0d` (near-black)
-- Text: `#ffffff`
-- Padding: 8px 24px
-- Radius: 9999px (full pill)
-- Font: Inter 15px weight 500
-- Shadow: `rgba(0,0,0,0.06) 0px 1px 2px`
-- Hover: opacity 0.9
-- Use: Primary CTA ("Get Started", "Start Building")
+Max content width approximately 1200px, centered. Hero is centered single-column with 96px+ top padding. Feature sections use 2–3 column CSS Grid. Section-internal density is low — 1–2 messages per section, never densely packed.
 
-**Secondary / Ghost (Full-round)**
-- Background: `#ffffff`
-- Text: `#0d0d0d`
-- Padding: 4.5px 12px
-- Radius: 9999px (full pill)
-- Border: `1px solid rgba(0,0,0,0.08)`
-- Font: Inter 15px weight 500
-- Hover: opacity 0.9
-- Use: Secondary actions ("Request Demo", "View Docs")
+The whitespace philosophy is **documentation-grade breathing room** — Mintlify sells documentation, so the marketing page itself demonstrates reading comfort.
 
-**Transparent / Nav Button**
-- Background: transparent
-- Text: `#0d0d0d`
-- Padding: 5px 6px
-- Radius: 8px
-- Border: none or `1px solid rgba(0,0,0,0.05)`
-- Use: Navigation items, icon buttons
+## Elevation & Depth
 
-**Brand Accent Button**
-- Background: `#18E299`
-- Text: `#0d0d0d`
-- Padding: 8px 24px
-- Radius: 9999px
-- Use: Special promotional CTAs
+Almost entirely **border-driven**, not shadow-driven. Five-tier system:
 
-### Cards & Containers
+- **Level 0 (Flat)**: no shadow, no border — body text blocks
+- **Level 1 (Subtle border)**: `1px solid rgba(0,0,0,0.05)` — standard cards, dividers
+- **Level 1b (Medium border)**: `1px solid rgba(0,0,0,0.08)` — interactive elements, input borders
+- **Level 2 (Ambient shadow)**: `rgba(0,0,0,0.03) 0px 2px 4px` — cards with subtle lift
+- **Level 2b (Button shadow)**: `rgba(0,0,0,0.06) 0px 1px 2px` — button micro-depth
+- **Focus**: `1px solid #18E299` outline — brand green ring on focused inputs
 
-**Standard Card**
-- Background: `#ffffff`
-- Border: `1px solid rgba(0,0,0,0.05)`
-- Radius: 16px
-- Padding: 24px
-- Shadow: `rgba(0,0,0,0.03) 0px 2px 4px`
-- Hover: subtle border darkening to `rgba(0,0,0,0.08)`
+When shadows appear, they are atmospheric whispers (0.03 opacity, 2px blur) — paper-like rather than lifted.
 
-**Featured Card**
-- Background: `#ffffff`
-- Border: `1px solid rgba(0,0,0,0.05)`
-- Radius: 24px
-- Padding: 32px
-- Inner content areas may have their own 16px radius containers
+The **hero atmospheric gradient** (cloud-like green-to-white wash) is the only decorative depth gesture. The rest of the page stays white-on-white with separation through borders and whitespace alone.
 
-**Logo/Trust Card**
-- Background: `#fafafa` or `#ffffff`
-- Border: `1px solid rgba(0,0,0,0.05)`
-- Radius: 16px
-- Centered logo/icon with consistent sizing
+## Shapes
 
-### Inputs & Forms
+- **xs (4px)**: inline code, small tags, tooltips
+- **sm (8px)**: nav buttons, transparent buttons, small containers
+- **md (16px)**: cards, content containers, image wrappers
+- **lg (24px)**: featured cards, hero containers, section panels
+- **full / pill (9999px)**: **buttons, inputs, badges** — Mintlify's signature shape
 
-**Email Input**
-- Background: transparent or `#ffffff`
-- Text: `#0d0d0d`
-- Padding: 0px 12px (height controlled by line-height)
-- Border: `1px solid rgba(0,0,0,0.08)`
-- Radius: 9999px (full pill, matching buttons)
-- Focus: `1px solid var(--color-brand)` + `outline: 1px solid var(--color-brand)`
-- Placeholder: `#888888`
+The full-pill button radius is the system's most identifiable visual signature. Cards never go pill — 16–24px is the cap.
 
-### Navigation
-- Clean horizontal nav on white, sticky with backdrop blur
-- Brand logotype left-aligned
-- Links: Inter 14–15px weight 500, `#0d0d0d` text
-- Hover: color shifts to brand green `var(--color-brand)`
-- CTA: dark pill button right-aligned ("Get Started")
-- Mobile: hamburger menu collapse at 768px
+## Components
 
-### Image Treatment
-- Product screenshots with subtle 1px borders
-- Rounded containers: 16px–24px radius
-- Atmospheric gradient backgrounds behind hero images
-- Cloud/sky imagery with soft green tinting
+**Button primary**: `#0d0d0d` near-black fill, white text, **9999px full-pill radius**, 8×24 padding, weight 500. Hover dims to opacity 0.9.
 
-### Distinctive Components
+**Button secondary / ghost**: white fill, ink text, 1px solid `rgba(0,0,0,0.08)` border, 9999px radius, 4.5×12 padding. Used for "Request Demo" / "View Docs" types.
 
-**Atmospheric Hero**
-- Full-width gradient wash: soft green-to-white cloud-like gradient
-- Centered headline with tight tracking
-- Subtitle in muted gray
-- Dual CTA buttons (dark primary + ghost secondary)
-- The gradient creates a sense of elevation and intelligence
+**Button nav**: transparent or `rgba(0,0,0,0.05)` border, ink text, 8px radius, 5×6 padding. The exception to the pill rule — nav items use rounded rectangles.
 
-**Trust Bar / Logo Grid**
-- "Loved by your favorite companies" section
-- Company logos in muted grayscale
-- Grid or horizontal layout with consistent sizing
-- Subtle border separation between logos
+**Button brand accent**: `#18E299` fill, ink text, 9999px radius. Reserved for special promotional CTAs only.
 
-**Feature Cards with Icons**
-- Icon or illustration at top
-- Title at 20px weight 600
-- Description at 14–16px in gray
-- Consistent padding and border treatment
-- Grid layout: 2–3 columns on desktop
+**Card standard**: white fill, 1px solid `rgba(0,0,0,0.05)` border, **16px radius**, 24px padding, optional ambient shadow.
 
-**CTA Footer Section**
-- Dark or gradient background
-- Large headline: "Make documentation your winning advantage"
-- Email input with pill styling
-- Brand green accent on CTAs
+**Card featured**: white fill, **24px radius**, 32px padding — for marquee marketing modules.
 
-## 5. Layout Principles
+**Card trust** (logo grid): `#fafafa` fill, 16px radius — used for the "loved by your favorite companies" section.
 
-### Spacing System
-- Base unit: 8px
-- Scale: 2px, 4px, 5px, 6px, 7px, 8px, 10px, 12px, 16px, 24px, 32px, 48px, 64px
-- Section padding: 48px–96px vertical
-- Card padding: 24px–32px
-- Component gaps: 8px–16px
+**Input email**: 9999px full-pill radius matching buttons, 1px solid `rgba(0,0,0,0.08)` border, focus ring in brand green.
 
-### Grid & Container
-- Max content width: approximately 1200px
-- Hero: centered single-column with generous top padding (96px+)
-- Feature sections: 2–3 column CSS Grid for cards
-- Full-width sections with contained content
-- Consistent horizontal padding: 24px (mobile) to 32px (desktop)
+**Badge pill**: `#d4fae8` light-green fill, `#0fa76e` deep-green text, 9999px radius, 4×12 padding, uppercase Inter 13px / weight 500.
 
-### Whitespace Philosophy
-- **Documentation-grade breathing room**: Every element has generous surrounding whitespace. Mintlify sells documentation, so the marketing page itself demonstrates reading comfort.
-- **Sections as chapters**: Each feature section is a self-contained unit with 48px–96px vertical padding, creating clear "chapter breaks."
-- **Content density is low**: Unlike developer tools that pack the page, Mintlify uses 1–2 key messages per section with supporting imagery.
+## Do's and Don'ts
 
-### Border Radius Scale
-- Small (4px): Inline code, small tags, tooltips
-- Medium (8px): Nav buttons, transparent buttons, small containers
-- Standard (16px): Cards, content containers, image wrappers
-- Large (24px): Featured cards, hero containers, section panels
-- Full Pill (9999px): Buttons, inputs, badges, pills — the signature shape
+**Do**
 
-## 6. Depth & Elevation
+- Use full-pill (9999px) radius for buttons and inputs — Mintlify's signature shape
+- Keep borders at 5% opacity (`rgba(0,0,0,0.05)`) — stronger borders break the airy feeling
+- Apply tight negative tracking on display (-1.28px at 64px, -0.8px at 40px, -0.24px at 24px)
+- Use only three weights: 400 (read), 500 (interact), 600 (announce)
+- Reserve brand green (`#18E299`) for CTAs, hover states, and focus rings — never decorative fills
+- Use Geist Mono uppercase for technical labels, Inter for everything else
+- Keep section padding generous (64–96px desktop, 48px mobile)
+- Stay all-white — no gray background sections, separation through borders + whitespace
 
-| Level | Treatment | Use |
-|-------|-----------|-----|
-| Flat (Level 0) | No shadow, no border | Page background, text blocks |
-| Subtle Border (Level 1) | `1px solid rgba(0,0,0,0.05)` | Standard card borders, dividers |
-| Medium Border (Level 1b) | `1px solid rgba(0,0,0,0.08)` | Interactive elements, input borders |
-| Ambient Shadow (Level 2) | `rgba(0,0,0,0.03) 0px 2px 4px` | Cards with subtle lift |
-| Button Shadow (Level 2b) | `rgba(0,0,0,0.06) 0px 1px 2px` | Button micro-depth |
-| Focus Ring (Accessibility) | `1px solid #18E299` outline | Focused inputs, active interactive elements |
+**Don't**
 
-**Shadow Philosophy**: Mintlify barely uses shadows. The depth system is almost entirely border-driven — ultra-subtle 5% opacity borders create separation without visual weight. When shadows appear, they're atmospheric whispers (`0.03 opacity, 2px blur, 4px spread`) that add the barest sense of lift. This restraint keeps the page feeling flat and paper-like — appropriate for a documentation company whose product is about clarity and readability.
+- Don't make button corners square or 8px — pill radius is mandatory
+- Don't use solid dark borders — 5% opacity is the discipline
+- Don't apply brand green decoratively — it's interactive-only
+- Don't use weight 700 — the scale stops at 600
+- Don't use positive letter-spacing on display Inter — only on uppercase labels
+- Don't introduce gray section backgrounds — white throughout
+- Don't add heavy shadows — depth is whisper-level only
 
-### Decorative Depth
-- Hero gradient: atmospheric green-white cloud gradient behind hero content
-- No background color alternation — white on white throughout
-- Depth comes from border opacity variation (5% → 8%) and whitespace
+## Agent Prompt Guide
 
-## 7. Dark Mode
+**Bias toward** — Inter for everything (Geist Mono only for code/labels), full-pill buttons, 5%-opacity borders, three-weight discipline (400/500/600), brand green sparingly, atmospheric gradient hero, white-on-white sectioning, generous documentation-grade whitespace.
 
-### Color Inversions
-- **Background**: `#0d0d0d` (near-black)
-- **Text Primary**: `#ededed` (near-white)
-- **Text Secondary**: `#a0a0a0` (muted gray)
-- **Brand Green**: `#18E299` (unchanged — the green works on both backgrounds)
-- **Border**: `rgba(255,255,255,0.08)` (white at 8% opacity)
-- **Card Background**: `#141414` (slightly lighter than page)
-- **Shadow**: `rgba(0,0,0,0.4) 0px 2px 4px` (stronger shadow for contrast)
-
-### Key Adjustments
-- Buttons invert: white background dark text becomes dark background light text
-- Badge backgrounds shift to deeper tones with lighter text
-- Focus ring remains brand green
-- Hero gradient shifts to dark-tinted green atmospheric wash
-
-## 8. Responsive Behavior
-
-### Breakpoints
-| Name | Width | Key Changes |
-|------|-------|-------------|
-| Mobile | <768px | Single column, stacked layout, hamburger nav |
-| Tablet | 768–1024px | Two-column grids begin, expanded padding |
-| Desktop | >1024px | Full layout, 3-column grids, maximum content width |
-
-### Touch Targets
-- Buttons with full-pill shape have comfortable 8px+ vertical padding
-- Navigation links spaced with adequate 16px+ gaps
-- Mobile menu provides full-width tap targets
-
-### Collapsing Strategy
-- Hero: 64px → 40px headline, maintains tight tracking proportionally
-- Navigation: horizontal links + CTA → hamburger menu at 768px
-- Feature cards: 3-column → 2-column → single column stacked
-- Section spacing: 96px → 48px on mobile
-- Footer: multi-column → stacked single column
-- Trust bar: grid → horizontal scroll or stacked
-
-### Image Behavior
-- Product screenshots maintain aspect ratio with responsive containers
-- Hero gradient simplifies on mobile
-- Full-width sections maintain edge-to-edge treatment
-
-## 9. Agent Prompt Guide
-
-### Quick Color Reference
-- Primary CTA: Near Black (`#0d0d0d`)
-- Background: Pure White (`#ffffff`)
-- Heading text: Near Black (`#0d0d0d`)
-- Body text: Gray 700 (`#333333`)
-- Border: `rgba(0,0,0,0.05)` (5% opacity)
-- Brand accent: Green (`#18E299`)
-- Link hover: Brand Green (`#18E299`)
-- Focus ring: Brand Green (`#18E299`)
-
-### Example Component Prompts
-- "Create a hero section on white background with atmospheric green-white gradient wash. Headline at 64px Inter weight 600, line-height 1.15, letter-spacing -1.28px, color #0d0d0d. Subtitle at 18px Inter weight 400, line-height 1.50, color #666666. Dark pill CTA (#0d0d0d, 9999px radius, 8px 24px padding) and ghost pill button (white, 1px solid rgba(0,0,0,0.08), 9999px radius)."
-- "Design a card: white background, 1px solid rgba(0,0,0,0.05) border, 16px radius, 24px padding, shadow rgba(0,0,0,0.03) 0px 2px 4px. Title at 20px Inter weight 600, letter-spacing -0.2px. Body at 14px weight 400, #666666."
-- "Build a pill badge: #d4fae8 background, #0fa76e text, 9999px radius, 4px 12px padding, 13px Inter weight 500, uppercase."
-- "Create navigation: white sticky header with backdrop-filter blur(12px). Inter 15px weight 500 for links, #0d0d0d text. Dark pill CTA 'Get Started' right-aligned, 9999px radius. Bottom border: 1px solid rgba(0,0,0,0.05)."
-- "Design a trust section showing company logos in muted gray. Grid layout with 16px radius containers, 1px border at 5% opacity. Label above: 'Loved by your favorite companies' at 13px Inter weight 500, uppercase, tracking 0.65px."
-
-### Iteration Guide
-1. Always use full-pill radius (9999px) for buttons and inputs — this is Mintlify's signature shape
-2. Keep borders at 5% opacity (`rgba(0,0,0,0.05)`) — stronger borders break the airy feeling
-3. Letter-spacing scales with font size: -1.28px at 64px, -0.8px at 40px, -0.24px at 24px, normal at 16px
-4. Three weights only: 400 (read), 500 (interact), 600 (announce)
-5. Brand green (`#18E299`) is used sparingly — CTAs and hover states only, never for decorative fills
-6. Geist Mono uppercase for technical labels, Inter for everything else
-7. Section padding is generous: 64px–96px on desktop, 48px on mobile
-8. No gray background sections — white throughout, separation through borders and whitespace
+**Reject** — square button corners, decorative brand green fills, weight 700, gray section backgrounds, heavy shadows, positive letter-spacing on Inter display, mixed font roles in code blocks.

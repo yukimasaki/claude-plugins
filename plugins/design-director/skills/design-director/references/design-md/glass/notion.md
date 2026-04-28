@@ -1,309 +1,333 @@
-# Design System Inspired by Notion
+---
+version: alpha
+name: Notion
+description: |
+  Notion's website embodies the philosophy of the tool itself — a blank canvas that gets out of your way. The system anchors on **warm neutrals** rather than cold grays so the page reads like quality paper, not sterile glass. Canvas is pure white (`#ffffff`) but text is a warm near-black (encoded as `#0a0a0a`, in production `rgba(0,0,0,0.95)` for the micro-warmth). The warm gray scale (`#f6f5f4` / `#31302e` / `#615d59` / `#a39e98`) carries subtle yellow-brown undertones for tactile, almost analog warmth. The custom **NotionInter** (modified Inter) runs aggressive negative letter-spacing at display sizes (-2.125px at 64px), with OpenType `"lnum"` and `"locl"` enabled on display text. The signature move is **whisper borders**: `1px solid rgba(0,0,0,0.1)` everywhere instead of heavy borders or shadows, paired with multi-layer shadow stacks that never exceed 0.05 opacity per layer — depth that's felt rather than seen. Notion Blue (`#0075de`) is the only saturated color in core UI chrome. Mood — warm, calm, paper-like, restrained.
 
-## 1. Visual Theme & Atmosphere
+colors:
+  primary: "#0075de"
+  primary-active: "#005bab"
+  primary-focus: "#097fe8"
+  ink: "#0a0a0a"
+  body: "#0a0a0a"
+  body-strong: "#0a0a0a"
+  muted: "#615d59"
+  muted-soft: "#a39e98"
+  canvas: "#ffffff"
+  surface-warm: "#f6f5f4"
+  surface-dark: "#31302e"
+  hairline: "#e0e0e0"
+  hairline-input: "#dddddd"
+  on-primary: "#ffffff"
+  on-dark: "#ffffff"
+  link: "#0075de"
+  link-on-dark: "#62aef0"
+  badge-blue-bg: "#f2f9ff"
+  badge-blue-text: "#097fe8"
+  brand-navy: "#213183"
+  accent-teal: "#2a9d99"
+  accent-green: "#1aae39"
+  accent-orange: "#dd5b00"
+  accent-pink: "#ff64c8"
+  accent-purple: "#391c57"
+  accent-brown: "#523410"
+  success: "#1aae39"
+  warning: "#dd5b00"
+  error: "#dd5b00"
 
-Notion's website embodies the philosophy of the tool itself: a blank canvas that gets out of your way. The design system is built on warm neutrals rather than cold grays, creating a distinctly approachable minimalism that feels like quality paper rather than sterile glass. The page canvas is pure white (`#ffffff`) but the text isn't pure black -- it's a warm near-black (`rgba(0,0,0,0.95)`) that softens the reading experience imperceptibly. The warm gray scale (`#f6f5f4`, `#31302e`, `#615d59`, `#a39e98`) carries subtle yellow-brown undertones, giving the interface a tactile, almost analog warmth.
+typography:
+  display-xl:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif"
+    fontSize: 64px
+    fontWeight: 700
+    lineHeight: 1.0
+    letterSpacing: -2.125px
+  display-lg:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 54px
+    fontWeight: 700
+    lineHeight: 1.04
+    letterSpacing: -1.875px
+  display-md:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 48px
+    fontWeight: 700
+    lineHeight: 1.0
+    letterSpacing: -1.5px
+  display-sm:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.5
+    letterSpacing: 0
+  title-lg:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 26px
+    fontWeight: 700
+    lineHeight: 1.23
+    letterSpacing: -0.625px
+  title-md:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.27
+    letterSpacing: -0.25px
+  body-lg:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 20px
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: -0.125px
+  body-md:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-emphasis:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.5
+    letterSpacing: 0
+  body-strong:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 16px
+    fontWeight: 600
+    lineHeight: 1.5
+    letterSpacing: 0
+  nav-link:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 1.33
+    letterSpacing: 0
+  caption:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.43
+    letterSpacing: 0
+  caption-light:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.43
+    letterSpacing: 0
+  badge:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 600
+    lineHeight: 1.33
+    letterSpacing: 0.125px
+  micro:
+    fontFamily: "NotionInter, Inter, -apple-system, system-ui, sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.33
+    letterSpacing: 0.125px
 
-The custom NotionInter font (a modified Inter) is the backbone of the system. At display sizes (64px), it uses aggressive negative letter-spacing (-2.125px), creating headlines that feel compressed and precise. The weight range is broader than typical systems: 400 for body, 500 for UI elements, 600 for semi-bold labels, and 700 for display headings. OpenType features `"lnum"` (lining numerals) and `"locl"` (localized forms) are enabled on larger text, adding typographic sophistication that rewards close reading.
+rounded:
+  xs: 4px
+  sm: 5px
+  md: 8px
+  lg: 12px
+  xl: 16px
+  pill: 9999px
+  full: 9999px
 
-What makes Notion's visual language distinctive is its border philosophy. Rather than heavy borders or shadows, Notion uses ultra-thin `1px solid rgba(0,0,0,0.1)` borders -- borders that exist as whispers, barely perceptible division lines that create structure without weight. The shadow system is equally restrained: multi-layer stacks with cumulative opacity never exceeding 0.05, creating depth that's felt rather than seen.
+spacing:
+  xxs: 4px
+  xs: 8px
+  sm: 12px
+  md: 16px
+  lg: 24px
+  xl: 32px
+  xxl: 48px
+  section: 80px
+  section-lg: 120px
 
-**Key Characteristics:**
-- NotionInter (modified Inter) with negative letter-spacing at display sizes (-2.125px at 64px)
-- Warm neutral palette: grays carry yellow-brown undertones (`#f6f5f4` warm white, `#31302e` warm dark)
-- Near-black text via `rgba(0,0,0,0.95)` -- not pure black, creating micro-warmth
-- Ultra-thin borders: `1px solid rgba(0,0,0,0.1)` throughout -- whisper-weight division
-- Multi-layer shadow stacks with sub-0.05 opacity for barely-there depth
-- Notion Blue (`#0075de`) as the singular accent color for CTAs and interactive elements
-- Pill badges (9999px radius) with tinted blue backgrounds for status indicators
-- 8px base spacing unit with an organic, non-rigid scale
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.nav-link}"
+    rounded: "{rounded.xs}"
+    padding: 8px 16px
+  button-primary-active:
+    backgroundColor: "{colors.primary-active}"
+    textColor: "{colors.on-primary}"
+    rounded: "{rounded.xs}"
+  button-secondary:
+    backgroundColor: "{colors.surface-warm}"
+    textColor: "{colors.ink}"
+    typography: "{typography.nav-link}"
+    rounded: "{rounded.xs}"
+    padding: 8px 16px
+  button-ghost:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.nav-link}"
+  badge-pill:
+    backgroundColor: "{colors.badge-blue-bg}"
+    textColor: "{colors.badge-blue-text}"
+    typography: "{typography.badge}"
+    rounded: "{rounded.pill}"
+    padding: 4px 8px
+  card:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.title-md}"
+    rounded: "{rounded.lg}"
+    padding: 32px
+  card-featured:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.xl}"
+    padding: 32px
+  card-warm:
+    backgroundColor: "{colors.surface-warm}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.lg}"
+    padding: 32px
+  metric-card:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.display-sm}"
+    rounded: "{rounded.lg}"
+    padding: 32px
+  text-input:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body-md}"
+    rounded: "{rounded.xs}"
+    padding: 6px 12px
+  top-nav:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
+    typography: "{typography.nav-link}"
+    height: 64px
+  feature-section-warm:
+    backgroundColor: "{colors.surface-warm}"
+    textColor: "{colors.ink}"
+    typography: "{typography.display-md}"
+    padding: 80px
+  footer:
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.muted}"
+    typography: "{typography.caption-light}"
+    padding: 64px
+---
 
-## 2. Color Palette & Roles
+## Overview
 
-### Primary
-- **Notion Black** (`rgba(0,0,0,0.95)` / `#000000f2`): Primary text, headings, body copy. The 95% opacity softens pure black without sacrificing readability.
-- **Pure White** (`#ffffff`): Page background, card surfaces, button text on blue.
-- **Notion Blue** (`#0075de`): Primary CTA, link color, interactive accent -- the only saturated color in the core UI chrome.
+Notion is the textbook example of warm-neutral minimalism. The page sits on pure white (`{colors.canvas}` — #ffffff) but the text is a warm near-black — encoded here as `{colors.ink}` (#0a0a0a), but in production specifically `rgba(0,0,0,0.95)` for the imperceptible micro-warmth that softens the reading experience. The warm gray scale (#f6f5f4 / #31302e / #615d59 / #a39e98) carries subtle yellow-brown undertones, giving the interface a tactile, almost analog warmth.
 
-### Brand Secondary
-- **Deep Navy** (`#213183`): Secondary brand color, used sparingly for emphasis and dark feature sections.
-- **Active Blue** (`#005bab`): Button active/pressed state -- darker variant of Notion Blue.
+The custom **NotionInter** font (a modified Inter) is the backbone. At 64px it carries -2.125px letter-spacing — the most aggressive compression in the system — relaxing progressively to -0.125px at 20px and 0 at body size. OpenType `"lnum"` (lining numerals) and `"locl"` (localized forms) are enabled at display sizes for typographic sophistication.
 
-### Warm Neutral Scale
-- **Warm White** (`#f6f5f4`): Background surface tint, section alternation, subtle card fill. The yellow undertone is key.
-- **Warm Dark** (`#31302e`): Dark surface background, dark section text. Warmer than standard grays.
-- **Warm Gray 500** (`#615d59`): Secondary text, descriptions, muted labels.
-- **Warm Gray 300** (`#a39e98`): Placeholder text, disabled states, caption text.
+The signature move is **whisper borders**: `1px solid rgba(0,0,0,0.1)` everywhere — borders that exist as barely-perceptible division lines, not weighty walls. The shadow system is equally restrained: multi-layer 4-to-5-layer stacks with cumulative opacity never exceeding 0.05 per layer, creating depth that's felt rather than seen.
 
-### Semantic Accent Colors
-- **Teal** (`#2a9d99`): Success states, positive indicators.
-- **Green** (`#1aae39`): Confirmation, completion badges.
-- **Orange** (`#dd5b00`): Warning states, attention indicators.
-- **Pink** (`#ff64c8`): Decorative accent, feature highlights.
-- **Purple** (`#391c57`): Premium features, deep accents.
-- **Brown** (`#523410`): Earthy accent, warm feature sections.
+Mood — warm, calm, paper-like, restrained.
 
-### Interactive
-- **Link Blue** (`#0075de`): Primary link color with underline-on-hover.
-- **Link Light Blue** (`#62aef0`): Lighter link variant for dark backgrounds.
-- **Focus Blue** (`#097fe8`): Focus ring on interactive elements.
-- **Badge Blue Bg** (`#f2f9ff`): Pill badge background, tinted blue surface.
-- **Badge Blue Text** (`#097fe8`): Pill badge text, darker blue for readability.
+## Colors
 
-### Shadows & Depth
-- **Card Shadow** (`rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.84688px, rgba(0,0,0,0.02) 0px 0.8px 2.925px, rgba(0,0,0,0.01) 0px 0.175px 1.04062px`): Multi-layer card elevation.
-- **Deep Shadow** (`rgba(0,0,0,0.01) 0px 1px 3px, rgba(0,0,0,0.02) 0px 3px 7px, rgba(0,0,0,0.02) 0px 7px 15px, rgba(0,0,0,0.04) 0px 14px 28px, rgba(0,0,0,0.05) 0px 23px 52px`): Five-layer deep elevation for modals and featured content.
-- **Whisper Border** (`1px solid rgba(0,0,0,0.1)`): Standard division border -- cards, dividers, sections.
+Canvas is pure white. Ink is `{colors.ink}` (#0a0a0a) — the frontmatter approximation of the production `rgba(0,0,0,0.95)` near-black with micro-warmth. The warm gray scale is the system's signature: `{colors.surface-warm}` (#f6f5f4) for alternating section backgrounds, `{colors.surface-dark}` (#31302e) for occasional dark feature surfaces, `{colors.muted}` (#615d59) for secondary text, `{colors.muted-soft}` (#a39e98) for placeholder / disabled / caption.
 
-## 3. Typography Rules
+**Notion Blue** (`{colors.primary}` — #0075de) is the only saturated color in core UI chrome. It carries every primary CTA, every link, the focus ring (`{colors.primary-focus}` — #097fe8). The `{colors.brand-navy}` (#213183) appears sparingly for emphasis. The accent palette (teal / green / orange / pink / purple / brown) is reserved for decorative feature sections, never UI chrome.
 
-### Font Family
-- **Primary**: `NotionInter`, with fallbacks: `Inter, -apple-system, system-ui, Segoe UI, Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol`
-- **OpenType Features**: `"lnum"` (lining numerals) and `"locl"` (localized forms) enabled on display and heading text.
+The whisper hairline (`{colors.hairline}` — #e0e0e0) is the opaque approximation of the production `rgba(0,0,0,0.1)` — in real implementations use the alpha form for true whisper-weight division.
 
-### Hierarchy
+## Typography
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| Display Hero | NotionInter | 64px (4.00rem) | 700 | 1.00 (tight) | -2.125px | Maximum compression, billboard headlines |
-| Display Secondary | NotionInter | 54px (3.38rem) | 700 | 1.04 (tight) | -1.875px | Secondary hero, feature headlines |
-| Section Heading | NotionInter | 48px (3.00rem) | 700 | 1.00 (tight) | -1.5px | Feature section titles, with `"lnum"` |
-| Sub-heading Large | NotionInter | 40px (2.50rem) | 700 | 1.50 | normal | Card headings, feature sub-sections |
-| Sub-heading | NotionInter | 26px (1.63rem) | 700 | 1.23 (tight) | -0.625px | Section sub-titles, content headers |
-| Card Title | NotionInter | 22px (1.38rem) | 700 | 1.27 (tight) | -0.25px | Feature cards, list titles |
-| Body Large | NotionInter | 20px (1.25rem) | 600 | 1.40 | -0.125px | Introductions, feature descriptions |
-| Body | NotionInter | 16px (1.00rem) | 400 | 1.50 | normal | Standard reading text |
-| Body Medium | NotionInter | 16px (1.00rem) | 500 | 1.50 | normal | Navigation, emphasized UI text |
-| Body Semibold | NotionInter | 16px (1.00rem) | 600 | 1.50 | normal | Strong labels, active states |
-| Body Bold | NotionInter | 16px (1.00rem) | 700 | 1.50 | normal | Headlines at body size |
-| Nav / Button | NotionInter | 15px (0.94rem) | 600 | 1.33 | normal | Navigation links, button text |
-| Caption | NotionInter | 14px (0.88rem) | 500 | 1.43 | normal | Metadata, secondary labels |
-| Caption Light | NotionInter | 14px (0.88rem) | 400 | 1.43 | normal | Body captions, descriptions |
-| Badge | NotionInter | 12px (0.75rem) | 600 | 1.33 | 0.125px | Pill badges, tags, status labels |
-| Micro Label | NotionInter | 12px (0.75rem) | 400 | 1.33 | 0.125px | Small metadata, timestamps |
+NotionInter (Inter fallback) carries the system. **Four weights**: 400 (body / reading), 500 (UI / interactive), 600 (emphasis / nav), 700 (display / heading). The broader weight range allows nuanced hierarchy.
 
-### Principles
-- **Compression at scale**: NotionInter at display sizes uses -2.125px letter-spacing at 64px, progressively relaxing to -0.625px at 26px and normal at 16px. The compression creates density at headlines while maintaining readability at body sizes.
-- **Four-weight system**: 400 (body/reading), 500 (UI/interactive), 600 (emphasis/navigation), 700 (headings/display). The broader weight range compared to most systems allows nuanced hierarchy.
-- **Warm scaling**: Line height tightens as size increases -- 1.50 at body (16px), 1.23-1.27 at sub-headings, 1.00-1.04 at display. This creates denser, more impactful headlines.
-- **Badge micro-tracking**: The 12px badge text uses positive letter-spacing (0.125px) -- the only positive tracking in the system, creating wider, more legible small text.
+- Display sizes (64 / 54 / 48px) use weight 700 with -2.125 / -1.875 / -1.5px letter-spacing — aggressive compression for billboard headlines
+- Sub-headings (26 / 22px) use weight 700 with -0.625 / -0.25px tracking — denser sub-section heads
+- Body (16px) uses 400 (read), 500 (UI emphasis), 600 (strong), 700 (heading-at-body-size)
+- Badge text (12px / 600) uses **positive** letter-spacing (0.125px) — the only positive tracking in the system, for legibility at small sizes
 
-## 4. Component Stylings
+Line-height tightens as size increases: 1.50 at body, 1.23–1.27 at sub-headings, 1.00–1.04 at display. OpenType `"lnum"` and `"locl"` are enabled on display.
 
-### Buttons
+## Layout
 
-**Primary Blue**
-- Background: `#0075de` (Notion Blue)
-- Text: `#ffffff`
-- Padding: 8px 16px
-- Radius: 4px (subtle)
-- Border: `1px solid transparent`
-- Hover: background darkens to `#005bab`
-- Active: scale(0.9) transform
-- Focus: `2px solid` focus outline, `var(--shadow-level-200)` shadow
-- Use: Primary CTA ("Get Notion free", "Try it")
+- Spacing base 8px (with organic micro-fractional values 5.6 / 6.4 for fine adjustments)
+- Max content width ~1200px centered
+- Hero: single-column centered with 80–120px top padding
+- Feature sections: 2–3 column card grids
+- **Warm alternation**: white sections alternate with `{colors.surface-warm}` (#f6f5f4) sections — subtle yellow-brown undertone creates rhythm without harsh color shift
+- Section spacing 64–120px desktop → 48px mobile
 
-**Secondary / Tertiary**
-- Background: `rgba(0,0,0,0.05)` (translucent warm gray)
-- Text: `#000000` (near-black)
-- Padding: 8px 16px
-- Radius: 4px
-- Hover: text color shifts, scale(1.05)
-- Active: scale(0.9) transform
-- Use: Secondary actions, form submissions
-
-**Ghost / Link Button**
-- Background: transparent
-- Text: `rgba(0,0,0,0.95)`
-- Decoration: underline on hover
-- Use: Tertiary actions, inline links
-
-**Pill Badge Button**
-- Background: `#f2f9ff` (tinted blue)
-- Text: `#097fe8`
-- Padding: 4px 8px
-- Radius: 9999px (full pill)
-- Font: 12px weight 600
-- Use: Status badges, feature labels, "New" tags
-
-### Cards & Containers
-- Background: `#ffffff`
-- Border: `1px solid rgba(0,0,0,0.1)` (whisper border)
-- Radius: 12px (standard cards), 16px (featured/hero cards)
-- Shadow: `rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.84688px, rgba(0,0,0,0.02) 0px 0.8px 2.925px, rgba(0,0,0,0.01) 0px 0.175px 1.04062px`
-- Hover: subtle shadow intensification
-- Image cards: 12px top radius, image fills top half
-
-### Inputs & Forms
-- Background: `#ffffff`
-- Text: `rgba(0,0,0,0.9)`
-- Border: `1px solid #dddddd`
-- Padding: 6px
-- Radius: 4px
-- Focus: blue outline ring
-- Placeholder: warm gray `#a39e98`
-
-### Navigation
-- Clean horizontal nav on white, not sticky
-- Brand logo left-aligned (33x34px icon + wordmark)
-- Links: NotionInter 15px weight 500-600, near-black text
-- Hover: color shift to `var(--color-link-primary-text-hover)`
-- CTA: blue pill button ("Get Notion free") right-aligned
-- Mobile: hamburger menu collapse
-- Product dropdowns with multi-level categorized menus
-
-### Image Treatment
-- Product screenshots with `1px solid rgba(0,0,0,0.1)` border
-- Top-rounded images: `12px 12px 0px 0px` radius
-- Dashboard/workspace preview screenshots dominate feature sections
-- Warm gradient backgrounds behind hero illustrations (decorative character illustrations)
-
-### Distinctive Components
-
-**Feature Cards with Illustrations**
-- Large illustrative headers (The Great Wave, product UI screenshots)
-- 12px radius card with whisper border
-- Title at 22px weight 700, description at 16px weight 400
-- Warm white (`#f6f5f4`) background variant for alternating sections
-
-**Trust Bar / Logo Grid**
-- Company logos (trusted teams section) in their brand colors
-- Horizontal scroll or grid layout with team counts
-- Metric display: large number + description pattern
-
-**Metric Cards**
-- Large number display (e.g., "$4,200 ROI")
-- NotionInter 40px+ weight 700 for the metric
-- Description below in warm gray body text
-- Whisper-bordered card container
-
-## 5. Layout Principles
-
-### Spacing System
-- Base unit: 8px
-- Scale: 2px, 3px, 4px, 5px, 6px, 7px, 8px, 11px, 12px, 14px, 16px, 24px, 32px
-- Non-rigid organic scale with fractional values (5.6px, 6.4px) for micro-adjustments
-
-### Grid & Container
-- Max content width: approximately 1200px
-- Hero: centered single-column with generous top padding (80-120px)
-- Feature sections: 2-3 column grids for cards
-- Full-width warm white (`#f6f5f4`) section backgrounds for alternation
-- Code/dashboard screenshots as contained with whisper border
-
-### Whitespace Philosophy
-- **Generous vertical rhythm**: 64-120px between major sections. Notion lets content breathe with vast vertical padding.
-- **Warm alternation**: White sections alternate with warm white (`#f6f5f4`) sections, creating gentle visual rhythm without harsh color breaks.
-- **Content-first density**: Body text blocks are compact (line-height 1.50) but surrounded by ample margin, creating islands of readable content in a sea of white space.
-
-### Border Radius Scale
-- Micro (4px): Buttons, inputs, functional interactive elements
-- Subtle (5px): Links, list items, menu items
-- Standard (8px): Small cards, containers, inline elements
-- Comfortable (12px): Standard cards, feature containers, image tops
-- Large (16px): Hero cards, featured content, promotional blocks
-- Full Pill (9999px): Badges, pills, status indicators
-- Circle (100%): Tab indicators, avatars
-
-## 6. Depth & Elevation
+## Elevation & Depth
 
 | Level | Treatment | Use |
-|-------|-----------|-----|
-| Flat (Level 0) | No shadow, no border | Page background, text blocks |
-| Whisper (Level 1) | `1px solid rgba(0,0,0,0.1)` | Standard borders, card outlines, dividers |
-| Soft Card (Level 2) | 4-layer shadow stack (max opacity 0.04) | Content cards, feature blocks |
-| Deep Card (Level 3) | 5-layer shadow stack (max opacity 0.05, 52px blur) | Modals, featured panels, hero elements |
-| Focus (Accessibility) | `2px solid var(--focus-color)` outline | Keyboard focus on all interactive elements |
+|---|---|---|
+| Flat | No shadow, no border | Page background, text blocks |
+| Whisper | 1px `{colors.hairline}` (production: `rgba(0,0,0,0.1)`) | Standard borders, card outlines, dividers |
+| Soft Card | 4-layer shadow stack, max per-layer opacity 0.04 | Content cards, feature blocks |
+| Deep Card | 5-layer shadow stack, max per-layer opacity 0.05, 52px blur | Modals, featured panels, hero elements |
+| Focus | 2px solid `{colors.primary-focus}` outline + shadow | Keyboard focus on interactive elements |
 
-**Shadow Philosophy**: Notion's shadow system uses multiple layers with extremely low individual opacity (0.01 to 0.05) that accumulate into soft, natural-looking elevation. The 4-layer card shadow spans from 1.04px to 18px blur, creating a gradient of depth rather than a single hard shadow. The 5-layer deep shadow extends to 52px blur at 0.05 opacity, producing ambient occlusion that feels like natural light rather than computer-generated depth. This layered approach makes elements feel embedded in the page rather than floating above it.
+The **multi-layer shadow stack** is the signature elevation technique. The 4-layer card shadow spans 1.04 → 18px blur with cumulative low opacity (0.01–0.04) creating a gradient of depth rather than a single hard shadow. The 5-layer deep shadow extends to 52px blur, producing ambient occlusion that feels like natural light. Elements feel embedded in the page rather than floating above it.
 
-### Decorative Depth
-- Hero section: decorative character illustrations (playful, hand-drawn style)
-- Section alternation: white to warm white (`#f6f5f4`) background shifts
-- No hard section borders -- separation comes from background color changes and spacing
+## Shapes
 
-## 7. Responsive Behavior
+| Token | Value | Use |
+|---|---|---|
+| `{rounded.xs}` | 4px | Buttons, inputs, functional interactive elements |
+| `{rounded.sm}` | 5px | Links, list items, menu items |
+| `{rounded.md}` | 8px | Small cards, containers, inline elements |
+| `{rounded.lg}` | 12px | Standard cards, feature containers, image tops |
+| `{rounded.xl}` | 16px | Hero cards, featured content |
+| `{rounded.pill}` | 9999px | Badges, pills, status indicators |
+| `{rounded.full}` | 9999px / 50% | Avatars, tab indicators |
 
-### Breakpoints
-| Name | Width | Key Changes |
-|------|-------|-------------|
-| Mobile Small | <400px | Tight single column, minimal padding |
-| Mobile | 400-600px | Standard mobile, stacked layout |
-| Tablet Small | 600-768px | 2-column grids begin |
-| Tablet | 768-1080px | Full card grids, expanded padding |
-| Desktop Small | 1080-1200px | Standard desktop layout |
-| Desktop | 1200-1440px | Full layout, maximum content width |
-| Large Desktop | >1440px | Centered, generous margins |
+The notable choice is **`{rounded.xs}` (4px) on buttons**. Notion does not use pill CTAs; the 4px functional radius keeps buttons feeling utility-grade.
 
-### Touch Targets
-- Buttons use comfortable padding (8px-16px vertical)
-- Navigation links at 15px with adequate spacing
-- Pill badges have 8px horizontal padding for tap targets
-- Mobile menu toggle uses standard hamburger button
+## Components
 
-### Collapsing Strategy
-- Hero: 64px display -> scales to 40px -> 26px on mobile, maintains proportional letter-spacing
-- Navigation: horizontal links + blue CTA -> hamburger menu
-- Feature cards: 3-column -> 2-column -> single column stacked
-- Product screenshots: maintain aspect ratio with responsive images
-- Trust bar logos: grid -> horizontal scroll on mobile
-- Footer: multi-column -> stacked single column
-- Section spacing: 80px+ -> 48px on mobile
+**`button-primary`** — Notion Blue fill (`{colors.primary}`), white text, 4px radius (subtle, not pill), 8/16 padding. Hover darkens to `{colors.primary-active}`; active state `transform: scale(0.9)`. Focus: 2px solid blue outline.
 
-### Image Behavior
-- Workspace screenshots maintain whisper border at all sizes
-- Hero illustrations scale proportionally
-- Product screenshots use responsive images with consistent border radius
-- Full-width warm white sections maintain edge-to-edge treatment
+**`button-secondary`** — Translucent warm-gray fill (production `rgba(0,0,0,0.05)`, encoded as `{colors.surface-warm}` opaque approximation), near-black text, 4px radius.
 
-## 8. Accessibility & States
+**`button-ghost`** — Transparent fill, near-black text, underline on hover. Used for tertiary inline actions.
 
-### Focus System
-- All interactive elements receive visible focus indicators
-- Focus outline: `2px solid` with focus color + shadow level 200
-- Tab navigation supported throughout all interactive components
-- High contrast text: near-black on white exceeds WCAG AAA (>14:1 ratio)
+**`badge-pill`** — Tinted blue surface system. Background `{colors.badge-blue-bg}` (#f2f9ff), text `{colors.badge-blue-text}` (#097fe8), 9999px radius, 4/8 padding, 12px / 600 with positive 0.125px tracking. Used for status / "New" tags / feature labels.
 
-### Interactive States
-- **Default**: Standard appearance with whisper borders
-- **Hover**: Color shift on text, scale(1.05) on buttons, underline on links
-- **Active/Pressed**: scale(0.9) transform, darker background variant
-- **Focus**: Blue outline ring with shadow reinforcement
-- **Disabled**: Warm gray (`#a39e98`) text, reduced opacity
+**`card`** — White fill, whisper border, 12px radius, 4-layer shadow stack. Title in `{typography.title-md}` (22px / 700 / -0.25px), body in `{typography.body-md}` (16px / 400 / `{colors.muted}`).
 
-### Color Contrast
-- Primary text (rgba(0,0,0,0.95)) on white: ~18:1 ratio
-- Secondary text (#615d59) on white: ~5.5:1 ratio (WCAG AA)
-- Blue CTA (#0075de) on white: ~4.6:1 ratio (WCAG AA for large text)
-- Badge text (#097fe8) on badge bg (#f2f9ff): ~4.5:1 ratio (WCAG AA for large text)
+**`card-warm`** — Alternate-section card on `{colors.surface-warm}` ground.
 
-## 9. Agent Prompt Guide
+**`metric-card`** — Big-number display (e.g., "$4,200 ROI") at `{typography.display-sm}` (40px / 700) with descriptive caption below in `{colors.muted}`. Whisper-bordered container.
 
-### Quick Color Reference
-- Primary CTA: Notion Blue (`#0075de`)
-- Background: Pure White (`#ffffff`)
-- Alt Background: Warm White (`#f6f5f4`)
-- Heading text: Near-Black (`rgba(0,0,0,0.95)`)
-- Body text: Near-Black (`rgba(0,0,0,0.95)`)
-- Secondary text: Warm Gray 500 (`#615d59`)
-- Muted text: Warm Gray 300 (`#a39e98`)
-- Border: `1px solid rgba(0,0,0,0.1)`
-- Link: Notion Blue (`#0075de`)
-- Focus ring: Focus Blue (`#097fe8`)
+**`text-input`** — White fill, 1px `{colors.hairline-input}` (#dddddd) border, 4px radius, 6px padding, placeholder in `{colors.muted-soft}`. Focus: blue outline ring.
 
-### Example Component Prompts
-- "Create a hero section on white background. Headline at 64px NotionInter weight 700, line-height 1.00, letter-spacing -2.125px, color rgba(0,0,0,0.95). Subtitle at 20px weight 600, line-height 1.40, color #615d59. Blue CTA button (#0075de, 4px radius, 8px 16px padding, white text) and ghost button (transparent bg, near-black text, underline on hover)."
-- "Design a card: white background, 1px solid rgba(0,0,0,0.1) border, 12px radius. Use shadow stack: rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.85px, rgba(0,0,0,0.02) 0px 0.8px 2.93px, rgba(0,0,0,0.01) 0px 0.175px 1.04px. Title at 22px NotionInter weight 700, letter-spacing -0.25px. Body at 16px weight 400, color #615d59."
-- "Build a pill badge: #f2f9ff background, #097fe8 text, 9999px radius, 4px 8px padding, 12px NotionInter weight 600, letter-spacing 0.125px."
-- "Create navigation: white header. NotionInter 15px weight 600 for links, near-black text. Blue pill CTA 'Get Notion free' right-aligned (#0075de bg, white text, 4px radius)."
-- "Design an alternating section layout: white sections alternate with warm white (#f6f5f4) sections. Each section has 64-80px vertical padding, max-width 1200px centered. Section heading at 48px weight 700, line-height 1.00, letter-spacing -1.5px."
+**`top-nav`** — White, not sticky. Brand logo + wordmark left, NotionInter 15px / 600 links, multi-level product dropdown, blue pill CTA right-aligned ("Get Notion free"). Mobile hamburger.
 
-### Iteration Guide
-1. Always use warm neutrals -- Notion's grays have yellow-brown undertones (#f6f5f4, #31302e, #615d59, #a39e98), never blue-gray
-2. Letter-spacing scales with font size: -2.125px at 64px, -1.875px at 54px, -0.625px at 26px, normal at 16px
-3. Four weights: 400 (read), 500 (interact), 600 (emphasize), 700 (announce)
-4. Borders are whispers: 1px solid rgba(0,0,0,0.1) -- never heavier
-5. Shadows use 4-5 layers with individual opacity never exceeding 0.05
-6. The warm white (#f6f5f4) section background is essential for visual rhythm
-7. Pill badges (9999px) for status/tags, 4px radius for buttons and inputs
-8. Notion Blue (#0075de) is the only saturated color in core UI -- use it sparingly for CTAs and links
+**`feature-section-warm`** — `{colors.surface-warm}` band for alternating sections, 80px vertical padding.
+
+## Do's and Don'ts
+
+**Do**
+- Use warm neutrals — Notion's grays carry yellow-brown undertones, never blue-gray
+- Set headlines in NotionInter at -2.125px (64px) → -1.5px (48px) → -0.25px (22px) → 0 (16px)
+- Use the four-weight system: 400 (read), 500 (interact), 600 (emphasize), 700 (announce)
+- Use whisper borders (`rgba(0,0,0,0.1)`) — never heavier
+- Use multi-layer shadow stacks (4–5 layers) with per-layer opacity ≤ 0.05
+- Alternate white sections with `{colors.surface-warm}` for visual rhythm
+- Reserve pill radius (9999px) for badges and status indicators only
+- Reserve `{colors.primary}` (Notion Blue) for primary CTAs and links — the only saturated color in core UI
+
+**Don't**
+- Don't use cold gray scales — every gray bends warm
+- Don't use pill radius on action buttons — 4px is the button radius
+- Don't use single-layer hard drop shadows — the system is multi-layer whisper
+- Don't introduce a second saturated UI color — Notion Blue is the only one
+- Don't use uppercase tracking on body or display — only the 12px badge has positive tracking
+- Don't go heavier than `1px solid rgba(0,0,0,0.1)` on borders
+- Don't omit the warm-white alternation — it's how the page breathes
+
+## Agent Prompt Guide
+
+**Bias toward** — pure-white canvas with warm-near-black ink, warm gray neutrals, NotionInter with aggressive negative letter-spacing on display, whisper borders (`rgba(0,0,0,0.1)`), 4-to-5-layer multi-shadow stacks, 4px button radius, pill badges for status, white-to-warm-white section alternation, single Notion Blue accent.
+
+**Reject** — cold blue-gray neutrals, pill radius on action buttons, single-layer drop shadows, secondary saturated UI colors, heavy borders, uppercase tracking on body or display.
