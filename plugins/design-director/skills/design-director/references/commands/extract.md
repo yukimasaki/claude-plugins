@@ -95,6 +95,10 @@ LLM 自身が書く。
      `surface` / `hairline` / `accent` 等の **canonical role に手動マッピ
      ング**。CSS custom properties に `--color-primary` 等があればそれを
      優先する
+   - **色 hex は各 entry の `srgb_hex` をそのまま採用する**（script が
+     `lab(...)` / `oklch(...)` 等をブラウザ経由で sRGB に正規化済み）。
+     LLM 側で LAB→sRGB を暗算しないこと。`custom_properties` に色値が
+     ある場合は対応する `custom_properties_srgb` の hex を使う
    - `typography`: observed の typography cluster を上位順に `display-xl`
      / `display-lg` / `heading-lg` / `body` / `caption` 等に割り当てる。
      viewport 内 + 大面積のクラスタを display 系に当てる

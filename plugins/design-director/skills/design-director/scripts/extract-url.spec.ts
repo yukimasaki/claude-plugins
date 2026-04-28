@@ -5,13 +5,22 @@ import {
   clusterPxValues,
   clusterTypography,
   clusterValues,
+  computeIsCjk,
   formatObservedYaml,
   parseArgs,
   pickNearestExemplars,
+  rgbStringToHex,
   slugFromUrl,
   type RawElementObservation,
   type ObservedYaml,
+  type ResolvedColor,
 } from "./extract-url";
+
+const WHITE_BG: ResolvedColor = {
+  value: "rgb(255, 255, 255)",
+  srgb: "rgb(255, 255, 255)",
+  srgb_hex: "#ffffff",
+};
 
 describe("slugFromUrl", () => {
   it("hostname を dash 区切り小文字に変換する", () => {
@@ -49,6 +58,133 @@ describe("clusterValues", () => {
   });
 });
 
+describe("rgbStringToHex", () => {
+  it("rgb(r, g, b) を 6 桁 hex に変換", () => {
+    expect(rgbStringToHex("rgb(31, 31, 31)")).toBe("#1f1f1f");
+    expect(rgbStringToHex("rgb(0, 0, 0)")).toBe("#000000");
+    expect(rgbStringToHex("rgb(255, 255, 255)")).toBe("#ffffff");
+    expect(rgbStringToHex("rgb(0, 119, 199)")).toBe("#0077c7");
+  });
+
+  it("alpha=1 の rgba は 6 桁 hex に正規化する", () => {
+    expect(rgbStringToHex("rgba(31, 31, 31, 1)")).toBe("#1f1f1f");
+  });
+
+  it("alpha < 1 の rgba は 8 桁 hex で alpha を保持する", () => {
+    expect(rgbStringToHex("rgba(0, 0, 0, 0.5)")).toBe("#00000080");
+    expect(rgbStringToHex("rgba(0, 0, 0, 0)")).toBe("#00000000");
+  });
+
+  it("空白を含む入力も受理する", () => {
+    expect(rgbStringToHex("  rgb(  31 ,  31 ,  31  )  ")).toBe("#1f1f1f");
+  });
+
+  it("rgb / rgba 形式以外の値は null", () => {
+    expect(rgbStringToHex("transparent")).toBeNull();
+    expect(rgbStringToHex("lab(50 0 0)")).toBeNull();
+    expect(rgbStringToHex("oklch(0.7 0.1 200)")).toBeNull();
+    expect(rgbStringToHex("#fff")).toBeNull();
+    expect(rgbStringToHex("")).toBeNull();
+    expect(rgbStringToHex("not a color")).toBeNull();
+  });
+});
+
+describe("computeIsCjk", () => {
+  const baseInput = {
+    fontsResolved: [] as string[],
+    langAttr: "",
+    ogLocale: null as string | null,
+    hostname: "example.com",
+    fontChains: [] as string[],
+  };
+
+  it("全 signal が false なら is_cjk: false", () => {
+    const r = computeIsCjk(baseInput);
+    expect(r.is_cjk).toBe(false);
+    expect(r.is_cjk_signals).toEqual({
+      font_loaded: false,
+      lang_attr: false,
+      og_locale: null,
+      tld_jp: false,
+      font_chain_jp: false,
+    });
+  });
+
+  it("lang=ja のみで is_cjk: true", () => {
+    const r = computeIsCjk({ ...baseInput, langAttr: "ja" });
+    expect(r.is_cjk).toBe(true);
+    expect(r.is_cjk_signals.lang_attr).toBe(true);
+  });
+
+  it("lang=ja-JP / zh-Hans / ko-KR も拾う", () => {
+    expect(computeIsCjk({ ...baseInput, langAttr: "ja-JP" }).is_cjk_signals.lang_attr).toBe(true);
+    expect(computeIsCjk({ ...baseInput, langAttr: "zh-Hans" }).is_cjk_signals.lang_attr).toBe(true);
+    expect(computeIsCjk({ ...baseInput, langAttr: "ko-KR" }).is_cjk_signals.lang_attr).toBe(true);
+  });
+
+  it("lang=en は CJK 扱いしない", () => {
+    expect(computeIsCjk({ ...baseInput, langAttr: "en" }).is_cjk).toBe(false);
+    expect(computeIsCjk({ ...baseInput, langAttr: "en-US" }).is_cjk).toBe(false);
+  });
+
+  it("og_locale=ja_JP は値そのものを保持して is_cjk: true", () => {
+    const r = computeIsCjk({ ...baseInput, ogLocale: "ja_JP" });
+    expect(r.is_cjk).toBe(true);
+    expect(r.is_cjk_signals.og_locale).toBe("ja_JP");
+  });
+
+  it("og_locale=en_US は CJK 扱いせず og_locale は null", () => {
+    const r = computeIsCjk({ ...baseInput, ogLocale: "en_US" });
+    expect(r.is_cjk).toBe(false);
+    expect(r.is_cjk_signals.og_locale).toBeNull();
+  });
+
+  it("hostname が .jp で終われば tld_jp: true", () => {
+    expect(computeIsCjk({ ...baseInput, hostname: "example.jp" }).is_cjk_signals.tld_jp).toBe(true);
+    expect(computeIsCjk({ ...baseInput, hostname: "example.co.jp" }).is_cjk_signals.tld_jp).toBe(true);
+    expect(computeIsCjk({ ...baseInput, hostname: "example.com" }).is_cjk_signals.tld_jp).toBe(false);
+  });
+
+  it("font-family chain に CJK フォント名があれば font_chain_jp: true", () => {
+    const r = computeIsCjk({
+      ...baseInput,
+      fontChains: [
+        '-apple-system, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif',
+      ],
+    });
+    expect(r.is_cjk).toBe(true);
+    expect(r.is_cjk_signals.font_chain_jp).toBe(true);
+  });
+
+  it("fonts_resolved に Noto Sans JP があれば font_loaded: true", () => {
+    const r = computeIsCjk({
+      ...baseInput,
+      fontsResolved: ["Inter", "Noto Sans JP"],
+    });
+    expect(r.is_cjk).toBe(true);
+    expect(r.is_cjk_signals.font_loaded).toBe(true);
+  });
+
+  it("system font だけの日本語サイト相当の入力でも tld+lang+chain で拾える", () => {
+    // .jp ドメイン + lang=ja + system font 経由の Noto Sans JP chain。
+    // fonts_resolved は空（Web font が無いため）
+    const r = computeIsCjk({
+      fontsResolved: [],
+      langAttr: "ja",
+      ogLocale: null,
+      hostname: "anonymized-product.example.jp",
+      fontChains: [
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif',
+      ],
+    });
+    expect(r.is_cjk).toBe(true);
+    expect(r.is_cjk_signals.font_loaded).toBe(false);
+    expect(r.is_cjk_signals.lang_attr).toBe(true);
+    expect(r.is_cjk_signals.tld_jp).toBe(true);
+    expect(r.is_cjk_signals.font_chain_jp).toBe(true);
+  });
+});
+
 describe("clusterPxValues", () => {
   it('"NNpx" 文字列をクラスタリングして代表値を返す', () => {
     const out = clusterPxValues(["4px", "4px", "8px", "16px", "16.4px"], 0.05);
@@ -78,10 +214,14 @@ describe("bucketColorsByRole", () => {
     textTransform: "none",
     fontVariantNumeric: "normal",
     color: "rgb(0, 0, 0)",
+    colorSrgb: "rgb(0, 0, 0)",
     backgroundColor: "rgba(0, 0, 0, 0)",
+    backgroundColorSrgb: null,
     ancestorBackground: "rgb(255, 255, 255)",
+    ancestorBackgroundSrgb: "rgb(255, 255, 255)",
     borderRadius: "0px",
     borderTopColor: "rgba(0, 0, 0, 0)",
+    borderTopColorSrgb: null,
     borderTopWidth: "0px",
     paddingTop: "0px",
     paddingRight: "0px",
@@ -93,10 +233,16 @@ describe("bucketColorsByRole", () => {
 
   it("body 背景と同色背景上のテキストは text_on_canvas に入る", () => {
     const r = bucketColorsByRole(
-      [baseObs({ color: "rgb(34, 34, 34)", ancestorBackground: "rgb(255, 255, 255)" })],
-      "rgb(255, 255, 255)",
+      [baseObs({
+        color: "rgb(34, 34, 34)",
+        colorSrgb: "rgb(34, 34, 34)",
+        ancestorBackground: "rgb(255, 255, 255)",
+      })],
+      WHITE_BG,
     );
     expect(r.text_on_canvas[0].value).toBe("rgb(34, 34, 34)");
+    expect(r.text_on_canvas[0].srgb).toBe("rgb(34, 34, 34)");
+    expect(r.text_on_canvas[0].srgb_hex).toBe("#222222");
     expect(r.text_on_non_canvas).toEqual([]);
   });
 
@@ -106,19 +252,22 @@ describe("bucketColorsByRole", () => {
         baseObs({
           tag: "button",
           backgroundColor: "rgb(0, 119, 199)",
+          backgroundColorSrgb: "rgb(0, 119, 199)",
         }),
       ],
-      "rgb(255, 255, 255)",
+      WHITE_BG,
     );
     expect(r.button_backgrounds[0].value).toBe("rgb(0, 119, 199)");
+    expect(r.button_backgrounds[0].srgb_hex).toBe("#0077c7");
   });
 
   it("a タグの color は link_colors に入る（btn class が無い場合）", () => {
     const r = bucketColorsByRole(
-      [baseObs({ tag: "a", color: "rgb(0, 119, 199)" })],
-      "rgb(255, 255, 255)",
+      [baseObs({ tag: "a", color: "rgb(0, 119, 199)", colorSrgb: "rgb(0, 119, 199)" })],
+      WHITE_BG,
     );
     expect(r.link_colors[0].value).toBe("rgb(0, 119, 199)");
+    expect(r.link_colors[0].srgb_hex).toBe("#0077c7");
   });
 
   it("a.btn は button 扱いされ link_colors には入らない", () => {
@@ -128,10 +277,12 @@ describe("bucketColorsByRole", () => {
           tag: "a",
           classNames: ["btn"],
           color: "rgb(255, 255, 255)",
+          colorSrgb: "rgb(255, 255, 255)",
           backgroundColor: "rgb(0, 119, 199)",
+          backgroundColorSrgb: "rgb(0, 119, 199)",
         }),
       ],
-      "rgb(255, 255, 255)",
+      WHITE_BG,
     );
     expect(r.button_backgrounds[0].value).toBe("rgb(0, 119, 199)");
     expect(r.link_colors).toEqual([]);
@@ -140,10 +291,10 @@ describe("bucketColorsByRole", () => {
   it("transparent / rgba(...,0) は無視される", () => {
     const r = bucketColorsByRole(
       [
-        baseObs({ color: "transparent" }),
-        baseObs({ color: "rgba(0,0,0,0)" }),
+        baseObs({ color: "transparent", colorSrgb: null }),
+        baseObs({ color: "rgba(0,0,0,0)", colorSrgb: null }),
       ],
-      "rgb(255, 255, 255)",
+      WHITE_BG,
     );
     expect(r.text_on_canvas).toEqual([]);
   });
@@ -151,26 +302,53 @@ describe("bucketColorsByRole", () => {
   it("border 1〜3px のみが border_colors に入る", () => {
     const r = bucketColorsByRole(
       [
-        baseObs({ borderTopColor: "rgb(229, 229, 229)", borderTopWidth: "1px" }),
-        baseObs({ borderTopColor: "rgb(0, 0, 0)", borderTopWidth: "10px" }),
+        baseObs({
+          borderTopColor: "rgb(229, 229, 229)",
+          borderTopColorSrgb: "rgb(229, 229, 229)",
+          borderTopWidth: "1px",
+        }),
+        baseObs({
+          borderTopColor: "rgb(0, 0, 0)",
+          borderTopColorSrgb: "rgb(0, 0, 0)",
+          borderTopWidth: "10px",
+        }),
       ],
-      "rgb(255, 255, 255)",
+      WHITE_BG,
     );
     expect(r.border_colors).toHaveLength(1);
     expect(r.border_colors[0].value).toBe("rgb(229, 229, 229)");
+    expect(r.border_colors[0].srgb_hex).toBe("#e5e5e5");
   });
 
   it("頻度の降順でソートされる", () => {
     const r = bucketColorsByRole(
       [
-        baseObs({ color: "rgb(50, 50, 50)" }),
-        baseObs({ color: "rgb(100, 100, 100)" }),
-        baseObs({ color: "rgb(100, 100, 100)" }),
+        baseObs({ color: "rgb(50, 50, 50)", colorSrgb: "rgb(50, 50, 50)" }),
+        baseObs({ color: "rgb(100, 100, 100)", colorSrgb: "rgb(100, 100, 100)" }),
+        baseObs({ color: "rgb(100, 100, 100)", colorSrgb: "rgb(100, 100, 100)" }),
       ],
-      "rgb(255, 255, 255)",
+      WHITE_BG,
     );
     expect(r.text_on_canvas[0].value).toBe("rgb(100, 100, 100)");
     expect(r.text_on_canvas[0].count).toBe(2);
+  });
+
+  it("LAB 値を value で保ちつつ srgb_hex に sRGB hex を付与する", () => {
+    // ground truth: lab(8.36 0 0) ≈ #1f1f1f だが、bucketColorsByRole は
+    // page.evaluate 側で resolve 済みの srgb 文字列に依存する pure 関数なので
+    // ここでは srgb をそのまま渡したときに hex が伝播することだけ確認する
+    const r = bucketColorsByRole(
+      [
+        baseObs({
+          color: "lab(8.36 0 0)",
+          colorSrgb: "rgb(31, 31, 31)",
+          ancestorBackground: "rgb(255, 255, 255)",
+        }),
+      ],
+      WHITE_BG,
+    );
+    expect(r.text_on_canvas[0].value).toBe("lab(8.36 0 0)");
+    expect(r.text_on_canvas[0].srgb_hex).toBe("#1f1f1f");
   });
 });
 
@@ -191,10 +369,14 @@ describe("clusterTypography", () => {
     textTransform: "none",
     fontVariantNumeric: "normal",
     color: "rgb(0, 0, 0)",
+    colorSrgb: "rgb(0, 0, 0)",
     backgroundColor: "rgba(0,0,0,0)",
+    backgroundColorSrgb: null,
     ancestorBackground: "rgb(255, 255, 255)",
+    ancestorBackgroundSrgb: "rgb(255, 255, 255)",
     borderRadius: "0px",
     borderTopColor: "rgba(0,0,0,0)",
+    borderTopColorSrgb: null,
     borderTopWidth: "0px",
     paddingTop: "0px",
     paddingRight: "0px",
@@ -318,10 +500,21 @@ describe("formatObservedYaml", () => {
     extracted_at: "2026-04-28T00:00:00.000Z",
     viewport: "1280x800",
     custom_properties: { "--brand": "#ff0066" },
+    custom_properties_srgb: { "--brand": "#ff0066" },
     colors: {
-      bg_of_body: "rgb(255, 255, 255)",
+      bg_of_body: {
+        value: "rgb(255, 255, 255)",
+        srgb: "rgb(255, 255, 255)",
+        srgb_hex: "#ffffff",
+      },
       text_on_canvas: [
-        { value: "rgb(0, 0, 0)", count: 10, samples: ["p", "h1"] },
+        {
+          value: "rgb(0, 0, 0)",
+          srgb: "rgb(0, 0, 0)",
+          srgb_hex: "#000000",
+          count: 10,
+          samples: ["p", "h1"],
+        },
       ],
       text_on_non_canvas: [],
       button_backgrounds: [],
@@ -347,6 +540,14 @@ describe("formatObservedYaml", () => {
     radius_observed: [{ value: "0px", count: 5, semantic_hint: "none" }],
     spacing_observed: { paddings_clustered: ["0px", "16px"], gaps: ["8px"] },
     fonts_resolved: ["Inter"],
+    is_cjk: false,
+    is_cjk_signals: {
+      font_loaded: false,
+      lang_attr: false,
+      og_locale: null,
+      tld_jp: false,
+      font_chain_jp: false,
+    },
     exemplar_hints: ["editorial/linear.md"],
     warnings: ["test warning"],
   };
@@ -357,18 +558,27 @@ describe("formatObservedYaml", () => {
     expect(out).toContain("source: url");
     expect(out).toContain('viewport: 1280x800');
     expect(out).toContain('"--brand": "#ff0066"');
-    expect(out).toContain('bg_of_body: "rgb(255, 255, 255)"');
+    expect(out).toContain("custom_properties_srgb:");
+    expect(out).toContain("  bg_of_body:");
+    expect(out).toContain('    value: "rgb(255, 255, 255)"');
+    expect(out).toContain('    srgb_hex: "#ffffff"');
+    expect(out).toContain('      srgb_hex: "#000000"');
     expect(out).toContain('cluster_size: "64px"');
     expect(out).toContain('value: "0px", count: 5, semantic_hint: "none"');
     expect(out).toContain('paddings_clustered: ["0px", "16px"]');
-    expect(out).toContain('exemplar_hints:');
+    expect(out).toContain("is_cjk: false");
+    expect(out).toContain("is_cjk_signals:");
+    expect(out).toContain("  font_loaded: false");
+    expect(out).toContain("  og_locale: null");
+    expect(out).toContain("exemplar_hints:");
     expect(out).toContain('  - "editorial/linear.md"');
     expect(out).toContain('  - "test warning"');
   });
 
-  it("空配列は [] で出る", () => {
+  it("空配列は [] / 空オブジェクトは {} で出る", () => {
     const empty: ObservedYaml = {
       ...minimal,
+      custom_properties_srgb: {},
       typography: [],
       fonts_resolved: [],
       exemplar_hints: [],
@@ -378,6 +588,7 @@ describe("formatObservedYaml", () => {
     const out = formatObservedYaml(empty);
     expect(out).toContain("typography:\n  []");
     expect(out).toContain("fonts_resolved:\n  []");
+    expect(out).toContain("custom_properties_srgb:\n  {}");
   });
 
   it("ダブルクオートを正しくエスケープする", () => {
@@ -387,6 +598,36 @@ describe("formatObservedYaml", () => {
     };
     const out = formatObservedYaml(escaped);
     expect(out).toContain('"She said \\"hi\\""');
+  });
+
+  it("srgb / srgb_hex が null のときは null リテラルで出る", () => {
+    const withNulls: ObservedYaml = {
+      ...minimal,
+      colors: {
+        ...minimal.colors,
+        bg_of_body: { value: "transparent", srgb: null, srgb_hex: null },
+        text_on_canvas: [
+          {
+            value: "transparent",
+            srgb: null,
+            srgb_hex: null,
+            count: 1,
+            samples: ["p"],
+          },
+        ],
+      },
+      is_cjk: true,
+      is_cjk_signals: {
+        ...minimal.is_cjk_signals,
+        og_locale: "ja_JP",
+        lang_attr: true,
+      },
+    };
+    const out = formatObservedYaml(withNulls);
+    expect(out).toContain("    srgb: null");
+    expect(out).toContain("    srgb_hex: null");
+    expect(out).toContain('  og_locale: "ja_JP"');
+    expect(out).toContain("  lang_attr: true");
   });
 });
 
