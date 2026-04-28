@@ -163,7 +163,7 @@ skill は呼び出し元プロジェクトのルート直下に `.design-studio/
 `references/` 配下の vendored 資産:
 
 - `prompts/`, `design-skills/`, `builtin-skills/` — [OpenCoworkAI/open-codesign](https://github.com/OpenCoworkAI/open-codesign) より（無改変）
-- `design-md/` — [DESIGN.md 公式仕様](https://github.com/google-labs-code/design.md)（Google Labs / Apache-2.0）準拠のフロントマター付き Markdown。**70 サイト**は [getdesign.md](https://getdesign.md)（VoltAgent team / MIT）から取得しカタログ全件をカバー、**25 サイト**は [kzhrknt/awesome-design-md-jp](https://github.com/kzhrknt/awesome-design-md-jp)（MIT）から日本企業を取得し `japanese-*` 4 family に配置（upstream は legacy prose 配信のため、本リポジトリで公式仕様に再構成、Issue #28）、**15 サイト**（7 単体 + remix family 8）は本リポジトリで仕様準拠に手動変換。**合計 110 サイト**
+- `design-md/` — [DESIGN.md 公式仕様](https://github.com/google-labs-code/design.md)（Google Labs / Apache-2.0）準拠のフロントマター付き Markdown。**70 サイト**は [getdesign.md](https://getdesign.md)（VoltAgent team / MIT）から取得しカタログ全件をカバー（うち 12 サイトは upstream 自身が公式仕様、残り 58 サイトは upstream の legacy prose を本リポジトリで再構成、Issue #31）、**25 サイト**は [kzhrknt/awesome-design-md-jp](https://github.com/kzhrknt/awesome-design-md-jp)（MIT）から日本企業を取得し `japanese-*` 4 family に配置（upstream は legacy prose 配信のため、本リポジトリで公式仕様に再構成、Issue #28）、**15 サイト**（7 単体 + remix family 8）は本リポジトリで仕様準拠に手動変換。**合計 110 サイト、すべて公式仕様**
 - `prompt-packs/`, `recipes/` — [rohitg00/awesome-claude-design](https://github.com/rohitg00/awesome-claude-design) より（無改変、family 分類体系も継承）
 
 vendored ファイルは無改変で保持する。getdesign.md / kzhrknt 由来の更新追従はメンテナが

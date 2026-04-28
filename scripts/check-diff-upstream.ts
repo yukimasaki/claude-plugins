@@ -103,6 +103,14 @@ export const REPOS: Record<UpstreamRepo, RepoConfig> = {
     // family 分類はメンテナの主観判断で rohitg00 流の 10 family に振り分け。
     // 別途 16 サイト（8 単体 + 8 remix、getdesign.md に無いもの）は自前変換で
     // vendor 済み（design-md/{family}/{slug}.md 形式、本マップには含めない）。
+    //
+    // 形式状況（Issue #31 / PR #34 時点）:
+    // - 12 サイト（airbnb / airtable / apple / binance / bmw / bmw-m / bugatti /
+    //   cal / claude / clay / clickhouse / cohere）は upstream 自身が公式仕様
+    //   配信、本リポジトリは無改変 vendor → 本スクリプトで「変更なし」報告
+    // - 残り 58 サイトは upstream の legacy prose を本リポジトリで公式仕様
+    //   （frontmatter YAML + Markdown body）に再構成済み → 本スクリプトで
+    //   「変更」報告（drift 永続化、upstream の追加 migration 待ちで再追従可）
     vendoredToUpstream: {
       // warm (3)
       "design-md/warm/claude.md": "design-md/claude/DESIGN.md",
