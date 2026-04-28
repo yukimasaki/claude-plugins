@@ -1,0 +1,138 @@
+# Japanese typography v1 (CJK rules for design-director)
+
+When the brief, target audience, or referenced sites are Japanese (or the
+generated UI must serve Japanese users), apply these rules. Western-only
+typography defaults silently fall apart in Japanese: stock SaaS templates
+default to Mincho when the page sets `font-family: serif`, body line-heights
+of 1.4 cram CJK strokes into illegible blocks, and `letter-spacing: -0.02em`
+collapses kanji onto one another. The fixes are formulaic — bake them into
+every Japanese-facing artifact.
+
+## 1. Font-family fallback chains (always include CJK)
+
+System fallbacks vary across platforms. Always declare the chain explicitly.
+
+Sans-serif (default for body + UI):
+```css
+font-family: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI",
+             "Yu Gothic", "Meiryo", system-ui, sans-serif;
+```
+Serif (editorial body, longform reading):
+```css
+font-family: "Source Serif 4", "Noto Serif JP", "Shippori Mincho",
+             "Hiragino Mincho ProN", "Yu Mincho", serif;
+```
+Monospace (code, transaction IDs):
+```css
+font-family: "JetBrains Mono", "BIZ UDGothic", "Source Han Code JP",
+             ui-monospace, monospace;
+```
+Order rule: latin face first, CJK face second, OS-bundled fallbacks third,
+generic last. Browsers render each glyph from the first font in the chain
+that contains it, so latin-first chains keep alphanumerics in your latin
+face while pulling kanji from the CJK face.
+
+NEVER use bare `font-family: serif;` or `sans-serif;` on a Japanese page —
+mac/iOS will render Hiragino Mincho on the bare keyword and you'll get
+a default-mincho UI.
+
+## 2. line-height (always wider than western body)
+
+Body: 1.7–1.8. Display: 1.4–1.5. Caption: 1.5–1.6.
+
+Western body sits comfortably at 1.4–1.5. Japanese needs more vertical air
+because kanji density per line is higher and the strokes are visually
+heavier. 1.4 on Japanese body looks "詰まっている" (cramped). 1.7 reads as
+default polished editorial. 2.0 is generous longform.
+
+## 3. letter-spacing for CJK
+
+Body: 0.04em–0.08em (positive). Display headings: 0–0.04em. Numerals: 0.
+
+Latin design tokens often default to negative letter-spacing on display
+(`letterSpacing: -0.02em` etc.). On Japanese this fuses adjacent kanji.
+For CJK content, KEEP letter-spacing >= 0. If a design system requires
+the latin display to sit tight, scope the negative value to a latin-only
+class and reset to 0 for CJK runs:
+```css
+.h1 { letter-spacing: -0.02em; }
+.h1:lang(ja) { letter-spacing: 0; }
+```
+
+## 4. OpenType `palt` and `kern`
+
+Japanese text contains "yakumono" (punctuation, brackets, kana variants)
+that ship with full-width whitespace boxes. By default, ja text strings
+look gapped around 「」（）and 句読点. Enable proportional alternates:
+
+```css
+font-feature-settings: "palt" 1, "kern" 1;
+```
+
+Apply to display surfaces (h1–h3, hero headlines, large CTAs). Apply
+selectively to body — `palt` on body can collapse intentional pauses in
+longform reading. Default: display ON, body OFF unless the brand asks for
+it.
+
+## 5. Kinsoku shori (line-break rules)
+
+Japanese has hard rules about which characters cannot start or end a line
+(closing brackets cannot start, opening brackets cannot end, 句読点 cannot
+start). Modern browsers handle this if you keep the right CSS:
+
+```css
+word-break: normal;          /* DO NOT use break-all on JP body */
+overflow-wrap: anywhere;     /* allow wrap inside long URLs / latin runs */
+line-break: strict;          /* enforce kinsoku */
+hanging-punctuation: allow-end;  /* let 句読点 hang into the right margin */
+```
+
+NEVER set `word-break: break-all` on Japanese body — it breaks mid-word
+without respect for kinsoku. `break-all` is for narrow CJK phone columns
+in *exceptional* cases only.
+
+## 6. Mixed Japanese + Latin (混植)
+
+When a Japanese paragraph contains English words / brand names / numerals,
+the latin face should be visually balanced with the CJK face. Two
+approaches:
+
+A. Latin-first font chain (Section 1) — let the browser hand each glyph to
+   the first available font. Simple, works for most cases.
+
+B. Class-based switch — wrap latin runs in a `<span>` with a latin-only
+   font for fine control over weight/optical size:
+   ```html
+   <p>SmartHR は <span class="lat">SaaS</span> 業界をリードする…</p>
+   ```
+   Use this when the latin face needs different weight (e.g. serif Japanese
+   body but sans latin brand names).
+
+## 7. Google Fonts CDN (recommended links)
+
+For prototyping, drop these into `<head>` for a usable Japanese type stack:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap">
+```
+Add Shippori Mincho, Klee One, Zen Kaku Gothic New, or BIZ UDGothic only
+when a specific design-md asks for them — they add bytes.
+
+## 8. Anti-slop checks (Japanese-specific)
+
+When generating UI for a Japanese audience, before hitting "ship":
+
+- [ ] Does `font-family` declare a CJK face explicitly? (No bare keywords.)
+- [ ] Is body line-height >= 1.6? (Lower = cramped.)
+- [ ] Is letter-spacing >= 0 on CJK runs? (Negative = fused kanji.)
+- [ ] Are display headings using `palt` for clean yakumono spacing?
+- [ ] Is `word-break: break-all` absent from body? (Use only on narrow
+  exceptional surfaces.)
+- [ ] Are mixed-language strings handled (latin first chain or class wrap)?
+- [ ] On a mac/iOS preview, does the page actually render the intended
+  CJK face (not Hiragino Mincho fallback)?
+
+If any answer is "default" or "not sure", the typography is failing on
+Japanese readers. Apply the defaults from Sections 1–6.

@@ -44,6 +44,13 @@
 
 ### 3. 美学方向性の決定
 
+0. **言語/市場判定（先行）**: ブリーフ・参考リンクのドメイン・対象ユーザーの
+   記述から、対象が **日本語コンテンツまたは日本市場向け** かを Claude が
+   silently 判定する。該当する場合は:
+   - Layer 1 で `references/prompts/japanese-typography.v1.txt` を Read
+   - 候補 family として `japanese-corporate` / `japanese-consumer` /
+     `japanese-editorial` / `japanese-creative` の 4 family（25 サイト）を
+     **優先提示** する（rohitg00 流の 10 family と併存）
 1. ユーザーが美学を明示している（「warm editorial で」「terminal-like に」）
    → 対応する `references/design-md/{family}/` を列挙し、代表ファイルの
    フロントマター（`name:` / `description:`）を読んで候補を選ぶ
