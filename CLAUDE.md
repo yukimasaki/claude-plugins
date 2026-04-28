@@ -61,3 +61,31 @@ Release-As: 0.2.0
 ## デザイン参照ファイル追加
 
 `plugins/design-director/skills/design-director/references/design-md/` への追加 PR の手順は [CONTRIBUTING.md](./CONTRIBUTING.md) を参照。
+
+## DESIGN.md フォーマット規約
+
+`plugins/design-director/skills/design-director/references/design-md/` 配下の DESIGN.md は [google-labs-code/design.md](https://github.com/google-labs-code/design.md) 公式仕様に従う **YAML frontmatter + Markdown 本文** の二層構造で記述します。新規ファイルおよび更新時はこの形式に揃えてください。
+
+### 必須 frontmatter
+
+- `version`: 通常 `alpha`
+- `name`: ブランド/システム名
+- `description`: 末尾に `Mood — <3〜5 語>` を含む 1 段落（Layer 2b の `when_to_use` シグナルとして使われる）
+- `colors`: フラットな `key: "#hex"` マップ（`primary` / `ink` / `body` / `surface` / `hairline` / `on-primary` / `success` / `error` 等）
+- `typography`: role-keyed オブジェクト。各 role に `fontFamily` / `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` を持たせる
+- `rounded`: スケール（`none` / `xs` / `sm` / `md` / `lg` / `xl` / `pill` / `full` 等）→ px
+- `spacing`: スケール（数値キーまたは `xxs` / `xs` / `sm` / `md` / `lg` / `xl` / `xxl` / `section` 等）→ px
+
+### 任意 frontmatter
+
+- `components`: コンポーネント単位の合成トークン。値はリテラルか `{colors.primary}` 形式の参照
+
+### Markdown 本文
+
+`## Colors` / `## Typography` / `## Components` 等のセクションで、frontmatter のトークンに対する適用ニュアンス（hierarchy / contrast / motion 等）を補足します。
+
+### 既存ファイルの状態
+
+リポジトリには公式仕様に変換済みのファイルと、kzhrknt/awesome-design-md-jp 等から取り込んだ legacy prose 形式のファイルが混在しています（`japanese-*` / `remix/` / `warm/claude` / `warm/mercury` 等は変換済み、`terminal/` / `editorial/` の多くは legacy prose）。新規 PR は必ず公式仕様で書き、既存ファイルの修正時は段階的に変換しても構いません。
+
+スキル本体の運用ルールは [SKILL.md](./plugins/design-director/skills/design-director/SKILL.md) を参照。
