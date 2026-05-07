@@ -1,7 +1,7 @@
 {
   "name": "design-director",
   "description": "デザイン駆動のプロトタイピング支援スキル。ギャラリー駆動で UI バリエーションを並列生成",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "author": {
     "name": "Yuki Masaki",
     "email": "97879070+yukimasaki@users.noreply.github.com"
