@@ -44,7 +44,17 @@ Format:
    escalates it with concrete examples.
 3. Synthesis: one persona writes the final recommendation, the other two
    sign off or lodge a minority report.
-4. Action items: 3 concrete decisions for the team to implement Monday.
+   The synthesis MUST be written as a USER ACTION TIMELINE — describe
+   how a real user opens the screen, taps a button, and sees the result,
+   in plain prose. Do NOT use technical jargon (mode names, state names,
+   function names, file paths) in the synthesis body. Implementation
+   specifics belong in Action Items / Minority Report only.
+4. Before / After ASCII mockups, side-by-side or stacked, so the
+   experience delta is visible at a glance. Required, not optional.
+5. Action items: 3 concrete decisions for the team to implement Monday.
+
+Order: synthesis (user action timeline) → ASCII mockups (Before / After)
+→ action items.
 
 Call out stalemates honestly. Don't force consensus.
 ```
@@ -89,16 +99,43 @@ Keep the systems discussion for the next sprint."
 [... rounds 2 and 3 ...]
 
 --- SYNTHESIS (written by Pragmatic) ---
-Ship in this order:
-1. Copy rewrite: "Start writing" + "Keep your notes" CTA variants
-2. Serif H1 on plan selection, Iowan Old Style, 44px
-3. Single-page checkout — move card details into plan selection
-   as an inline accordion
+A freelance writer lands on the pricing page from a blog post.
+
+Before: She sees a generic "Choose your plan" headline in a sans-serif
+face. She picks Pro, hits "Get Started", waits a beat, and is taken to
+a separate page asking for card details. Two pages, two waits, and
+nothing on either screen tells her this is a writing tool.
+
+After: She sees "Start writing — $29 / month" in a warm serif headline.
+The price has room to breathe; the value sits right under the headline.
+As she scrolls, the card-details fields appear inline on the same page
+— no second screen, no context switch. She fills in her card and clicks
+"Keep your notes". The button names the outcome, not the transaction.
+
+--- BEFORE / AFTER MOCKUPS ---
+
+Before (two pages):                  After (single page):
+┌────────────────────────────┐      ┌─────────────────────────────┐
+│ Choose your plan           │      │  Start writing              │
+│                            │      │  $29 / month                │
+│ ○ Free  ● Pro  ○ Team      │      │  ─────                      │
+│                            │      │  Keep your notes, drafts,   │
+│ [ Get Started ]            │      │  and research in one place. │
+└────────────────────────────┘      │                             │
+            ↓                       │  ○ Free  ● Pro  ○ Team      │
+┌────────────────────────────┐      │                             │
+│ Card details               │      │  Card details               │
+│ [______________]           │      │  [______________________]   │
+│ [______________]           │      │  [_________]                │
+│                            │      │                             │
+│ [ Pay $29 ]                │      │  [ Keep your notes ]        │
+└────────────────────────────┘      └─────────────────────────────┘
 
 Minority report (Architect): "We're skipping token work again. Logged
 as design-debt item #47."
-Minority report (Art Director): "Agreed on copy and serif. Accordion
-is a trend; make it a simple continuation instead."
+Minority report (Art Director): "Agreed on copy and serif. The inline
+card details should read as a simple continuation, not a boxed
+accordion."
 
 --- ACTION ITEMS ---
 1. Rewrite 4 checkout strings by Wednesday
