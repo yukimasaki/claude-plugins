@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.7](https://github.com/yukimasaki/claude-plugins/compare/v0.4.6...v0.4.7) (2026-05-10)
+
+
+### Features
+
+* **design-director:** 3 デザイナー + ユーザー参加の 4 者ディベート prompt-pack を追加 ([#47](https://github.com/yukimasaki/claude-plugins/issues/47)) ([3387860](https://github.com/yukimasaki/claude-plugins/commit/3387860779ca22730e6d78c00380eb069584bf91))
+
 ## [0.4.6](https://github.com/yukimasaki/claude-plugins/compare/v0.4.5...v0.4.6) (2026-05-07)
 
 
