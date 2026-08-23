@@ -3,6 +3,10 @@ name: release-please
 on:
   push:
     branches: [main]
+  # Release PR を作り直したいときに手で起こせるようにする。
+  # release-please は既存の Release PR があると再生成しないことがあるため、
+  # 設定を変えたあとは PR を閉じてからこれを実行する。
+  workflow_dispatch:
 
 permissions:
   contents: read
