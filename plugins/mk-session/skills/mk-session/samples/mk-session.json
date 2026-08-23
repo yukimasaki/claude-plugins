@@ -1,0 +1,17 @@
+{
+  "worktree": {
+    "delegate": "auto",
+    "path": "../{repo}-{issue}",
+    "branch": "{type}/{issue}-{slug}",
+    "env": [".env.local", "sites/app/.env.local"],
+    "install": "bun install"
+  },
+  "agent": {
+    "command": "claude",
+    "agmsgType": "claude-code",
+    "launchArgs": ["--model", "default", "--dangerously-skip-permissions"],
+    "sessionNameFlag": "-n"
+  },
+  "team": "{repo}-{issue}",
+  "handshakeTimeoutSec": 90
+}

@@ -19,6 +19,11 @@
       "name": "buzzounce",
       "source": "./plugins/buzzounce",
       "description": "OSS / AI / 個人開発の X (Twitter) 告知ツイートを persona と mode を選んで対話生成するスキル"
+    },
+    {
+      "name": "mk-session",
+      "source": "./plugins/mk-session",
+      "description": "Issue 番号から worktree・ターミナルタブ・コーディングエージェントを一括セットアップし、エージェント間メッセージの疎通確認まで済ませるスキル"
     }
   ]
 }
