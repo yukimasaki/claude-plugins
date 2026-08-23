@@ -53,6 +53,18 @@ export function hasHandshakeReply(
   );
 }
 
+/**
+ * シェルに渡す 1 引数として安全な形に包む。
+ *
+ * 起動プロンプトと疎通メッセージには「そのまま実行させるコマンド」を書くので、
+ * team 名やパスに空白やメタ文字が入ると分割・解釈されて別のコマンドになる。
+ * agmsg 側はそうした名前を受け付けるため、包まないとこちらだけが壊れる。
+ */
+export function shellQuote(value: string): string {
+  if (value.length > 0 && /^[A-Za-z0-9_@%+=:,./-]+$/.test(value)) return value;
+  return `'${value.replace(/'/g, `'\\''`)}'`;
+}
+
 export type KickoffPromptInput = {
   issue: number;
   team: string;
@@ -79,7 +91,7 @@ export function buildKickoffPrompt(input: KickoffPromptInput): string {
     "最初に次の 4 つを順に実行して。終わるまで他の作業を始めないで。",
     `1. /agmsg actas ${input.issue}`,
     "2. /agmsg mode monitor",
-    `3. ${input.agmsgScriptsDir}/send.sh ${input.team} ${input.issue} ${input.lead} "${input.readyToken} ready"`,
+    `3. ${buildSendCommand(input, `${input.readyToken} ready`)}`,
     `4. このあと ${input.lead} から疎通確認のメッセージが届く。本文に書かれた返信コマンドをそのまま実行して返信して`,
     "",
     `そのあと本題に入って: ${task}`,
@@ -102,6 +114,25 @@ export type ProbeMessageInput = {
 export function buildProbeMessage(input: ProbeMessageInput): string {
   return [
     `mk-session の疎通確認です。次のコマンドをそのまま実行して返信してください:`,
-    `${input.agmsgScriptsDir}/send.sh ${input.team} ${input.issue} ${input.lead} "${input.token} ok"`,
+    buildSendCommand(input, `${input.token} ok`),
   ].join("\n");
+}
+
+/** 子に実行させる send.sh の 1 行。引数はすべてクォートして渡す */
+function buildSendCommand(
+  input: {
+    agmsgScriptsDir: string;
+    team: string;
+    issue: number;
+    lead: string;
+  },
+  body: string,
+): string {
+  return [
+    shellQuote(`${input.agmsgScriptsDir}/send.sh`),
+    shellQuote(input.team),
+    String(input.issue),
+    shellQuote(input.lead),
+    shellQuote(body),
+  ].join(" ");
 }

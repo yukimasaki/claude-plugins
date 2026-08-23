@@ -5,6 +5,7 @@ import {
   buildProbeMessage,
   hasHandshakeReply,
   parseHistory,
+  shellQuote,
 } from "./handshake.ts";
 
 const HISTORY = [
@@ -80,7 +81,7 @@ describe("buildKickoffPrompt", () => {
 
   it("ready の返信コマンドに team・宛先・トークンが入る", () => {
     expect(prompt).toContain(
-      'send.sh claude-plugins-53 53 lead "mk-session-handshake-53-abc ready"',
+      "send.sh claude-plugins-53 53 lead 'mk-session-handshake-53-abc ready'",
     );
   });
 
@@ -104,7 +105,57 @@ describe("buildProbeMessage", () => {
       agmsgScriptsDir: "/home/u/.agents/skills/agmsg/scripts",
     });
     expect(body).toContain(
-      'send.sh claude-plugins-53 53 lead "mk-session-probe-53-xyz ok"',
+      "send.sh claude-plugins-53 53 lead 'mk-session-probe-53-xyz ok'",
+    );
+  });
+});
+
+describe("shellQuote", () => {
+  it("安全な文字だけの値はそのまま返す", () => {
+    expect(shellQuote("acme-53")).toBe("acme-53");
+    expect(shellQuote("/home/u/.agents/scripts/send.sh")).toBe(
+      "/home/u/.agents/scripts/send.sh",
+    );
+  });
+
+  it("空白を含む値を包む", () => {
+    expect(shellQuote("epic 42")).toBe("'epic 42'");
+  });
+
+  it("メタ文字を含む値を包む", () => {
+    expect(shellQuote("a;rm -rf /")).toBe("'a;rm -rf /'");
+    expect(shellQuote("a`b`")).toBe("'a`b`'");
+    expect(shellQuote("$(id)")).toBe("'$(id)'");
+  });
+
+  it("シングルクオートを含む値を壊さずに包む", () => {
+    expect(shellQuote("it's")).toBe("'it'\\''s'");
+  });
+
+  it("空文字も包む", () => {
+    expect(shellQuote("")).toBe("''");
+  });
+});
+
+describe("空白入りの team 名でもコマンドが壊れない", () => {
+  const base = {
+    issue: 42,
+    team: "epic 42",
+    lead: "lead",
+    agmsgScriptsDir: "/home/my agents/scripts",
+  };
+
+  it("起動プロンプトの send.sh がすべてクォートされる", () => {
+    const prompt = buildKickoffPrompt({ ...base, readyToken: "tok" });
+    expect(prompt).toContain(
+      "'/home/my agents/scripts/send.sh' 'epic 42' 42 lead 'tok ready'",
+    );
+  });
+
+  it("疎通メッセージの返信コマンドがすべてクォートされる", () => {
+    const message = buildProbeMessage({ ...base, token: "tok" });
+    expect(message).toContain(
+      "'/home/my agents/scripts/send.sh' 'epic 42' 42 lead 'tok ok'",
     );
   });
 });
