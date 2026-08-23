@@ -21,6 +21,11 @@
         },
         {
           "type": "json",
+          "path": "plugins/buzzounce/.claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
           "path": "plugins/mk-session/.claude-plugin/plugin.json",
           "jsonpath": "$.version"
         }

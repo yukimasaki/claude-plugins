@@ -24,6 +24,9 @@ jobs:
       - name: Validate design-director plugin
         run: claude plugin validate ./plugins/design-director
 
+      - name: Validate buzzounce plugin
+        run: claude plugin validate ./plugins/buzzounce
+
       - name: Validate mk-session plugin
         run: claude plugin validate ./plugins/mk-session
 
