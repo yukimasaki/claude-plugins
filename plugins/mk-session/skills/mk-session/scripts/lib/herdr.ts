@@ -103,13 +103,14 @@ export function startAgent(
 }
 
 export function listPanes(
-  workspace: string,
+  workspace: string | undefined,
   options: RunOptions = {},
 ): HerdrPane[] {
-  const result = run("herdr", ["pane", "list", "--workspace", workspace], {
-    ...options,
-    dryRun: false,
-  });
+  const result = run(
+    "herdr",
+    workspace ? ["pane", "list", "--workspace", workspace] : ["pane", "list"],
+    { ...options, dryRun: false },
+  );
   if (result.status !== 0) return [];
   return parsePanes(result.stdout);
 }

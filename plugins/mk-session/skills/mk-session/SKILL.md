@@ -77,8 +77,15 @@ bun "${CLAUDE_PLUGIN_ROOT}/skills/mk-session/scripts/setup-worktree.ts" <issue> 
 
 - `action: "created"` — 内蔵手順で作成済み。`path` / `branch` をそのまま次の段に渡す。
 
+  `incomplete` が空でないときは exit 3 で返る。worktree は作れているので次の段へ進んでよいが、
+  **完了報告で「成功」と書かない**。`incomplete` に `install` が入っていれば依存が入っていないので、
+  worktree のパスと再実行するコマンド（`installCommand`）をユーザーに提示する。
+
 **BLOCK された場合**（同名の worktree が既にある / ブランチが既にある）はスクリプトが exit 1 で止まる。
 握りつぶして先へ進まず、出力に出ている指示（`cleanup` か `--branch` の指定）をユーザーに提示する。
+
+**`--branch` は内蔵経路専用**。委譲先がブランチ名の指定を受ける保証がないため、委譲経路で
+`--branch` を渡すと exit 1 で止まる。指定した名前で作りたいときは `--delegate none` を併用する。
 
 ### 2. セッション段
 
@@ -124,6 +131,10 @@ bun "${CLAUDE_PLUGIN_ROOT}/skills/mk-session/scripts/cleanup-session.ts" cleanup
 ```
 
 このスクリプトが畳むのは**セッション層だけ**（herdr タブと agmsg の team 登録）。
+タブのラベルは Issue 番号だけなので、同じ workspace に別リポジトリの同じ番号のセッションが
+あると区別できない。pane の cwd がこのリポジトリの worktree 配下のタブだけを閉じ、確認できな
+かったタブは閉じずに `skippedTabs` に入れて返す。**`skippedTabs` が空でなければ完了報告に含め、
+どのタブを閉じなかったかをユーザーに伝える。**
 worktree とブランチの削除は、作る側と同じく既存手順へ委譲する。
 
 - 既存手順があるリポジトリ: `Skill(<skillName>, cleanup <issue>)`

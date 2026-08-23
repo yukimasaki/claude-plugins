@@ -81,7 +81,7 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 
 | 引数 | 説明 |
 |---|---|
-| `--branch=<name>` | ブランチ名を明示指定する |
+| `--branch=<name>` | ブランチ名を明示指定する（内蔵経路のみ。委譲経路では `--delegate none` を併用する） |
 | `--team=<name>` | team 名を指定する（Epic の既存 team に相乗りするとき） |
 | `--agent=<cmd>` | 起動するエージェントを変える（agmsg の type も追従する） |
 | `--yolo` | 権限確認を飛ばす引数を足す（claude / codex のみ。他は `launchArgs` に明示する） |
@@ -110,6 +110,10 @@ herdr のタブと agmsg の team 登録を畳む。worktree とブランチの�
 作る側と同じく既存手順（`mk-wktree cleanup` 等）へ委譲する。
 
 対象タブは作る側と同じ workspace（`--workspace` か `HERDR_WORKSPACE_ID`）から探す。
+ラベルは Issue 番号だけなので、同じ workspace に別リポジトリの同じ番号のセッションがあると
+ラベルでは区別できない。pane の cwd がこのリポジトリの worktree 配下にあるタブだけを閉じ、
+確認できなかったタブは閉じずに `skippedTabs` として返す。
+
 親（`lead`）の team 登録を外すのは `team` テンプレートが `{issue}` を含むときだけで、
 `--team` で既存 team に相乗りした場合は他の Issue のために残す。
 
@@ -119,6 +123,9 @@ herdr のタブと agmsg の team 登録を畳む。worktree とブランチの�
 |---|---|
 | `worktree の作成先が既に存在します` で止まる | 前回の残骸。`/mk-session cleanup <issue>` で畳んでから再実行する |
 | `ブランチが既に存在します` で止まる | `--branch=` で別名を指定するか、既存ブランチを整理する |
+| `--branch は ... 委譲経路では使えません` で止まる | 委譲先がブランチ名を決めるため。内蔵手順で作るなら `--delegate none` を併用する |
+| 依存インストールが失敗して exit 3 になる | worktree は作れている。`incomplete` に `install` が入るので、worktree で `installCommand` を手で再実行する |
+| タブが閉じずに `skippedTabs` に入る | 別リポジトリの同番号タブと区別できなかったか、worktree を先に消していた。タブを手で閉じる |
 | `herdr の workspace id が分かりません` | `HERDR_WORKSPACE_ID` を設定するか `--workspace` を渡す |
 | 疎通確認がタイムアウトする | 子が権限確認で止まっているか、受信モードが無効。`--yolo` を付けるか、子のタブで `/agmsg mode monitor` を実行する |
 | タブは残るがエージェントが出ない | `agent-not-started` で終了する。root pane は残すので、そのタブで起動コマンドを直接試して原因を見る |

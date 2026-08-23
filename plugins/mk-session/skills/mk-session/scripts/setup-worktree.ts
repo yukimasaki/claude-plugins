@@ -62,6 +62,15 @@ const branch = buildBranchName({
 const team = renderTemplate(config.team, { repo: repoName, issue });
 
 if (decision.mode === "skill") {
+  // 委譲先がブランチ名の指定を受ける保証はない。黙って無視すると
+  // 「指定した名前で作られたつもりが違う名前だった」に気付けない。
+  if (parsed.branch) {
+    fail(
+      `--branch は ${decision.skillName} への委譲経路では使えません\n` +
+        `委譲先がブランチ名を決めるため、指定は反映されません。\n` +
+        `内蔵手順で作るなら --delegate none を付けて再実行してください`,
+    );
+  }
   log(`worktree 段は ${decision.skillName} に委譲します（${decision.reason}）`);
   emit({
     action: "delegate",
@@ -143,12 +152,16 @@ for (const entry of config.worktree.env) {
 
 const installCommand = config.worktree.install ??
   detectInstallCommand(dryRun ? readdirSyncSafe(repoRoot) : readdirSyncSafe(worktreePath));
+// 未完了のまま成功として報告しないための印。worktree は作れているので
+// 巻き戻さず、何が終わっていないかを呼び出し側に返す。
+const incomplete: string[] = [];
 let installed = false;
 if (installCommand) {
   const result = runShell(installCommand, { cwd: worktreePath, dryRun });
   installed = !result.skipped && result.status === 0;
   if (!installed && !result.skipped) {
     log(`依存インストールが失敗しました: ${installCommand}`);
+    incomplete.push("install");
   }
 } else {
   log("依存インストールのコマンドを特定できませんでした（スキップ）");
@@ -156,6 +169,7 @@ if (installCommand) {
 
 emit({
   action: "created",
+  incomplete,
   dryRun,
   issue,
   issueTitle: issueInfo.title,
@@ -171,6 +185,9 @@ emit({
   repoName,
   config,
 });
+
+// 一部が終わっていない場合は 0 で返さない（exit 3 = 一部未完了で正常終了）
+if (incomplete.length > 0) process.exit(3);
 
 function isRegisteredWorktree(target: string): boolean {
   const result = run("git", ["worktree", "list", "--porcelain"], {
