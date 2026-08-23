@@ -29,6 +29,12 @@ const dryRun = parsed.dryRun;
 const lead = parsed.lead ?? process.env.MK_SESSION_LEAD ?? "lead";
 const agmsgScriptsDir = findAgmsgScriptsDir();
 const herdrAvailable = hasCommand("herdr");
+// 作る側は --workspace / HERDR_WORKSPACE_ID に作る。同じ workspace を見ないと
+// 「閉じたつもりでタブが残る」「別 workspace の同名ラベルを閉じる」が起きる。
+const workspace = parsed.workspace ?? process.env.HERDR_WORKSPACE_ID;
+// team テンプレートが Issue 単位のときだけ、親の登録も畳んでよい。
+// --team で既存 team に相乗りした場合は他の Issue がまだ使っている。
+const teamIsPerIssue = config.team.includes("{issue}");
 
 const results = parsed.issues.map((issue) => {
   const team = renderTemplate(config.team, { repo: repoName, issue });
@@ -39,8 +45,7 @@ const results = parsed.issues.map((issue) => {
     const ctx: AgmsgContext = { scriptsDir: agmsgScriptsDir, team };
     const left = leaveTeam(ctx, String(issue), { dryRun });
     leftTeam = !left.skipped && left.status === 0;
-    // team 名が Issue 単位のときは、親の登録も残さない
-    if (team.includes(String(issue))) {
+    if (teamIsPerIssue) {
       leaveTeam(ctx, lead, { dryRun });
     }
   }
@@ -52,6 +57,7 @@ const results = parsed.issues.map((issue) => {
     closedTabs,
     leftTeam,
     herdrAvailable,
+    workspace: workspace ?? null,
     agmsgAvailable: agmsgScriptsDir !== null,
   };
 });
@@ -64,7 +70,11 @@ console.log(
 
 /** ラベルが Issue 番号のタブを閉じる。ラベル運用は mk-session が作るときの規約 */
 function closeTabsFor(issue: number): string[] {
-  const list = run("herdr", ["tab", "list"], {});
+  const list = run(
+    "herdr",
+    workspace ? ["tab", "list", "--workspace", workspace] : ["tab", "list"],
+    {},
+  );
   if (list.status !== 0) return [];
   let tabs: Array<{ tab_id: string; label?: string }> = [];
   try {

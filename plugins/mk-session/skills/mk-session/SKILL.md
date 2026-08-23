@@ -10,7 +10,7 @@ description: >-
   片付けも本スキルが持つ: 「セッションを閉じて」「タブと worktree を片付けて」
   「mk-session cleanup」なども本スキルを呼ぶ。
 argument-hint: "<issue-number> [--branch=<name>] [--team=<name>] [--agent=<cmd>] [--yolo] | cleanup <issue-number>..."
-allowed-tools: Bash(bun *, git *, gh *, herdr *, ls *, cat *, command *), Read, Skill
+allowed-tools: Bash(bun:*), Bash(git:*), Bash(gh:*), Bash(herdr:*), Bash(ls:*), Bash(cat:*), Bash(command:*), Read, Skill
 ---
 
 # mk-session
@@ -40,7 +40,7 @@ Issue 番号を 1 つ渡すと、次の状態までを作る。
 /mk-session 123
 /mk-session #123
 /mk-session 123 --branch=feat/123-custom
-/mk-session 123 --team retocare-3691     # Epic の既存 team に相乗りする
+/mk-session 123 --team acme-3691     # Epic の既存 team に相乗りする
 /mk-session 123 --agent codex            # 起動するエージェントを変える
 /mk-session 123 --yolo                   # 権限確認を飛ばして起動する
 

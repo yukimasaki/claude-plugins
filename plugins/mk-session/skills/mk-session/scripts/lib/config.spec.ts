@@ -16,12 +16,12 @@ describe("resolveConfig", () => {
   it("設定ファイルの値が既定値を上書きする", () => {
     const resolved = resolveConfig({
       worktree: { delegate: "none", install: "uv sync", env: [".env", ".env.local"] },
-      team: "retocare-{issue}",
+      team: "acme-{issue}",
     });
     expect(resolved.worktree.delegate).toBe("none");
     expect(resolved.worktree.install).toBe("uv sync");
     expect(resolved.worktree.env).toEqual([".env", ".env.local"]);
-    expect(resolved.team).toBe("retocare-{issue}");
+    expect(resolved.team).toBe("acme-{issue}");
     // 触れていない項目は既定値のまま
     expect(resolved.worktree.path).toBe(DEFAULT_CONFIG.worktree.path);
   });
@@ -29,9 +29,9 @@ describe("resolveConfig", () => {
   it("コマンド引数が設定ファイルを上書きする", () => {
     const resolved = resolveConfig(
       { team: "from-file-{issue}", agent: { command: "claude" } },
-      { team: "retocare-3691", agent: "codex" },
+      { team: "acme-3691", agent: "codex" },
     );
-    expect(resolved.team).toBe("retocare-3691");
+    expect(resolved.team).toBe("acme-3691");
     expect(resolved.agent.command).toBe("codex");
   });
 
@@ -42,6 +42,31 @@ describe("resolveConfig", () => {
     expect(resolveConfig(undefined, { agent: "claude" }).agent.agmsgType).toBe(
       "claude-code",
     );
+  });
+
+  it("claude 以外に差し替えたら claude 固有の既定引数を当てない", () => {
+    const resolved = resolveConfig(undefined, { agent: "codex" });
+    expect(resolved.agent.launchArgs).toEqual([]);
+    expect(resolved.agent.sessionNameFlag).toBeNull();
+  });
+
+  it("claude 以外でも設定ファイルの明示指定は尊重する", () => {
+    const resolved = resolveConfig(
+      { agent: { command: "codex", launchArgs: ["exec"], sessionNameFlag: "--name" } },
+    );
+    expect(resolved.agent.launchArgs).toEqual(["exec"]);
+    expect(resolved.agent.sessionNameFlag).toBe("--name");
+  });
+
+  it("--yolo はエージェントごとのフラグを足す", () => {
+    expect(
+      resolveConfig(undefined, { agent: "codex", yolo: true }).agent.launchArgs,
+    ).toEqual(["--dangerously-bypass-approvals-and-sandbox"]);
+  });
+
+  it("--yolo のフラグが分からないエージェントはエラーにする", () => {
+    expect(() => resolveConfig(undefined, { agent: "my-agent", yolo: true }))
+      .toThrow(/launchArgs/);
   });
 
   it("既定では権限確認を飛ばす引数が付かない", () => {

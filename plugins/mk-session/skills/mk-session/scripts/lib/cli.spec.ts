@@ -20,11 +20,11 @@ describe("parseArgs", () => {
   });
 
   it("= 区切りと空白区切りの両方を受ける", () => {
-    expect(parseArgs(["53", "--team=retocare-3691"]).overrides.team).toBe(
-      "retocare-3691",
+    expect(parseArgs(["53", "--team=acme-3691"]).overrides.team).toBe(
+      "acme-3691",
     );
-    expect(parseArgs(["53", "--team", "retocare-3691"]).overrides.team).toBe(
-      "retocare-3691",
+    expect(parseArgs(["53", "--team", "acme-3691"]).overrides.team).toBe(
+      "acme-3691",
     );
   });
 

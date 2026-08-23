@@ -55,6 +55,16 @@ export type CliOverrides = {
 
 export const BYPASS_PERMISSIONS_FLAG = "--dangerously-skip-permissions";
 
+/**
+ * 権限確認を飛ばすフラグはエージェントごとに違う。
+ * 未知のコマンドに claude のフラグを付けると起動そのものが失敗するため、
+ * 分かるものだけを持ち、それ以外は呼び出し側に明示させる。
+ */
+export const BYPASS_FLAG_BY_COMMAND: Record<string, string> = {
+  claude: BYPASS_PERMISSIONS_FLAG,
+  codex: "--dangerously-bypass-approvals-and-sandbox",
+};
+
 /** agent コマンド → agmsg の type。未知のコマンドは呼び出し側に明示させる */
 export const AGMSG_TYPE_BY_COMMAND: Record<string, string> = {
   claude: "claude-code",
@@ -104,8 +114,12 @@ export function resolveConfig(
     asString(fileAgent.agmsgType, "agent.agmsgType") ??
     agmsgTypeFor(command);
 
+  // 既定の launchArgs / sessionNameFlag は claude 固有（`--model default` / `-n`）。
+  // 別のエージェントに差し替えたときにそのまま付けると起動に失敗するので、
+  // 設定ファイルで明示されていない限り引数なしで起動する。
+  const isDefaultCommand = basename(command) === DEFAULT_CONFIG.agent.command;
   const launchArgs = asStringArray(fileAgent.launchArgs, "agent.launchArgs") ??
-    DEFAULT_CONFIG.agent.launchArgs;
+    (isDefaultCommand ? DEFAULT_CONFIG.agent.launchArgs : []);
 
   return {
     worktree: {
@@ -124,8 +138,8 @@ export function resolveConfig(
     agent: {
       command,
       agmsgType,
-      launchArgs: cli.yolo ? withBypassFlag(launchArgs) : launchArgs,
-      sessionNameFlag: sessionNameFlag(fileAgent),
+      launchArgs: cli.yolo ? withBypassFlag(launchArgs, command) : launchArgs,
+      sessionNameFlag: sessionNameFlag(fileAgent, isDefaultCommand),
     },
     team: cli.team ?? asString(file.team, "team") ?? DEFAULT_CONFIG.team,
     handshakeTimeoutSec: cli.handshakeTimeoutSec ??
@@ -136,15 +150,28 @@ export function resolveConfig(
 
 /** 未知のコマンドは agmsg の type を推定できないので、そのままコマンド名を返す */
 export function agmsgTypeFor(command: string): string {
-  const base = command.split("/").pop() ?? command;
-  return AGMSG_TYPE_BY_COMMAND[base] ?? base;
+  return AGMSG_TYPE_BY_COMMAND[basename(command)] ?? basename(command);
 }
 
-/** 権限確認を飛ばすフラグを 1 度だけ足す（設計判断 D8） */
-export function withBypassFlag(args: string[]): string[] {
-  return args.includes(BYPASS_PERMISSIONS_FLAG)
-    ? args
-    : [...args, BYPASS_PERMISSIONS_FLAG];
+function basename(command: string): string {
+  return command.split("/").pop() || command;
+}
+
+/**
+ * 権限確認を飛ばすフラグを 1 度だけ足す（設計判断 D8）。
+ *
+ * フラグ名が分からないエージェントでは、当てずっぽうで付けると起動が壊れるため
+ * 設定ファイルへの明示を求めてエラーにする。
+ */
+export function withBypassFlag(args: string[], command = "claude"): string[] {
+  const flag = BYPASS_FLAG_BY_COMMAND[basename(command)];
+  if (!flag) {
+    throw new Error(
+      `${command} の権限確認を飛ばす引数が分かりません。` +
+        "agent.launchArgs に直接書いてください",
+    );
+  }
+  return args.includes(flag) ? args : [...args, flag];
 }
 
 /** `{repo}` `{issue}` `{slug}` `{type}` `{branch}` を差し込む */
@@ -170,9 +197,12 @@ export function detectInstallCommand(entries: string[]): string | null {
 }
 
 /** `null` を「フラグ不要」の意思表示として扱うため、未指定と区別する */
-function sessionNameFlag(fileAgent: Record<string, unknown>): string | null {
+function sessionNameFlag(
+  fileAgent: Record<string, unknown>,
+  isDefaultCommand: boolean,
+): string | null {
   if (!("sessionNameFlag" in fileAgent)) {
-    return DEFAULT_CONFIG.agent.sessionNameFlag;
+    return isDefaultCommand ? DEFAULT_CONFIG.agent.sessionNameFlag : null;
   }
   const value = fileAgent.sessionNameFlag;
   if (value === null) return null;

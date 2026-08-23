@@ -1,7 +1,7 @@
 /**
  * コマンド引数のパース。
  *
- * `/mk-session 123 --team retocare-3691 --yolo` の形と、
+ * `/mk-session 123 --team acme-3691 --yolo` の形と、
  * `/mk-session cleanup 123` の 2 モードを受ける。
  */
 import type { CliOverrides } from "./config.ts";

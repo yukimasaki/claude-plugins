@@ -25,6 +25,8 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 - [git](https://git-scm.com/) / [GitHub CLI](https://cli.github.com/)（`gh` はブランチ名の自動生成に使う。無くても番号だけの名前で動く）
 - [herdr](https://github.com/fujibee/herdr)（タブとエージェントの起動に使う。未導入なら worktree の準備までで正常終了する）
 - [agmsg](https://agmsg.cc)（エージェント間メッセージ。未導入なら team 参加と疎通確認をスキップする）
+  - 探索順は `$AGMSG_HOME/scripts` → `~/.agents/skills/agmsg/scripts` → `~/.claude/skills/agmsg/scripts`
+    → Claude Code プラグインとして入れた `~/.claude/plugins/{marketplaces,cache}/*agmsg*/**/scripts`
 - [Bun](https://bun.sh/)（スクリプトの実行）
 
 ## 既存の worktree 手順がある場合
@@ -55,12 +57,23 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 | `worktree.install` | ロックファイルから推定 | 依存インストールのコマンド |
 | `agent.command` | `"claude"` | 起動するエージェント |
 | `agent.agmsgType` | コマンドから推定 | agmsg の agent type |
-| `agent.launchArgs` | `["--model", "default"]` | 起動時の引数 |
-| `agent.sessionNameFlag` | `"-n"` | セッション表示名を渡すフラグ。不要なら `null` |
+| `agent.launchArgs` | `claude なら ["--model", "default"]`、それ以外は `[]` | 起動時の引数 |
+| `agent.sessionNameFlag` | `claude なら "-n"`、それ以外は `null` | セッション表示名を渡すフラグ。不要なら `null` |
 | `team` | `"{repo}-{issue}"` | agmsg の team 名 |
 | `handshakeTimeoutSec` | `90` | 疎通確認の待ち時間（秒） |
 
-テンプレートで使える変数は `{repo}` `{issue}` `{slug}` `{type}` `{branch}`。
+`agent.launchArgs` と `agent.sessionNameFlag` の既定値は claude 固有（`--model default` / `-n`）
+なので、`agent.command` を別のエージェントに変えた場合は既定値を当てない。別エージェントに
+渡したい引数は `launchArgs` に明示する。
+
+テンプレートで使える変数は**項目ごとに違う**。未対応の変数は置換されず、
+`{type}` のような文字列がそのままパス名やブランチ名に残るので注意。
+
+| 項目 | 使える変数 |
+|---|---|
+| `worktree.branch` | `{type}` `{issue}` `{slug}` |
+| `worktree.path` | `{repo}` `{issue}` `{branch}` |
+| `team` | `{repo}` `{issue}` |
 
 設定の解決順は **既定値 < `.claude/mk-session.json` < コマンド引数**。
 
@@ -71,7 +84,7 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 | `--branch=<name>` | ブランチ名を明示指定する |
 | `--team=<name>` | team 名を指定する（Epic の既存 team に相乗りするとき） |
 | `--agent=<cmd>` | 起動するエージェントを変える（agmsg の type も追従する） |
-| `--yolo` | 権限確認を飛ばす引数（`--dangerously-skip-permissions`）を足す |
+| `--yolo` | 権限確認を飛ばす引数を足す（claude / codex のみ。他は `launchArgs` に明示する） |
 | `--workspace=<id>` | herdr の workspace を指定する（既定は `HERDR_WORKSPACE_ID`） |
 | `--timeout=<sec>` | 疎通確認の待ち時間を変える |
 | `--lead=<name>` | 親（呼び出し側）の agmsg 名を変える（既定 `lead`） |
@@ -95,6 +108,10 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 
 herdr のタブと agmsg の team 登録を畳む。worktree とブランチの削除は、
 作る側と同じく既存手順（`mk-wktree cleanup` 等）へ委譲する。
+
+対象タブは作る側と同じ workspace（`--workspace` か `HERDR_WORKSPACE_ID`）から探す。
+親（`lead`）の team 登録を外すのは `team` テンプレートが `{issue}` を含むときだけで、
+`--team` で既存 team に相乗りした場合は他の Issue のために残す。
 
 ## トラブルシュート
 

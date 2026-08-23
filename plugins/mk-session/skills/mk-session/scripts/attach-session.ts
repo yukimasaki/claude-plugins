@@ -47,6 +47,8 @@ const config = resolveConfig(loadConfigFile(repoRoot), parsed.overrides);
 const dryRun = parsed.dryRun;
 const team = renderTemplate(config.team, { repo: repoName, issue });
 const lead = parsed.lead ?? process.env.MK_SESSION_LEAD ?? "lead";
+// 親（このスクリプトを呼んでいる側）のエージェント種別。claude 以外から呼ぶ場合に上書きする
+const leadType = process.env.MK_SESSION_LEAD_TYPE ?? "claude-code";
 
 // --- 前提ツールの確認（未導入なら該当段をスキップして正常終了する） ---
 if (!hasCommand("herdr")) {
@@ -140,7 +142,7 @@ if (!agmsgScriptsDir) {
 }
 
 const ctx: AgmsgContext = { scriptsDir: agmsgScriptsDir, team };
-joinTeam(ctx, lead, "claude-code", repoRoot, { dryRun });
+joinTeam(ctx, lead, leadType, repoRoot, { dryRun });
 joinTeam(ctx, String(issue), config.agent.agmsgType, worktreePath, { dryRun });
 setDeliveryMonitor(agmsgScriptsDir, config.agent.agmsgType, worktreePath, {
   dryRun,
@@ -158,7 +160,8 @@ if (dryRun) {
 
 // 1. 子の初期化完了（ready）を待つ
 const ready = await waitFor(readyToken, config.handshakeTimeoutSec);
-if (!ready && agentPane !== "(unknown)") {
+if (!ready) {
+  // ここに来る時点で agentPane は判明している（未検出なら上で exit 2 済み）。
   // 起動プロンプトが流れていない可能性があるので 1 度だけ流し込みに落とす
   paneRun(agentPane, `/agmsg actas ${issue}`);
   paneRun(agentPane, "/agmsg mode monitor");

@@ -4,7 +4,7 @@
  * agmsg は CLI ではなく skill 同梱のシェルスクリプト群として配布されるため、
  * scripts ディレクトリを探して直接叩く。
  */
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { run, type RunOptions } from "./exec.ts";
@@ -23,12 +23,72 @@ export function agmsgScriptsDirCandidates(
   return candidates;
 }
 
+/** Claude Code のプラグインとして入れた agmsg を探す場所 */
+const PLUGIN_ROOTS = [
+  [".claude", "plugins", "marketplaces"],
+  [".claude", "plugins", "cache"],
+];
+
+/**
+ * プラグイン配布の agmsg を探す。
+ *
+ * marketplace / cache 配下は `<marketplace>/scripts`・`<marketplace>/<plugin>/scripts`・
+ * `<marketplace>/<plugin>/<version>/scripts` と深さが揃わないため、名前に agmsg を
+ * 含むディレクトリを 3 階層まで辿って scripts を候補にする。
+ */
+export function pluginAgmsgScriptsDirCandidates(
+  home = os.homedir(),
+): string[] {
+  const candidates: string[] = [];
+  for (const segments of PLUGIN_ROOTS) {
+    const root = path.join(home, ...segments);
+    // 1 階層目（marketplace 名）に agmsg を含む枝だけを辿る。
+    // 別プラグインの `scripts/send.sh` を誤って掴まないための絞り込み。
+    for (const owner of listDirs(root).filter((n) => n.includes("agmsg"))) {
+      const ownerDir = path.join(root, owner);
+      candidates.push(path.join(ownerDir, "scripts"));
+      for (const plugin of listDirs(ownerDir).filter(isVisible)) {
+        const pluginDir = path.join(ownerDir, plugin);
+        candidates.push(path.join(pluginDir, "scripts"));
+        // 新しいバージョンから先に見るため、名前の降順で辿る
+        for (const version of listDirs(pluginDir).filter(isVersionLike).sort()
+          .reverse()) {
+          candidates.push(path.join(pluginDir, version, "scripts"));
+        }
+      }
+    }
+  }
+  return candidates;
+}
+
+function isVisible(name: string): boolean {
+  return !name.startsWith(".");
+}
+
+function isVersionLike(name: string): boolean {
+  return /^v?\d/.test(name);
+}
+
+function listDirs(dir: string): string[] {
+  try {
+    return readdirSync(dir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+  } catch {
+    return [];
+  }
+}
+
 /** agmsg が導入されていなければ null（該当段をスキップする / 設計判断 D4） */
 export function findAgmsgScriptsDir(
   env: NodeJS.ProcessEnv = process.env,
   home = os.homedir(),
 ): string | null {
-  for (const dir of agmsgScriptsDirCandidates(env, home)) {
+  const candidates = [
+    ...agmsgScriptsDirCandidates(env, home),
+    ...pluginAgmsgScriptsDirCandidates(home),
+  ];
+  for (const dir of candidates) {
     if (existsSync(path.join(dir, "send.sh"))) return dir;
   }
   return null;
