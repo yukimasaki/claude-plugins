@@ -1,0 +1,17 @@
+{
+  "name": "mk-session-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "bun scripts/setup-worktree.ts",
+    "attach": "bun scripts/attach-session.ts",
+    "cleanup": "bun scripts/cleanup-session.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

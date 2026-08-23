@@ -1,0 +1,21 @@
+{
+  "name": "mk-session",
+  "description": "Issue 番号から git worktree・ターミナルタブ・コーディングエージェントを一括セットアップし、agmsg の疎通確認までを完了条件とするスキル。",
+  "version": "0.1.0",
+  "author": {
+    "name": "Yuki Masaki",
+    "email": "97879070+yukimasaki@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/yukimasaki/claude-plugins/blob/main/plugins/mk-session/skills/mk-session/README.md",
+  "repository": "https://github.com/yukimasaki/claude-plugins",
+  "license": "MIT",
+  "keywords": [
+    "worktree",
+    "git",
+    "agent",
+    "session",
+    "herdr",
+    "agmsg",
+    "issue"
+  ]
+}
