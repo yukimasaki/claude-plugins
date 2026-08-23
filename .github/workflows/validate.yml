@@ -26,3 +26,24 @@ jobs:
 
       - name: Validate mk-session plugin
         run: claude plugin validate ./plugins/mk-session
+
+  mk-session-scripts:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plugins/mk-session/skills/mk-session
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun run test
