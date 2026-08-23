@@ -77,7 +77,9 @@ export function parseArgs(argv: string[]): ParsedArgs {
         throw new Error(`未知のオプションです: ${flag}`);
       }
       const value = inlineValue ?? tokens.shift();
-      if (value === undefined || value.startsWith("--")) {
+      // `--branch=` のように空値を渡されたときに黙って既定値へ倒すと、
+      // 「指定したのに効いていない」が発見できない
+      if (value === undefined || value === "" || value.startsWith("--")) {
         throw new Error(`${flag} には値が必要です`);
       }
       assign(parsed, target, value, flag);

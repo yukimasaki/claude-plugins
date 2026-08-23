@@ -28,6 +28,7 @@ import {
   loadConfigFile,
   makeSkillExists,
 } from "./lib/repo.ts";
+import { parseWorktreePaths } from "./lib/tabs.ts";
 
 const parsed = parseArgs(process.argv.slice(2));
 if (parsed.mode !== "setup") {
@@ -193,9 +194,9 @@ function isRegisteredWorktree(target: string): boolean {
   const result = run("git", ["worktree", "list", "--porcelain"], {
     cwd: repoRoot,
   });
-  return result.stdout
-    .split("\n")
-    .some((line) => line.startsWith("worktree ") && line.slice(9) === target);
+  // 生の行と resolve 済みのパスを比べると、末尾空白や相対表記の差で
+  // 登録済みの worktree を取りこぼす。tabs.ts と同じ正規化を通す
+  return parseWorktreePaths(result.stdout).includes(path.resolve(target));
 }
 
 function branchExists(name: string): boolean {

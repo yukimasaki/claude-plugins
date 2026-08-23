@@ -89,6 +89,18 @@ export function runShell(
     encoding: "utf8",
     shell: true,
   });
+  // spawn 自体に失敗した場合（cwd が無い等）stderr は空になる。
+  // 理由を落とすと「依存インストールが失敗しました」だけが残って原因が追えない。
+  if (result.error) {
+    if (options.check) throw result.error;
+    return {
+      command: commandLine,
+      status: 127,
+      stdout: "",
+      stderr: String(result.error.message),
+      skipped: false,
+    };
+  }
   const status = result.status ?? 1;
   if (options.check && status !== 0) {
     throw new Error(

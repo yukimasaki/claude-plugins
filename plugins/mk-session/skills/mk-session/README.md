@@ -82,6 +82,7 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 | 引数 | 説明 |
 |---|---|
 | `--branch=<name>` | ブランチ名を明示指定する（内蔵経路のみ。委譲経路では `--delegate none` を併用する） |
+| `--delegate=<value>` | 委譲先を上書きする（`auto` / `none` / skill 名） |
 | `--team=<name>` | team 名を指定する（Epic の既存 team に相乗りするとき） |
 | `--agent=<cmd>` | 起動するエージェントを変える（agmsg の type も追従する） |
 | `--yolo` | 権限確認を飛ばす引数を足す（claude / codex のみ。他は `launchArgs` に明示する） |

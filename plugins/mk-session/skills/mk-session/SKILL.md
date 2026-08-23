@@ -100,11 +100,15 @@ herdr の workspace は `--workspace` か環境変数 `HERDR_WORKSPACE_ID` か�
 このスクリプトが行うのは次の 6 つ。
 
 1. `herdr tab create`（ラベルは Issue 番号のみ）
-2. `herdr agent start`（初期プロンプトに actas / mode monitor / ready 返信を埋め込む）
-3. タブ作成時に余る空ペイン（起動前に居た pane）を close
-4. `join.sh` で親（既定名 `lead`）と子を同じ team に入れる
-5. `delivery.sh set monitor` で子の受信モードを有効化する
+2. `join.sh` で親（既定名 `lead`）と子を同じ team に入れる
+3. `delivery.sh set monitor` で子の受信モードを有効化する
+4. `herdr agent start`（初期プロンプトに actas / mode monitor / ready 返信を埋め込む）
+5. タブ作成時に余る空ペイン（起動前に居た pane）を close
 6. 疎通確認: 子の ready を待ち、続いて親からトークン付きメッセージを送って返信を待つ
+
+2〜3 を起動より前に置くのは、`send.sh` が team 未登録の送信者を拒否するため。
+起動後に join すると、子が 1 ターン目に返す ready が落ちる。join / delivery が
+失敗した場合は疎通確認を待たず `agmsg-setup-failed`（exit 2）で止める。
 
 終了コードの意味:
 

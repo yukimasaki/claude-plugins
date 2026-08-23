@@ -89,11 +89,22 @@ export function buildBranchName(input: BranchNameInput): string {
     .replace(/\{issue\}/g, String(input.issue))
     .replace(/\{slug\}/g, slug ?? "");
 
-  return rendered
+  const name = rendered
     .split("/")
     .map((segment) =>
       segment.replace(/-{2,}/g, "-").replace(/^-+|-+$/g, ""),
     )
     .filter((segment) => segment.length > 0)
     .join("/");
+
+  // テンプレートが `{slug}` だけで slug も取れないと空文字になる。
+  // そのまま `git branch -b ''` に渡すと git の生エラーで止まるので、
+  // 何を直せばよいか分かる形で弾く。
+  if (!name) {
+    throw new Error(
+      `ブランチ名が空になりました（テンプレート: ${template}）。` +
+        "worktree.branch に {issue} を含めるか、--branch で明示してください",
+    );
+  }
+  return name;
 }

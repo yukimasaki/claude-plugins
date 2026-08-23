@@ -17,7 +17,7 @@ import {
 } from "./lib/agmsg.ts";
 import { parseArgs } from "./lib/cli.ts";
 import { renderTemplate, resolveConfig } from "./lib/config.ts";
-import { hasCommand } from "./lib/exec.ts";
+import { hasCommand, type RunResult } from "./lib/exec.ts";
 import {
   buildHandshakeToken,
   buildKickoffPrompt,
@@ -99,14 +99,38 @@ const argv = [
   kickoff,
 ];
 
+// --- agmsg の登録は起動より先に済ませる ---
+// 子は 1 ターン目に send.sh で ready を返す。send.sh は team に未登録の
+// from/to を拒否するため、起動後に join すると最初の ready が落ちる。
+// delivery.sh の SessionStart hook も、子のセッションが始まる前に書いておく。
+if (agmsgScriptsDir) {
+  const joinCtx: AgmsgContext = { scriptsDir: agmsgScriptsDir, team };
+  requireAgmsg(
+    joinTeam(joinCtx, lead, leadType, repoRoot, { dryRun }),
+    "join.sh（親）",
+  );
+  requireAgmsg(
+    joinTeam(joinCtx, String(issue), config.agent.agmsgType, worktreePath, {
+      dryRun,
+    }),
+    "join.sh（子）",
+  );
+  requireAgmsg(
+    setDeliveryMonitor(agmsgScriptsDir, config.agent.agmsgType, worktreePath, {
+      dryRun,
+    }),
+    "delivery.sh set monitor",
+  );
+}
+
 // agent start は既存 pane を使わず split するため、タブ作成時の空シェルが余る。
 // 閉じてよいのは「起動前から居た pane」だけ。起動直後の pane list は agent の
 // 登録が間に合わず、エージェントの pane まで空と見えることがある（タブごと消える）。
+// tab create 直後の pane list はまだ空のことがあるので、少し待って掴む。
+// 空のまま進むと root pane 自体を「エージェントの pane」と誤認する。
 const rootPanes = dryRun
   ? []
-  : listPanes(workspace)
-    .filter((pane) => pane.tab_id === tab.tabId)
-    .map((pane) => pane.pane_id);
+  : await waitForRootPanes(workspace, tab.tabId, 10);
 
 startAgent(
   { name: `issue${issue}`, tabId: tab.tabId, workspace, cwd: worktreePath, argv },
@@ -131,7 +155,7 @@ if (agentPane === "(unknown)") {
 
 for (const paneId of rootPanes) closePane(paneId, { dryRun });
 
-// --- agmsg（team join → 受信モード → 疎通確認） ---
+// --- agmsg（疎通確認） ---
 if (!agmsgScriptsDir) {
   finish(3, {
     status: "skipped",
@@ -142,11 +166,6 @@ if (!agmsgScriptsDir) {
 }
 
 const ctx: AgmsgContext = { scriptsDir: agmsgScriptsDir, team };
-joinTeam(ctx, lead, leadType, repoRoot, { dryRun });
-joinTeam(ctx, String(issue), config.agent.agmsgType, worktreePath, { dryRun });
-setDeliveryMonitor(agmsgScriptsDir, config.agent.agmsgType, worktreePath, {
-  dryRun,
-});
 
 if (dryRun) {
   finish(0, {
@@ -161,11 +180,14 @@ if (dryRun) {
 // 1. 子の初期化完了（ready）を待つ
 const ready = await waitFor(readyToken, config.handshakeTimeoutSec);
 if (!ready) {
-  // ここに来る時点で agentPane は判明している（未検出なら上で exit 2 済み）。
-  // 起動プロンプトが流れていない可能性があるので 1 度だけ流し込みに落とす
-  paneRun(agentPane, `/agmsg actas ${issue}`);
-  paneRun(agentPane, "/agmsg mode monitor");
-  await waitFor(readyToken, Math.min(30, config.handshakeTimeoutSec));
+  // 起動プロンプトが流れていない可能性があるので 1 度だけ流し込みに落とす。
+  // ただし root pane を 1 つも掴めていないときは agentPane が root（素のシェル）
+  // である可能性があり、そこへ打つとスラッシュコマンドがシェルに流れる。
+  if (rootPanes.length > 0) {
+    paneRun(agentPane, `/agmsg actas ${issue}`);
+    paneRun(agentPane, "/agmsg mode monitor");
+    await waitFor(readyToken, Math.min(30, config.handshakeTimeoutSec));
+  }
 }
 
 // 2. 親 → 子 → 親 の往復を確かめる（送信成功は届いた証拠にならない）
@@ -199,6 +221,41 @@ finish(0, {
   worktreePath,
   issue,
 });
+
+/**
+ * agmsg のセットアップは失敗しても exit 0 の run() で呼ぶため、握り潰すと
+ * 90 秒後に「疎通確認がタイムアウト」としてしか現れない（例: 未知の agent type を
+ * join.sh が拒否したケース）。原因が見える形でその場で止める。
+ */
+function requireAgmsg(result: RunResult, label: string): void {
+  if (result.skipped || result.status === 0) return;
+  finish(2, {
+    status: "agmsg-setup-failed",
+    reason: `${label} が失敗しました (exit ${result.status}): ${
+      result.stderr || result.stdout
+    }`,
+    tabId: tab.tabId,
+    team,
+    lead,
+    cleanup: `/mk-session cleanup ${issue}`,
+  });
+}
+
+/** tab create 直後の pane が pane list に現れるまで待つ */
+async function waitForRootPanes(
+  workspaceId: string,
+  tabId: string,
+  timeoutSec: number,
+): Promise<string[]> {
+  const deadline = Date.now() + timeoutSec * 1000;
+  for (;;) {
+    const panes = listPanes(workspaceId)
+      .filter((pane) => pane.tab_id === tabId)
+      .map((pane) => pane.pane_id);
+    if (panes.length > 0 || Date.now() >= deadline) return panes;
+    await sleep(500);
+  }
+}
 
 /** agent start が split した pane が現れるまで待つ（起動前から居た pane は除く） */
 async function waitForAgentPane(

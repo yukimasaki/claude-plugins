@@ -50,9 +50,10 @@ export function pluginAgmsgScriptsDirCandidates(
       for (const plugin of listDirs(ownerDir).filter(isVisible)) {
         const pluginDir = path.join(ownerDir, plugin);
         candidates.push(path.join(pluginDir, "scripts"));
-        // 新しいバージョンから先に見るため、名前の降順で辿る
-        for (const version of listDirs(pluginDir).filter(isVersionLike).sort()
-          .reverse()) {
+        // 新しいバージョンから先に見るため、数字を数値として比較した降順で辿る
+        // （辞書順だと v10 が v9 より前に来て、古い方を先に掴む）
+        for (const version of listDirs(pluginDir).filter(isVersionLike)
+          .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))) {
           candidates.push(path.join(pluginDir, version, "scripts"));
         }
       }

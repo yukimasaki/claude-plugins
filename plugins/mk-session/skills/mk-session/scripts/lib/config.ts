@@ -143,7 +143,7 @@ export function resolveConfig(
     },
     team: cli.team ?? asString(file.team, "team") ?? DEFAULT_CONFIG.team,
     handshakeTimeoutSec: cli.handshakeTimeoutSec ??
-      asNumber(file.handshakeTimeoutSec, "handshakeTimeoutSec") ??
+      asPositiveNumber(file.handshakeTimeoutSec, "handshakeTimeoutSec") ??
       DEFAULT_CONFIG.handshakeTimeoutSec,
   };
 }
@@ -236,10 +236,17 @@ function asStringArray(value: unknown, label: string): string[] | undefined {
   return value as string[];
 }
 
-function asNumber(value: unknown, label: string): number | undefined {
+/**
+ * 0 や負値を通すと待ち時間が即座に尽き、正常なセットアップでも
+ * 「疎通確認がタイムアウトしました」で終わってしまう。
+ */
+function asPositiveNumber(value: unknown, label: string): number | undefined {
   if (value === undefined || value === null) return undefined;
   if (typeof value !== "number" || !Number.isFinite(value)) {
     throw new Error(`${label} は数値である必要があります`);
+  }
+  if (value <= 0) {
+    throw new Error(`${label} は正の数である必要があります`);
   }
   return value;
 }
