@@ -46,6 +46,13 @@ const decision = resolveDelegate({
 });
 
 const issueInfo = fetchIssue(issue, repoRoot);
+
+if (issueInfo.unavailable) {
+  log("gh から Issue を取得できませんでした。ブランチ名は番号のみで作ります");
+} else if (issueInfo.state && issueInfo.state.toUpperCase() !== "OPEN") {
+  log(`注意: Issue #${issue} は ${issueInfo.state} です`);
+}
+
 const branch = buildBranchName({
   issue,
   title: issueInfo.title,
@@ -73,12 +80,6 @@ if (decision.mode === "skill") {
 }
 
 log(`worktree を内蔵手順で作成します（${decision.reason}）`);
-
-if (issueInfo.unavailable) {
-  log("gh から Issue を取得できませんでした。ブランチ名は番号のみで作ります");
-} else if (issueInfo.state && issueInfo.state.toUpperCase() !== "OPEN") {
-  log(`注意: Issue #${issue} は ${issueInfo.state} です`);
-}
 
 const defaultBranch = getDefaultBranch(repoRoot);
 const worktreePath = path.resolve(
