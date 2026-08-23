@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.8](https://github.com/yukimasaki/claude-plugins/compare/v0.4.7...v0.4.8) (2026-08-23)
+
+
+### Features
+
+* **mk-session:** Issue 番号から worktree とセッションを一括セットアップするプラグインを追加 ([#54](https://github.com/yukimasaki/claude-plugins/issues/54)) ([ea62407](https://github.com/yukimasaki/claude-plugins/commit/ea62407d8519684c503f4244c283c77facb5f292))
+
 ## [0.4.7](https://github.com/yukimasaki/claude-plugins/compare/v0.4.6...v0.4.7) (2026-05-10)
 
 
