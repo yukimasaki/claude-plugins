@@ -61,6 +61,33 @@ chore(readme): リブランディング
 Release-As: 0.2.0
 ```
 
+## 新規プラグインを追加するときのチェック
+
+このリポジトリは **marketplace と各プラグインのバージョンを揃えて**運用しています。
+`release-please` は `release-please-config.json` の `extra-files` に書かれたファイルしか
+書き換えないため、**新しいプラグインを追加したら必ず `extra-files` に登録します**。
+
+```json
+{
+  "type": "json",
+  "path": "plugins/<plugin-name>/.claude-plugin/plugin.json",
+  "jsonpath": "$.version"
+}
+```
+
+登録を忘れると、そのプラグインだけ初期値（例: `0.1.0`）のまま取り残され、
+marketplace のバージョンと食い違います。Release PR の差分に
+`plugins/<plugin-name>/.claude-plugin/plugin.json` が現れるかで確認できます。
+
+あわせて次も確認します。
+
+- `.claude-plugin/marketplace.json` の `plugins` にエントリを追加したか
+- `.github/workflows/validate.yml` に `claude plugin validate ./plugins/<plugin-name>` を足したか
+- スクリプトを持つプラグインなら、その **typecheck とテストを CI で実行するジョブ**を足したか
+  （`claude plugin validate` は型エラーもテスト失敗も検出しません）
+- ワークフローに新しいジョブを足したときは、既存ジョブと **action のバージョンが揃っているか**
+  （dependabot の bump PR は、その PR が作られた後に増えたジョブを更新しません）
+
 ## Git 運用ルール
 
 - コミットメッセージに `Co-Authored-By` フッターを付けない
