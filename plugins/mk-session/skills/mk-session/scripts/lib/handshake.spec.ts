@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildHandshakeToken,
   buildKickoffPrompt,
+  buildLeadDeclaration,
   buildProbeMessage,
   hasHandshakeReply,
   parseHistory,
@@ -92,6 +93,74 @@ describe("buildKickoffPrompt", () => {
   it("本題は初期化のあとに置く", () => {
     expect(prompt.indexOf("send.sh")).toBeLessThan(prompt.indexOf("本題"));
     expect(prompt).toContain("#53 を取得して着手して");
+  });
+});
+
+describe("buildKickoffPrompt（リーダー移譲）", () => {
+  const base = {
+    issue: 53,
+    team: "claude-plugins-53",
+    lead: "lead",
+    readyToken: "mk-session-handshake-53-abc",
+    agmsgScriptsDir: "/home/u/.agents/skills/agmsg/scripts",
+  };
+
+  it("delegated のとき役割宣言を本題の手前に置く", () => {
+    const prompt = buildKickoffPrompt({ ...base, leadRole: "delegated" });
+    expect(prompt).toContain("作業リーダーはあなた");
+    expect(prompt).toContain("実装に関与せず");
+    expect(prompt.indexOf("作業リーダーはあなた")).toBeLessThan(
+      prompt.indexOf("本題に入って"),
+    );
+  });
+
+  it("delegated では相談・報告の送信コマンドを渡す", () => {
+    const prompt = buildKickoffPrompt({ ...base, leadRole: "delegated" });
+    expect(prompt).toContain(
+      "send.sh claude-plugins-53 53 lead '<本文>'",
+    );
+  });
+
+  it("kept は現行（leadRole 未指定）と 1 文字も変わらない", () => {
+    expect(buildKickoffPrompt({ ...base, leadRole: "kept" })).toBe(
+      buildKickoffPrompt(base),
+    );
+  });
+
+  it("kept には役割宣言が入らない", () => {
+    expect(buildKickoffPrompt({ ...base, leadRole: "kept" })).not.toContain(
+      "作業リーダーはあなた",
+    );
+  });
+});
+
+describe("buildLeadDeclaration", () => {
+  const base = { issue: 53, lead: "lead" };
+
+  it("agmsg が無くても役割の所在は伝える", () => {
+    const declaration = buildLeadDeclaration(base);
+    expect(declaration).toContain("作業リーダーはあなた");
+    expect(declaration).toContain("実装に関与せず");
+  });
+
+  it("agmsg が無いときは送信コマンドを載せず、連絡手段が無いことを伝える", () => {
+    const declaration = buildLeadDeclaration(base);
+    expect(declaration).not.toContain("send.sh");
+    expect(declaration).toContain("連絡手段は無い");
+  });
+
+  it("agmsg があるときは送信コマンドと probe 返信の念押しを載せる", () => {
+    const declaration = buildLeadDeclaration({
+      ...base,
+      channel: {
+        team: "claude-plugins-53",
+        agmsgScriptsDir: "/home/u/.agents/skills/agmsg/scripts",
+      },
+    });
+    expect(declaration).toContain(
+      "send.sh claude-plugins-53 53 lead '<本文>'",
+    );
+    expect(declaration).toContain("4 の返信は必ず返して");
   });
 });
 

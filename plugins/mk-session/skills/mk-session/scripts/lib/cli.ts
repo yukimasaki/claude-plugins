@@ -22,10 +22,20 @@ export type ParsedArgs = {
   lead?: string;
   /** 子に渡す本題。既定は Issue の取得と着手 */
   task?: string;
+  /**
+   * リーダー役の扱いを明示する（設計判断 D5）。
+   * 未指定なら team の決まり方から自動判定する。
+   */
+  leadMode?: LeadMode;
   /** 実際の副作用を起こさず、実行予定のコマンドだけを出す */
   dryRun: boolean;
   overrides: CliOverrides;
 };
+
+/** `delegate` = 子に移譲する / `keep` = 呼び出し元がリーダーのまま */
+export type LeadMode = "delegate" | "keep";
+
+const LEAD_MODES: readonly LeadMode[] = ["delegate", "keep"];
 
 const CLEANUP_ALIASES = new Set(["cleanup", "clean", "rm", "remove"]);
 
@@ -41,6 +51,7 @@ const VALUE_FLAGS: Record<string, keyof ParsedArgs | keyof CliOverrides> = {
   "--title": "title",
   "--lead": "lead",
   "--task": "task",
+  "--lead-mode": "leadMode",
   "--timeout": "handshakeTimeoutSec",
 };
 
@@ -124,6 +135,16 @@ function assign(
 ): void {
   if (target === "branch") {
     parsed.branch = value;
+    return;
+  }
+  if (target === "leadMode") {
+    // 黙って既定へ倒すと「指定したのに移譲されない」が発見できない
+    if (!LEAD_MODES.includes(value as LeadMode)) {
+      throw new Error(
+        `${flag} には ${LEAD_MODES.join(" か ")} を指定してください: ${value}`,
+      );
+    }
+    parsed.leadMode = value as LeadMode;
     return;
   }
   if (target === "workspace" || target === "path" || target === "title" ||
