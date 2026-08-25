@@ -95,8 +95,18 @@ export type LeadRole = "delegated" | "kept";
  */
 export function buildKickoffPrompt(input: KickoffPromptInput): string {
   const task = input.task ?? `#${input.issue} を取得して着手して`;
-  const body = input.leadRole === "delegated"
-    ? `${buildLeadDeclaration(input)}\n\nそのあと本題に入って: ${task}`
+  const declaration = input.leadRole === "delegated"
+    ? buildLeadDeclaration({
+      issue: input.issue,
+      lead: input.lead,
+      channel: {
+        team: input.team,
+        agmsgScriptsDir: input.agmsgScriptsDir,
+      },
+    })
+    : undefined;
+  const body = declaration
+    ? `${declaration}\n\nそのあと本題に入って: ${task}`
     : `そのあと本題に入って: ${task}`;
   return [
     "最初に次の 4 つを順に実行して。終わるまで他の作業を始めないで。",
@@ -109,22 +119,49 @@ export function buildKickoffPrompt(input: KickoffPromptInput): string {
   ].join("\n");
 }
 
+export type LeadDeclarationInput = {
+  issue: number;
+  /** 親（呼び出し側）の agmsg 名 */
+  lead: string;
+  /**
+   * agmsg が使えるときだけ渡す。相談・報告の送信コマンドを宣言に添える。
+   * 未指定でも宣言そのものは出す（agmsg 未導入でも役割の所在は伝わるべきなので）。
+   */
+  channel?: { team: string; agmsgScriptsDir: string };
+};
+
 /**
  * 移譲の宣言（設計判断 D2）。
  *
  * 起動後に送ると、届く前に子が本題へ入ってしまう。起動引数に入れておけば
  * 1 ターン目に必ず読まれる。相談窓口を書いておくのは、呼び出し元が team に
  * 残る（D3）ためで、閉じられていても履歴として次のセッションが受け取れる。
+ *
+ * agmsg 依存なのは送信コマンドの行だけ。役割の所在は agmsg の有無と関係なく
+ * 伝える（縮退時に黙って旧挙動へ戻ると、呼び出し元が実装に入る事故が残る）。
  */
-function buildLeadDeclaration(input: KickoffPromptInput): string {
-  return [
+export function buildLeadDeclaration(input: LeadDeclarationInput): string {
+  const lines = [
     `この Issue（#${input.issue}）の作業リーダーはあなた。`,
     "方針判断・実装・レビュー依頼・PR 運用の起点はすべてあなたが持つ。",
-    `呼び出し元（${input.lead}）は実装に関与せず、このあと終了することがある。`,
-    `相談・報告は次の 1 行で投げて: ${
-      buildSendCommand(input, "<本文>")
-    }`,
-  ].join("\n");
+    `呼び出し元（${input.lead}）はこの Issue の実装に関与せず、判断はあなたに委ねる。`,
+  ];
+  if (input.channel) {
+    lines.push(
+      "呼び出し元は上の 4 手順が終わったあと終了することがある（4 の返信は必ず返して）。",
+      `相談・報告は次の 1 行で投げて: ${
+        buildSendCommand(
+          { ...input.channel, issue: input.issue, lead: input.lead },
+          "<本文>",
+        )
+      }`,
+    );
+  } else {
+    lines.push(
+      "agmsg が無いため呼び出し元との連絡手段は無い。判断は自分で完結させて。",
+    );
+  }
+  return lines.join("\n");
 }
 
 export type ProbeMessageInput = {

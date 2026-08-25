@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildHandshakeToken,
   buildKickoffPrompt,
+  buildLeadDeclaration,
   buildProbeMessage,
   hasHandshakeReply,
   parseHistory,
@@ -130,6 +131,36 @@ describe("buildKickoffPrompt（リーダー移譲）", () => {
     expect(buildKickoffPrompt({ ...base, leadRole: "kept" })).not.toContain(
       "作業リーダーはあなた",
     );
+  });
+});
+
+describe("buildLeadDeclaration", () => {
+  const base = { issue: 53, lead: "lead" };
+
+  it("agmsg が無くても役割の所在は伝える", () => {
+    const declaration = buildLeadDeclaration(base);
+    expect(declaration).toContain("作業リーダーはあなた");
+    expect(declaration).toContain("実装に関与せず");
+  });
+
+  it("agmsg が無いときは送信コマンドを載せず、連絡手段が無いことを伝える", () => {
+    const declaration = buildLeadDeclaration(base);
+    expect(declaration).not.toContain("send.sh");
+    expect(declaration).toContain("連絡手段は無い");
+  });
+
+  it("agmsg があるときは送信コマンドと probe 返信の念押しを載せる", () => {
+    const declaration = buildLeadDeclaration({
+      ...base,
+      channel: {
+        team: "claude-plugins-53",
+        agmsgScriptsDir: "/home/u/.agents/skills/agmsg/scripts",
+      },
+    });
+    expect(declaration).toContain(
+      "send.sh claude-plugins-53 53 lead '<本文>'",
+    );
+    expect(declaration).toContain("4 の返信は必ず返して");
   });
 });
 

@@ -100,6 +100,11 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 `MK_SESSION_RESULT` に `leadRole: "delegated"` と `parentCanExit: true` が出る。
 呼び出し元はそのまま終了してよい。
 
+疎通確認が失敗した回（exit 2）は `leadRole: "delegated"` のまま `parentCanExit: false` で返る。
+子は既に役割宣言込みで起動しているので呼び出し元は実装に入らないが、原因を片付けるまで閉じない。
+agmsg が未導入の回（exit 3）も役割宣言は起動プロンプトに入るので `leadRole` はそのまま返るが、
+子からの相談・報告を受け取る経路が無いので `parentCanExit: false`（呼び出し元は閉じずに残す）。
+
 `--team` で既存 team に相乗りしたとき（Epic のサブ Issue）は `leadRole: "kept"` で、
 従来どおり統括セッションがリーダーのまま。自動判定を覆したいときは `--lead-mode` を使う。
 

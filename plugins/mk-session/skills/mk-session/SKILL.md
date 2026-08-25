@@ -121,7 +121,8 @@ herdr の workspace は `--workspace` か環境変数 `HERDR_WORKSPACE_ID` か�
 | `--lead-mode=delegate` / `=keep` | 指定どおり | 自動判定を覆す |
 
 `.claude/mk-session.json` の `team` で命名を変えているだけのリポジトリは「指定あり」と見なさない
-（Epic とは無関係のため）。移譲しても**呼び出し元は team から抜けない** — 抜けると子からの相談・
+（Epic とは無関係のため）。agmsg が未導入でも役割宣言そのものは渡す（相談・報告の送信コマンドの
+行だけが落ちる） — 縮退時だけ黙って旧挙動へ戻ると、呼び出し元が実装に入る事故が残るため。移譲しても**呼び出し元は team から抜けない** — 抜けると子からの相談・
 報告の宛先が消え、`/mk-session cleanup` の前提も崩れるため、降ろすのは役割だけ。
 
 2〜3 を起動より前に置くのは、`send.sh` が team 未登録の送信者を拒否するため。
@@ -144,8 +145,11 @@ herdr の workspace は `--workspace` か環境変数 `HERDR_WORKSPACE_ID` か�
 - worktree のパスとブランチ名
 - herdr のタブ名（= Issue 番号）とペイン ID
 - agmsg の team 名と、疎通テストの往復結果
-- リーダー役の所在（`MK_SESSION_RESULT` の `leadRole`）。`delegated` のときは
-  「この Issue の主役は新セッション / この呼び出し元は実装に入らない / 閉じてよい」を明記する
+- リーダー役の所在（`MK_SESSION_RESULT` の `leadRole` と `parentCanExit`）。
+  `leadRole: "delegated"` なら「この Issue の主役は新セッション / この呼び出し元は実装に入らない」を明記する。
+  「閉じてよい」と書けるのは `parentCanExit: true` のときだけ。疎通確認が失敗した回（exit 2）と
+  agmsg 未導入の回（exit 3）は `delegated` でも `parentCanExit: false` で返るので、**役割は子に
+  移っているが、呼び出し元はまだ閉じずに原因を片付ける**、と書く
 - スキップした段があればその理由
 
 ## 実行手順（片付け）

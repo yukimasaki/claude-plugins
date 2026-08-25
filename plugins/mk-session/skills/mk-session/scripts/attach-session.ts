@@ -21,6 +21,7 @@ import { hasCommand, type RunResult } from "./lib/exec.ts";
 import {
   buildHandshakeToken,
   buildKickoffPrompt,
+  buildLeadDeclaration,
   buildProbeMessage,
   hasHandshakeReply,
   parseHistory,
@@ -89,6 +90,14 @@ const agmsgScriptsDir = findAgmsgScriptsDir();
 const readyToken = buildHandshakeToken(issue, `ready-${stamp()}`);
 const probeToken = buildHandshakeToken(issue, `probe-${stamp()}`);
 
+const task = parsed.task ??
+  (parsed.title
+    ? `#${issue}（${parsed.title}）を取得して着手して`
+    : `#${issue} を取得して着手して`);
+
+// agmsg が無いと 4 手順（actas / monitor / ready / probe 返信）は組めないが、
+// 役割の宣言だけは agmsg と関係なく渡せる。ここで素の task に落とすと、
+// 縮退時だけ黙って旧挙動（呼び出し元がリーダーのまま）へ戻ってしまう。
 const kickoff = agmsgScriptsDir
   ? buildKickoffPrompt({
     issue,
@@ -96,13 +105,12 @@ const kickoff = agmsgScriptsDir
     lead,
     readyToken,
     agmsgScriptsDir,
-    task: parsed.task ??
-      (parsed.title
-        ? `#${issue}（${parsed.title}）を取得して着手して`
-        : undefined),
+    task,
     leadRole,
   })
-  : parsed.task ?? `#${issue} を取得して着手して`;
+  : leadRole === "delegated"
+  ? `${buildLeadDeclaration({ issue, lead })}\n\nそのあと本題に入って: ${task}`
+  : task;
 
 const sessionName = parsed.title ? `${issue} ${parsed.title}` : String(issue);
 const argv = [
@@ -170,11 +178,18 @@ for (const paneId of rootPanes) closePane(paneId, { dryRun });
 
 // --- agmsg（疎通確認） ---
 if (!agmsgScriptsDir) {
+  // 役割宣言は起動プロンプトに入っているので leadRole はそのまま返す。
+  // ただし agmsg が無い = 子からの相談・報告を受け取る経路が無いので、
+  // 「閉じてよい」とは言わない（parentCanExit は false）。
   finish(3, {
     status: "skipped",
-    reason: "agmsg が未導入のため、team join と疎通確認をスキップしました",
+    reason: leadRole === "delegated"
+      ? "agmsg が未導入のため、team join と疎通確認をスキップしました（リーダー役は子に移していますが、相談・報告の経路がありません。呼び出し元は閉じずに残してください）"
+      : "agmsg が未導入のため、team join と疎通確認をスキップしました",
     tabId: tab.tabId,
     paneId: agentPane,
+    leadRole,
+    parentCanExit: false,
   });
 }
 
@@ -215,6 +230,9 @@ sendMessage(
 const roundTrip = await waitFor(probeToken, config.handshakeTimeoutSec);
 
 if (!roundTrip) {
+  // 子は既に役割宣言込みの起動プロンプトを受け取っている。ここで leadRole を落とすと
+  // 呼び出し元が「まだ誰もリーダーではない」と誤認して自分の worktree（別ブランチ）で
+  // 実装を始めてしまう。役割は伝えたうえで、終了してよいとは言わない。
   finish(2, {
     status: "handshake-failed",
     reason:
@@ -223,6 +241,8 @@ if (!roundTrip) {
     paneId: agentPane,
     team,
     lead,
+    leadRole,
+    parentCanExit: false,
     cleanup: `/mk-session cleanup ${issue}`,
   });
 }
