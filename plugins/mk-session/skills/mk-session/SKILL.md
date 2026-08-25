@@ -9,7 +9,7 @@ description: >-
   既に worktree セットアップ手順（mk-wktree 等）を持つリポジトリでは、その手順に委譲する。
   片付けも本スキルが持つ: 「セッションを閉じて」「タブと worktree を片付けて」
   「mk-session cleanup」なども本スキルを呼ぶ。
-argument-hint: "<issue-number> [--branch=<name>] [--team=<name>] [--agent=<cmd>] [--yolo] | cleanup <issue-number>..."
+argument-hint: "<issue-number> [--branch=<name>] [--team=<name>] [--agent=<cmd>] [--lead-mode=<delegate|keep>] [--yolo] | cleanup <issue-number>..."
 allowed-tools: Bash(bun:*), Bash(git:*), Bash(gh:*), Bash(herdr:*), Bash(ls:*), Bash(cat:*), Bash(command:*), Read, Skill
 ---
 
@@ -43,6 +43,7 @@ Issue 番号を 1 つ渡すと、次の状態までを作る。
 /mk-session 123 --team acme-3691     # Epic の既存 team に相乗りする
 /mk-session 123 --agent codex            # 起動するエージェントを変える
 /mk-session 123 --yolo                   # 権限確認を飛ばして起動する
+/mk-session 123 --lead-mode=keep         # リーダー役を移譲せず呼び出し元に残す
 
 # 片付け
 /mk-session cleanup 123
@@ -93,7 +94,8 @@ bun "${CLAUDE_PLUGIN_ROOT}/skills/mk-session/scripts/setup-worktree.ts" <issue> 
 bun "${CLAUDE_PLUGIN_ROOT}/skills/mk-session/scripts/attach-session.ts" <issue> \
   --path <worktree-path> \
   --title "<Issue タイトル>" \
-  [--team=<name>] [--agent=<cmd>] [--yolo] [--workspace=<id>] [--timeout=<sec>] [--task="<本題>"]
+  [--team=<name>] [--agent=<cmd>] [--yolo] [--workspace=<id>] [--timeout=<sec>] [--task="<本題>"] \
+  [--lead-mode=delegate|keep]
 ```
 
 herdr の workspace は `--workspace` か環境変数 `HERDR_WORKSPACE_ID` から解決する。
@@ -105,6 +107,22 @@ herdr の workspace は `--workspace` か環境変数 `HERDR_WORKSPACE_ID` か�
 4. `herdr agent start`（初期プロンプトに actas / mode monitor / ready 返信を埋め込む）
 5. タブ作成時に余る空ペイン（起動前に居た pane）を close
 6. 疎通確認: 子の ready を待ち、続いて親からトークン付きメッセージを送って返信を待つ
+
+#### リーダー役の所在
+
+`--team` を明示していないセットアップ（= 単体 Issue）では、**リーダー役を子セッションへ移譲する**。
+起動プロンプトに「この Issue のリーダーはあなた / 呼び出し元は実装に関与しない」を埋め込むので、
+セットアップ後に人が同じ趣旨のメッセージを送り直す必要はない。
+
+| 呼び出し | `leadRole` | 意味 |
+|---|---|---|
+| `--team` なし（単体 Issue） | `delegated` | 子がリーダー。呼び出し元は実装に入らず終了してよい |
+| `--team acme-1`（Epic 相乗り） | `kept` | 従来どおり統括セッションがリーダーのまま |
+| `--lead-mode=delegate` / `=keep` | 指定どおり | 自動判定を覆す |
+
+`.claude/mk-session.json` の `team` で命名を変えているだけのリポジトリは「指定あり」と見なさない
+（Epic とは無関係のため）。移譲しても**呼び出し元は team から抜けない** — 抜けると子からの相談・
+報告の宛先が消え、`/mk-session cleanup` の前提も崩れるため、降ろすのは役割だけ。
 
 2〜3 を起動より前に置くのは、`send.sh` が team 未登録の送信者を拒否するため。
 起動後に join すると、子が 1 ターン目に返す ready が落ちる。join / delivery が
@@ -126,6 +144,8 @@ herdr の workspace は `--workspace` か環境変数 `HERDR_WORKSPACE_ID` か�
 - worktree のパスとブランチ名
 - herdr のタブ名（= Issue 番号）とペイン ID
 - agmsg の team 名と、疎通テストの往復結果
+- リーダー役の所在（`MK_SESSION_RESULT` の `leadRole`）。`delegated` のときは
+  「この Issue の主役は新セッション / この呼び出し元は実装に入らない / 閉じてよい」を明記する
 - スキップした段があればその理由
 
 ## 実行手順（片付け）
@@ -178,4 +198,6 @@ worktree とブランチの削除は、作る側と同じく既存手順へ委�
   `--dangerously-skip-permissions` を書いておく。
 - **疎通確認が済むまで、実装セッションに作業指示を出さない。** 送信側には成功と出るのに、
   返信だけが片道で消える事故が起きる。
+- **移譲したら（`leadRole: "delegated"`）呼び出し元は実装に入らない。** 呼び出し元は元の
+  worktree（別ブランチ）に居るため、そこで実装を始めると別ブランチに変更が積まれる。
 - **タブのラベルは Issue 番号のみ。** 説明はエージェントのセッション名（`-n`）側に渡す。

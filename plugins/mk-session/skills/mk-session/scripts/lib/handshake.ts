@@ -76,7 +76,15 @@ export type KickoffPromptInput = {
   agmsgScriptsDir: string;
   /** 起動後に子へ渡す本題。既定は Issue の取得 */
   task?: string;
+  /**
+   * リーダー役の所在（設計判断 D2）。
+   * `delegated` のとき、本題の手前に役割の宣言を差し込む。既定は `kept`。
+   */
+  leadRole?: LeadRole;
 };
+
+/** `delegated` = この子がリーダー / `kept` = 呼び出し元がリーダーのまま */
+export type LeadRole = "delegated" | "kept";
 
 /**
  * 子セッションの起動プロンプト（設計判断 D5）。
@@ -87,6 +95,9 @@ export type KickoffPromptInput = {
  */
 export function buildKickoffPrompt(input: KickoffPromptInput): string {
   const task = input.task ?? `#${input.issue} を取得して着手して`;
+  const body = input.leadRole === "delegated"
+    ? `${buildLeadDeclaration(input)}\n\nそのあと本題に入って: ${task}`
+    : `そのあと本題に入って: ${task}`;
   return [
     "最初に次の 4 つを順に実行して。終わるまで他の作業を始めないで。",
     `1. /agmsg actas ${input.issue}`,
@@ -94,7 +105,25 @@ export function buildKickoffPrompt(input: KickoffPromptInput): string {
     `3. ${buildSendCommand(input, `${input.readyToken} ready`)}`,
     `4. このあと ${input.lead} から疎通確認のメッセージが届く。本文に書かれた返信コマンドをそのまま実行して返信して`,
     "",
-    `そのあと本題に入って: ${task}`,
+    body,
+  ].join("\n");
+}
+
+/**
+ * 移譲の宣言（設計判断 D2）。
+ *
+ * 起動後に送ると、届く前に子が本題へ入ってしまう。起動引数に入れておけば
+ * 1 ターン目に必ず読まれる。相談窓口を書いておくのは、呼び出し元が team に
+ * 残る（D3）ためで、閉じられていても履歴として次のセッションが受け取れる。
+ */
+function buildLeadDeclaration(input: KickoffPromptInput): string {
+  return [
+    `この Issue（#${input.issue}）の作業リーダーはあなた。`,
+    "方針判断・実装・レビュー依頼・PR 運用の起点はすべてあなたが持つ。",
+    `呼び出し元（${input.lead}）は実装に関与せず、このあと終了することがある。`,
+    `相談・報告は次の 1 行で投げて: ${
+      buildSendCommand(input, "<本文>")
+    }`,
   ].join("\n");
 }
 

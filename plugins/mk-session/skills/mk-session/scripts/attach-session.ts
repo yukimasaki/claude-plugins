@@ -24,6 +24,7 @@ import {
   buildProbeMessage,
   hasHandshakeReply,
   parseHistory,
+  type LeadRole,
 } from "./lib/handshake.ts";
 import {
   closePane,
@@ -49,6 +50,17 @@ const team = renderTemplate(config.team, { repo: repoName, issue });
 const lead = parsed.lead ?? process.env.MK_SESSION_LEAD ?? "lead";
 // 親（このスクリプトを呼んでいる側）のエージェント種別。claude 以外から呼ぶ場合に上書きする
 const leadType = process.env.MK_SESSION_LEAD_TYPE ?? "claude-code";
+// リーダー役の所在（設計判断 D1 / D5）。`--lead-mode` が自動判定より優先される。
+// 自動判定は「`--team` での明示指定があったか」だけを見る。指定があれば Epic への
+// 相乗りなので統括セッションがリーダーのまま、無ければ単体 Issue なので子へ移譲する。
+const leadRole: LeadRole = parsed.leadMode === "delegate"
+  ? "delegated"
+  : parsed.leadMode === "keep"
+  ? "kept"
+  : config.teamSource === "cli"
+  ? "kept"
+  : "delegated";
+const parentCanExit = leadRole === "delegated";
 
 // --- 前提ツールの確認（未導入なら該当段をスキップして正常終了する） ---
 if (!hasCommand("herdr")) {
@@ -88,6 +100,7 @@ const kickoff = agmsgScriptsDir
       (parsed.title
         ? `#${issue}（${parsed.title}）を取得して着手して`
         : undefined),
+    leadRole,
   })
   : parsed.task ?? `#${issue} を取得して着手して`;
 
@@ -174,6 +187,8 @@ if (dryRun) {
     paneId: agentPane,
     team,
     lead,
+    leadRole,
+    parentCanExit,
   });
 }
 
@@ -218,6 +233,8 @@ finish(0, {
   paneId: agentPane,
   team,
   lead,
+  leadRole,
+  parentCanExit,
   worktreePath,
   issue,
 });

@@ -69,6 +69,19 @@ describe("parseArgs", () => {
     expect(() => parseArgs(["53", "--team", "--yolo"])).toThrow(/--team/);
   });
 
+  it("--lead-mode は delegate / keep を受ける", () => {
+    expect(parseArgs(["53", "--lead-mode=delegate"]).leadMode).toBe("delegate");
+    expect(parseArgs(["53", "--lead-mode", "keep"]).leadMode).toBe("keep");
+  });
+
+  it("--lead-mode 未指定なら undefined（自動判定に委ねる）", () => {
+    expect(parseArgs(["53"]).leadMode).toBeUndefined();
+  });
+
+  it("--lead-mode の不正値は黙って既定へ倒さずエラー", () => {
+    expect(() => parseArgs(["53", "--lead-mode=bogus"])).toThrow(/delegate/);
+  });
+
   it("--timeout は正の秒数のみ受ける", () => {
     expect(parseArgs(["53", "--timeout=30"]).overrides.handshakeTimeoutSec)
       .toBe(30);
