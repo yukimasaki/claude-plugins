@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0](https://github.com/yukimasaki/claude-plugins/compare/v0.4.8...v0.5.0) (2026-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **mk-session:** 既定のセットアップが agmsg に触れなくなった。`--team` の 有無によるモードの自動判定と `--lead-mode` を廃止し、`--team` は team 名の 上書きだけに戻した。`MK_SESSION_RESULT` の `leadRole` / `parentCanExit` は `mode`（standby | orchestrate）に置き換えた。
+
+### Features
+
+* **mk-session:** 単体 Issue ではリーダー役を新セッションへ移譲する ([#63](https://github.com/yukimasaki/claude-plugins/issues/63)) ([ec71ab3](https://github.com/yukimasaki/claude-plugins/commit/ec71ab34deca873ea43caf909abdab1718ba5945)), closes [#62](https://github.com/yukimasaki/claude-plugins/issues/62)
+* **mk-session:** 既定を「Issue 取得して待機」にし、統括は --orchestrate に切り出す ([#65](https://github.com/yukimasaki/claude-plugins/issues/65)) ([eb63f5e](https://github.com/yukimasaki/claude-plugins/commit/eb63f5e56d5480ee71874e4d1fd1a56fddaff316))
+
 ## [0.4.8](https://github.com/yukimasaki/claude-plugins/compare/v0.4.7...v0.4.8) (2026-08-23)
 
 
