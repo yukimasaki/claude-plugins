@@ -121,6 +121,13 @@ describe("buildStandbyPrompt", () => {
     );
   });
 
+  it("先頭を # で始めない（行頭の # はメモリ追記のショートカットとして食われる）", () => {
+    expect(buildStandbyPrompt({ issue: 53 }).startsWith("#")).toBe(false);
+    expect(
+      buildStandbyPrompt({ issue: 53, title: "タブを直す" }).startsWith("#"),
+    ).toBe(false);
+  });
+
   it("--task の指定があればそれをそのまま渡す", () => {
     expect(buildStandbyPrompt({ issue: 53, task: "別の指示" })).toBe("別の指示");
   });

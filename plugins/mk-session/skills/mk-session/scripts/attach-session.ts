@@ -176,7 +176,8 @@ if (agentPane === "(unknown)") {
     reason:
       `エージェントの pane が現れませんでした（${config.agent.command} の起動を確認してください）`,
     tabId: tab.tabId,
-    team,
+    // 待機モードでは team を作っていない。返すと「agmsg の team が残っている」と誤読される
+    ...(orchestrate ? { team } : {}),
   });
 }
 

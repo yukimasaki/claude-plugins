@@ -117,10 +117,11 @@ export type StandbyPromptInput = {
  */
 export function buildStandbyPrompt(input: StandbyPromptInput): string {
   if (input.task) return input.task;
-  // 括弧で閉じたあとに半角空白を挟むと日本語として不自然になるので、行ごと分ける
+  // 先頭を `#` で始めない。Claude Code は行頭の `#` をメモリ追記のショートカットとして
+  // 扱うため、起動プロンプトがそのまま CLAUDE.md へ流れて 1 ターン目が消える恐れがある。
   const heading = input.title
-    ? `#${input.issue}（${input.title}）を担当するセッションです。`
-    : `#${input.issue} を担当するセッションです。`;
+    ? `Issue #${input.issue}（${input.title}）を担当するセッションです。`
+    : `Issue #${input.issue} を担当するセッションです。`;
   return [
     `${heading}次の 2 つだけを実行して、そこで止まってください。`,
     "",
