@@ -6,7 +6,7 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 /mk-session 123
 ```
 
-これだけで、worktree の作成からエージェントへメッセージが届く状態までが揃う。
+これだけで、worktree の作成から「Issue を読み終えたセッションが指示を待っている」状態までが揃う。
 
 ## 何をするか
 
@@ -15,16 +15,37 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 | worktree | ブランチを切り、env を symlink し、依存をインストールする |
 | タブ | herdr で Issue 番号をラベルにしたタブを作る |
 | エージェント | そのタブでコーディングエージェントを起動する |
-| 受信設定 | agmsg の team に参加させ、受信モードを monitor にする |
-| 疎通確認 | 親 → 子 → 親 の往復メッセージが通ることを確かめる |
+| 待機 | 起動したセッションが Issue を取得して要約し、指示待ちで止まる |
 
-**疎通確認まで通って初めて完了**とする。タブができた時点で終わると、指示が届かないタブが残る。
+**作業は始めさせない。** 立ち上げの目的は、Issue を読み終えたセッションが指示を受けられる
+状態で待っていることであって、実装を走らせることではない。人が要約を見て方針を決める前に
+着手されると、後から差し戻すことになる。
+
+## オーケストレーションモード
+
+Epic + サブ Issue を統括するときだけ `--orchestrate` を付ける。
+
+```text
+/mk-session 123 --orchestrate
+```
+
+このモードでは agmsg の team 参加・受信モードの設定・**親 → 子 → 親 の往復疎通確認**まで
+行い、そこまで通って初めて完了とする。統括セッションから指示が届かないタブを残さないため。
+agmsg が見つからないときは、タブを作る前に exit 2 で止まる。
+
+| | 既定（待機） | `--orchestrate`（統括） |
+|---|---|---|
+| 起動後の子 | Issue を取得して要約し、止まる | `actas` / `mode monitor` を有効化し、ready を返して着手する |
+| agmsg | 一切触れない | team 参加・受信モード・往復の疎通確認まで必須 |
+| agmsg が無いとき | 影響なし | タブを作る前に exit 2 で止まる |
+
+`--team` は team 名を変えるだけで、モードには影響しない。
 
 ## 前提
 
 - [git](https://git-scm.com/) / [GitHub CLI](https://cli.github.com/)（`gh` はブランチ名の自動生成に使う。無くても番号だけの名前で動く）
 - [herdr](https://github.com/fujibee/herdr)（タブとエージェントの起動に使う。未導入なら worktree の準備までで正常終了する）
-- [agmsg](https://agmsg.cc)（エージェント間メッセージ。未導入なら team 参加と疎通確認をスキップする）
+- [agmsg](https://agmsg.cc)（エージェント間メッセージ。`--orchestrate` のときだけ使う。未導入ならそのモードは起動しない）
   - 探索順は `$AGMSG_HOME/scripts` → `~/.agents/skills/agmsg/scripts` → `~/.claude/skills/agmsg/scripts`
     → Claude Code プラグインとして入れた `~/.claude/plugins/{marketplaces,cache}/*agmsg*/**/scripts`
 - [Bun](https://bun.sh/)（スクリプトの実行）
@@ -59,8 +80,8 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 | `agent.agmsgType` | コマンドから推定 | agmsg の agent type |
 | `agent.launchArgs` | `claude なら ["--model", "default"]`、それ以外は `[]` | 起動時の引数 |
 | `agent.sessionNameFlag` | `claude なら "-n"`、それ以外は `null` | セッション表示名を渡すフラグ。不要なら `null` |
-| `team` | `"{repo}-{issue}"` | agmsg の team 名 |
-| `handshakeTimeoutSec` | `90` | 疎通確認の待ち時間（秒） |
+| `team` | `"{repo}-{issue}"` | agmsg の team 名（`--orchestrate` のときだけ効く） |
+| `handshakeTimeoutSec` | `90` | 疎通確認の待ち時間（秒。`--orchestrate` のときだけ効く） |
 
 `agent.launchArgs` と `agent.sessionNameFlag` の既定値は claude 固有（`--model default` / `-n`）
 なので、`agent.command` を別のエージェントに変えた場合は既定値を当てない。別エージェントに
@@ -83,41 +104,34 @@ Issue 番号を 1 つ渡すと、その Issue を担当する作業環境とエ�
 |---|---|
 | `--branch=<name>` | ブランチ名を明示指定する（内蔵経路のみ。委譲経路では `--delegate none` を併用する） |
 | `--delegate=<value>` | 委譲先を上書きする（`auto` / `none` / skill 名） |
-| `--team=<name>` | team 名を指定する（Epic の既存 team に相乗りするとき） |
+| `--orchestrate` | オーケストレーションモードで起動する（Epic + サブ Issue の統括） |
+| `--team=<name>` | team 名を指定する（Epic の既存 team に相乗りするとき。モードは変わらない） |
 | `--agent=<cmd>` | 起動するエージェントを変える（agmsg の type も追従する） |
 | `--yolo` | 権限確認を飛ばす引数を足す（claude / codex のみ。他は `launchArgs` に明示する） |
 | `--workspace=<id>` | herdr の workspace を指定する（既定は `HERDR_WORKSPACE_ID`） |
-| `--timeout=<sec>` | 疎通確認の待ち時間を変える |
-| `--lead=<name>` | 親（呼び出し側）の agmsg 名を変える（既定 `lead`） |
-| `--task="<本題>"` | 子に渡す本題を差し替える（既定は Issue の取得と着手） |
-| `--lead-mode=<delegate\|keep>` | リーダー役の扱いを明示する（既定は `--team` の有無から自動判定） |
+| `--timeout=<sec>` | 疎通確認の待ち時間を変える（`--orchestrate` のみ） |
+| `--lead=<name>` | 親（呼び出し側）の agmsg 名を変える（既定 `lead`、`--orchestrate` のみ） |
+| `--task="<本題>"` | 子に渡す本題を差し替える（既定は Issue の取得・要約と待機） |
 | `--dry-run` | 実行予定のコマンドだけを出して何も作らない |
 
-## リーダー役の移譲
+## 結果の読み方
 
-`--team` を明示していないセットアップ（= 単体 Issue）では、リーダー役を子セッションへ移譲する。
-起動プロンプトに「この Issue のリーダーはあなた / 呼び出し元は実装に関与しない」が埋め込まれ、
-`MK_SESSION_RESULT` に `leadRole: "delegated"` と `parentCanExit: true` が出る。
-呼び出し元はそのまま終了してよい。
+`MK_SESSION_RESULT` には `mode` が入る。
 
-疎通確認が失敗した回（exit 2）は `leadRole: "delegated"` のまま `parentCanExit: false` で返る。
-子は既に役割宣言込みで起動しているので呼び出し元は実装に入らないが、原因を片付けるまで閉じない。
-agmsg が未導入の回（exit 3）も役割宣言は起動プロンプトに入るので `leadRole` はそのまま返るが、
-子からの相談・報告を受け取る経路が無いので `parentCanExit: false`（呼び出し元は閉じずに残す）。
-
-`--team` で既存 team に相乗りしたとき（Epic のサブ Issue）は `leadRole: "kept"` で、
-従来どおり統括セッションがリーダーのまま。自動判定を覆したいときは `--lead-mode` を使う。
-
-移譲しても呼び出し元は team から抜けない。抜けると子からの相談・報告の宛先が消え、
-`cleanup` が畳む team 登録の前提も崩れるため、降ろすのは役割だけにしている。
+| `mode` | 意味 |
+|---|---|
+| `standby` | 既定。起動したセッションは Issue を読んで指示待ちで止まっている。次の指示は人が出す |
+| `orchestrate` | 統括モード。`team` と疎通確認の結果が併せて返る |
 
 ## 権限について
 
 既定の起動は `claude --model default` で、**権限確認を飛ばす引数は付かない**。
 飛ばしたい場合だけ、設定ファイルの `launchArgs` に書くか `--yolo` を付ける。
 
-なお権限確認ありのまま起動すると、子は初期プロンプトの `send.sh` 実行で許可待ちになり、
-疎通確認はタイムアウトする。1 コマンドで最後まで通したいリポジトリでは、
+なお権限確認ありのまま起動すると、子は最初のコマンド実行で許可待ちになる。既定の待機モードでは
+`gh issue view` がそこで止まって要約が出ず、`--orchestrate` では初期プロンプトの `send.sh` が
+止まって疎通確認がタイムアウトする。スクリプトは要約が出たかまでは見ないので、待機モードは
+許可待ちのままでも exit 0 で返る。1 コマンドで最後まで通したいリポジトリでは、
 `launchArgs` に `--dangerously-skip-permissions` を書いておく。
 
 ## 片付け
@@ -147,6 +161,7 @@ herdr のタブと agmsg の team 登録を畳む。worktree とブランチの�
 | 依存インストールが失敗して exit 3 になる | worktree は作れている。`incomplete` に `install` が入るので、worktree で `installCommand` を手で再実行する |
 | タブが閉じずに `skippedTabs` に入る | 別リポジトリの同番号タブと区別できなかったか、worktree を先に消していた。タブを手で閉じる |
 | `herdr の workspace id が分かりません` | `HERDR_WORKSPACE_ID` を設定するか `--workspace` を渡す |
+| `agmsg が見つかりません` で止まる | `--orchestrate` は疎通が前提。agmsg を導入するか、`--orchestrate` を外して実行する |
 | 疎通確認がタイムアウトする | 子が権限確認で止まっているか、受信モードが無効。`--yolo` を付けるか、子のタブで `/agmsg mode monitor` を実行する |
 | タブは残るがエージェントが出ない | `agent-not-started` で終了する。root pane は残すので、そのタブで起動コマンドを直接試して原因を見る |
 | エージェントが起動しない | `agent.command` が PATH にあるか確認する |
@@ -164,6 +179,6 @@ bun run typecheck   # 型チェック
 | ファイル | 役割 |
 |---|---|
 | `scripts/setup-worktree.ts` | 委譲判定と、内蔵の worktree 作成 |
-| `scripts/attach-session.ts` | タブ作成 → エージェント起動 → team 参加 → 疎通確認 |
+| `scripts/attach-session.ts` | タブ作成 → エージェント起動（`--orchestrate` なら team 参加 → 疎通確認まで） |
 | `scripts/cleanup-session.ts` | セッション層の片付け |
 | `scripts/lib/*.ts` | 純ロジック（ブランチ名・設定解決・委譲判定・疎通判定）と外部コマンドのラッパ |

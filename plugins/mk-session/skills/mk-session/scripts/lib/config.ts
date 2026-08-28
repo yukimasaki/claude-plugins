@@ -34,19 +34,11 @@ export type AgentConfig = {
   sessionNameFlag: string | null;
 };
 
-/** team 名がどの層で決まったか（設計判断 D1） */
-export type TeamSource = "default" | "file" | "cli";
-
 export type ResolvedConfig = {
   worktree: WorktreeConfig;
   agent: AgentConfig;
   /** team 名のテンプレート */
   team: string;
-  /**
-   * team 名の出どころ。`cli` = `--team` での明示指定 = Epic 相乗り、と見なす。
-   * 解決後の文字列だけでは、リポジトリ既定を変えただけの `file` 由来と区別できない。
-   */
-  teamSource: TeamSource;
   /** 疎通確認の待ち時間（秒） */
   handshakeTimeoutSec: number;
 };
@@ -98,7 +90,6 @@ export const DEFAULT_CONFIG: ResolvedConfig = {
     sessionNameFlag: "-n",
   },
   team: "{repo}-{issue}",
-  teamSource: "default",
   handshakeTimeoutSec: 90,
 };
 
@@ -130,13 +121,7 @@ export function resolveConfig(
   const launchArgs = asStringArray(fileAgent.launchArgs, "agent.launchArgs") ??
     (isDefaultCommand ? DEFAULT_CONFIG.agent.launchArgs : []);
 
-  const fileTeam = asString(file.team, "team");
-  const team = cli.team ?? fileTeam ?? DEFAULT_CONFIG.team;
-  const teamSource: TeamSource = cli.team !== undefined
-    ? "cli"
-    : fileTeam !== undefined
-    ? "file"
-    : "default";
+  const team = cli.team ?? asString(file.team, "team") ?? DEFAULT_CONFIG.team;
 
   return {
     worktree: {
@@ -159,7 +144,6 @@ export function resolveConfig(
       sessionNameFlag: sessionNameFlag(fileAgent, isDefaultCommand),
     },
     team,
-    teamSource,
     handshakeTimeoutSec: cli.handshakeTimeoutSec ??
       asPositiveNumber(file.handshakeTimeoutSec, "handshakeTimeoutSec") ??
       DEFAULT_CONFIG.handshakeTimeoutSec,

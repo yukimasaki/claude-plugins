@@ -2,9 +2,13 @@
 /**
  * セッション段（設計判断 D1 / D4 / D5 / D6）。
  *
- * タブ作成 → エージェント起動 → 余った空ペインの始末 → team join →
- * 受信モードの設定 → 疎通確認 までを 1 本で通す。途中で止めると
- * 「タブはあるのに指示が届かない」状態が生まれるため、段を分けない。
+ * 既定は「タブ作成 → エージェント起動 → 余った空ペインの始末」まで。
+ * 起動したセッションは Issue を読み込んで要約したところで止まり、指示を待つ。
+ *
+ * `--orchestrate` を付けたときだけ、続けて team join → 受信モードの設定 →
+ * 疎通確認 まで通す。統括セッションと各セッションが必ずメッセージを
+ * やり取りできる状態にするのがこのモードの目的なので、agmsg が使えなければ
+ * タブを作る前に止める。
  */
 import path from "node:path";
 import {
@@ -21,11 +25,10 @@ import { hasCommand, type RunResult } from "./lib/exec.ts";
 import {
   buildHandshakeToken,
   buildKickoffPrompt,
-  buildLeadDeclaration,
   buildProbeMessage,
+  buildStandbyPrompt,
   hasHandshakeReply,
   parseHistory,
-  type LeadRole,
 } from "./lib/handshake.ts";
 import {
   closePane,
@@ -51,22 +54,16 @@ const team = renderTemplate(config.team, { repo: repoName, issue });
 const lead = parsed.lead ?? process.env.MK_SESSION_LEAD ?? "lead";
 // 親（このスクリプトを呼んでいる側）のエージェント種別。claude 以外から呼ぶ場合に上書きする
 const leadType = process.env.MK_SESSION_LEAD_TYPE ?? "claude-code";
-// リーダー役の所在（設計判断 D1 / D5）。`--lead-mode` が自動判定より優先される。
-// 自動判定は「`--team` での明示指定があったか」だけを見る。指定があれば Epic への
-// 相乗りなので統括セッションがリーダーのまま、無ければ単体 Issue なので子へ移譲する。
-const leadRole: LeadRole = parsed.leadMode === "delegate"
-  ? "delegated"
-  : parsed.leadMode === "keep"
-  ? "kept"
-  : config.teamSource === "cli"
-  ? "kept"
-  : "delegated";
-const parentCanExit = leadRole === "delegated";
+// オーケストレーションモード（設計判断 D1 / D5）。
+// 既定では agmsg に触れない。統括が要るときだけ明示的に立ち上げる。
+const orchestrate = parsed.orchestrate;
+const mode = orchestrate ? "orchestrate" : "standby";
 
 // --- 前提ツールの確認（未導入なら該当段をスキップして正常終了する） ---
 if (!hasCommand("herdr")) {
   finish(3, {
     status: "skipped",
+    mode,
     reason: "herdr が未導入のため、タブ作成とエージェント起動をスキップしました",
   });
 }
@@ -75,8 +72,23 @@ const workspace = parsed.workspace ?? process.env.HERDR_WORKSPACE_ID;
 if (!workspace) {
   finish(3, {
     status: "skipped",
+    mode,
     reason:
       "herdr の workspace id が分かりません（--workspace か HERDR_WORKSPACE_ID を指定してください）",
+  });
+}
+
+// --- agmsg（オーケストレーションモードの前提） ---
+// 疎通できない統括は成立しないので、タブを作る前に止める。作ってから落とすと
+// 片付けが要るうえ、指示の届かないタブが残る。
+const agmsgScriptsDir = orchestrate ? findAgmsgScriptsDir() : undefined;
+if (orchestrate && !agmsgScriptsDir) {
+  finish(2, {
+    status: "agmsg-missing",
+    mode,
+    reason:
+      "agmsg が見つかりません。--orchestrate は統括セッションとの疎通が前提なので、" +
+      "agmsg を導入するか --orchestrate を外して実行してください",
   });
 }
 
@@ -86,18 +98,14 @@ const tab = createTab(
   { cwd: repoRoot, dryRun },
 );
 
-const agmsgScriptsDir = findAgmsgScriptsDir();
 const readyToken = buildHandshakeToken(issue, `ready-${stamp()}`);
 const probeToken = buildHandshakeToken(issue, `probe-${stamp()}`);
 
-const task = parsed.task ??
+const orchestrateTask = parsed.task ??
   (parsed.title
     ? `#${issue}（${parsed.title}）を取得して着手して`
     : `#${issue} を取得して着手して`);
 
-// agmsg が無いと 4 手順（actas / monitor / ready / probe 返信）は組めないが、
-// 役割の宣言だけは agmsg と関係なく渡せる。ここで素の task に落とすと、
-// 縮退時だけ黙って旧挙動（呼び出し元がリーダーのまま）へ戻ってしまう。
 const kickoff = agmsgScriptsDir
   ? buildKickoffPrompt({
     issue,
@@ -105,12 +113,9 @@ const kickoff = agmsgScriptsDir
     lead,
     readyToken,
     agmsgScriptsDir,
-    task,
-    leadRole,
+    task: orchestrateTask,
   })
-  : leadRole === "delegated"
-  ? `${buildLeadDeclaration({ issue, lead })}\n\nそのあと本題に入って: ${task}`
-  : task;
+  : buildStandbyPrompt({ issue, title: parsed.title, task: parsed.task });
 
 const sessionName = parsed.title ? `${issue} ${parsed.title}` : String(issue);
 const argv = [
@@ -167,29 +172,26 @@ if (agentPane === "(unknown)") {
   // 何が起きたか見えるように、残したまま失敗として返す。
   finish(2, {
     status: "agent-not-started",
+    mode,
     reason:
       `エージェントの pane が現れませんでした（${config.agent.command} の起動を確認してください）`,
     tabId: tab.tabId,
-    team,
+    // 待機モードでは team を作っていない。返すと「agmsg の team が残っている」と誤読される
+    ...(orchestrate ? { team } : {}),
   });
 }
 
 for (const paneId of rootPanes) closePane(paneId, { dryRun });
 
-// --- agmsg（疎通確認） ---
+// --- 既定はここまで。起動したセッションは Issue を読んで指示を待つ ---
 if (!agmsgScriptsDir) {
-  // 役割宣言は起動プロンプトに入っているので leadRole はそのまま返す。
-  // ただし agmsg が無い = 子からの相談・報告を受け取る経路が無いので、
-  // 「閉じてよい」とは言わない（parentCanExit は false）。
-  finish(3, {
-    status: "skipped",
-    reason: leadRole === "delegated"
-      ? "agmsg が未導入のため、team join と疎通確認をスキップしました（リーダー役は子に移していますが、相談・報告の経路がありません。呼び出し元は閉じずに残してください）"
-      : "agmsg が未導入のため、team join と疎通確認をスキップしました",
+  finish(0, {
+    status: dryRun ? "dry-run" : "ok",
+    mode,
     tabId: tab.tabId,
     paneId: agentPane,
-    leadRole,
-    parentCanExit: false,
+    worktreePath,
+    issue,
   });
 }
 
@@ -198,12 +200,11 @@ const ctx: AgmsgContext = { scriptsDir: agmsgScriptsDir, team };
 if (dryRun) {
   finish(0, {
     status: "dry-run",
+    mode,
     tabId: tab.tabId,
     paneId: agentPane,
     team,
     lead,
-    leadRole,
-    parentCanExit,
   });
 }
 
@@ -230,31 +231,27 @@ sendMessage(
 const roundTrip = await waitFor(probeToken, config.handshakeTimeoutSec);
 
 if (!roundTrip) {
-  // 子は既に役割宣言込みの起動プロンプトを受け取っている。ここで leadRole を落とすと
-  // 呼び出し元が「まだ誰もリーダーではない」と誤認して自分の worktree（別ブランチ）で
-  // 実装を始めてしまう。役割は伝えたうえで、終了してよいとは言わない。
+  // タブとエージェントは生きているので、成功にはしないが残して原因を見せる。
   finish(2, {
     status: "handshake-failed",
+    mode,
     reason:
       `疎通確認がタイムアウトしました（${config.handshakeTimeoutSec} 秒）。作ったものは残してあります`,
     tabId: tab.tabId,
     paneId: agentPane,
     team,
     lead,
-    leadRole,
-    parentCanExit: false,
     cleanup: `/mk-session cleanup ${issue}`,
   });
 }
 
 finish(0, {
   status: "ok",
+  mode,
   tabId: tab.tabId,
   paneId: agentPane,
   team,
   lead,
-  leadRole,
-  parentCanExit,
   worktreePath,
   issue,
 });
@@ -268,6 +265,7 @@ function requireAgmsg(result: RunResult, label: string): void {
   if (result.skipped || result.status === 0) return;
   finish(2, {
     status: "agmsg-setup-failed",
+    mode,
     reason: `${label} が失敗しました (exit ${result.status}): ${
       result.stderr || result.stdout
     }`,

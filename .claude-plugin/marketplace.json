@@ -23,7 +23,7 @@
     {
       "name": "mk-session",
       "source": "./plugins/mk-session",
-      "description": "Issue 番号から worktree・ターミナルタブ・コーディングエージェントを一括セットアップし、エージェント間メッセージの疎通確認まで済ませるスキル"
+      "description": "Issue 番号から worktree・ターミナルタブ・コーディングエージェントを一括セットアップし、そのセッションに Issue を取得させて指示待ちで待機させるスキル"
     }
   ]
 }

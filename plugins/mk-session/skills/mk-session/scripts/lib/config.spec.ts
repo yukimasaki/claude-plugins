@@ -26,17 +26,6 @@ describe("resolveConfig", () => {
     expect(resolved.worktree.path).toBe(DEFAULT_CONFIG.worktree.path);
   });
 
-  it("teamSource で team 名の出どころが分かる", () => {
-    expect(resolveConfig().teamSource).toBe("default");
-    expect(resolveConfig({ team: "from-file-{issue}" }).teamSource).toBe("file");
-    expect(resolveConfig(undefined, { team: "acme-1" }).teamSource).toBe("cli");
-    // 設定ファイルと --team が両方あるときは --team が勝つ
-    expect(
-      resolveConfig({ team: "from-file-{issue}" }, { team: "acme-1" })
-        .teamSource,
-    ).toBe("cli");
-  });
-
   it("コマンド引数が設定ファイルを上書きする", () => {
     const resolved = resolveConfig(
       { team: "from-file-{issue}", agent: { command: "claude" } },
