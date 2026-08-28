@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   buildHandshakeToken,
   buildKickoffPrompt,
-  buildLeadDeclaration,
   buildProbeMessage,
+  buildStandbyPrompt,
   hasHandshakeReply,
   parseHistory,
   shellQuote,
@@ -96,71 +96,33 @@ describe("buildKickoffPrompt", () => {
   });
 });
 
-describe("buildKickoffPrompt（リーダー移譲）", () => {
-  const base = {
-    issue: 53,
-    team: "claude-plugins-53",
-    lead: "lead",
-    readyToken: "mk-session-handshake-53-abc",
-    agmsgScriptsDir: "/home/u/.agents/skills/agmsg/scripts",
-  };
+describe("buildStandbyPrompt", () => {
+  it("Issue の取得と要約を指示し、そこで止めることを明記する", () => {
+    const prompt = buildStandbyPrompt({ issue: 53 });
+    expect(prompt).toContain("gh issue view 53");
+    expect(prompt).toContain("要約");
+    expect(prompt).toContain("指示待ちで停止");
+  });
 
-  it("delegated のとき役割宣言を本題の手前に置く", () => {
-    const prompt = buildKickoffPrompt({ ...base, leadRole: "delegated" });
-    expect(prompt).toContain("作業リーダーはあなた");
-    expect(prompt).toContain("実装に関与せず");
-    expect(prompt.indexOf("作業リーダーはあなた")).toBeLessThan(
-      prompt.indexOf("本題に入って"),
+  it("実装に入らないことを明示する", () => {
+    const prompt = buildStandbyPrompt({ issue: 53 });
+    expect(prompt).toContain("実装・ブランチ操作・ファイルの変更は始めない");
+  });
+
+  it("agmsg には触れない（既定のセットアップは疎通を前提にしない）", () => {
+    const prompt = buildStandbyPrompt({ issue: 53, title: "タブを直す" });
+    expect(prompt).not.toContain("agmsg");
+    expect(prompt).not.toContain("send.sh");
+  });
+
+  it("タイトルが分かっていれば冒頭に添える", () => {
+    expect(buildStandbyPrompt({ issue: 53, title: "タブを直す" })).toContain(
+      "#53（タブを直す）",
     );
   });
 
-  it("delegated では相談・報告の送信コマンドを渡す", () => {
-    const prompt = buildKickoffPrompt({ ...base, leadRole: "delegated" });
-    expect(prompt).toContain(
-      "send.sh claude-plugins-53 53 lead '<本文>'",
-    );
-  });
-
-  it("kept は現行（leadRole 未指定）と 1 文字も変わらない", () => {
-    expect(buildKickoffPrompt({ ...base, leadRole: "kept" })).toBe(
-      buildKickoffPrompt(base),
-    );
-  });
-
-  it("kept には役割宣言が入らない", () => {
-    expect(buildKickoffPrompt({ ...base, leadRole: "kept" })).not.toContain(
-      "作業リーダーはあなた",
-    );
-  });
-});
-
-describe("buildLeadDeclaration", () => {
-  const base = { issue: 53, lead: "lead" };
-
-  it("agmsg が無くても役割の所在は伝える", () => {
-    const declaration = buildLeadDeclaration(base);
-    expect(declaration).toContain("作業リーダーはあなた");
-    expect(declaration).toContain("実装に関与せず");
-  });
-
-  it("agmsg が無いときは送信コマンドを載せず、連絡手段が無いことを伝える", () => {
-    const declaration = buildLeadDeclaration(base);
-    expect(declaration).not.toContain("send.sh");
-    expect(declaration).toContain("連絡手段は無い");
-  });
-
-  it("agmsg があるときは送信コマンドと probe 返信の念押しを載せる", () => {
-    const declaration = buildLeadDeclaration({
-      ...base,
-      channel: {
-        team: "claude-plugins-53",
-        agmsgScriptsDir: "/home/u/.agents/skills/agmsg/scripts",
-      },
-    });
-    expect(declaration).toContain(
-      "send.sh claude-plugins-53 53 lead '<本文>'",
-    );
-    expect(declaration).toContain("4 の返信は必ず返して");
+  it("--task の指定があればそれをそのまま渡す", () => {
+    expect(buildStandbyPrompt({ issue: 53, task: "別の指示" })).toBe("別の指示");
   });
 });
 

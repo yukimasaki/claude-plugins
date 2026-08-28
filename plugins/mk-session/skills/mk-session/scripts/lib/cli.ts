@@ -1,7 +1,7 @@
 /**
  * コマンド引数のパース。
  *
- * `/mk-session 123 --team acme-3691 --yolo` の形と、
+ * `/mk-session 123 --orchestrate --yolo` の形と、
  * `/mk-session cleanup 123` の 2 モードを受ける。
  */
 import type { CliOverrides } from "./config.ts";
@@ -20,22 +20,17 @@ export type ParsedArgs = {
   title?: string;
   /** 親（呼び出し側）の agmsg 名。既定は lead */
   lead?: string;
-  /** 子に渡す本題。既定は Issue の取得と着手 */
+  /** 子に渡す本題。既定は Issue を取得して要約し、指示待ちで停止する */
   task?: string;
   /**
-   * リーダー役の扱いを明示する（設計判断 D5）。
-   * 未指定なら team の決まり方から自動判定する。
+   * オーケストレーションモード（Epic + サブ Issue の統括）。
+   * 明示したときだけ agmsg の team 参加と疎通確認まで行う。
    */
-  leadMode?: LeadMode;
+  orchestrate: boolean;
   /** 実際の副作用を起こさず、実行予定のコマンドだけを出す */
   dryRun: boolean;
   overrides: CliOverrides;
 };
-
-/** `delegate` = 子に移譲する / `keep` = 呼び出し元がリーダーのまま */
-export type LeadMode = "delegate" | "keep";
-
-const LEAD_MODES: readonly LeadMode[] = ["delegate", "keep"];
 
 const CLEANUP_ALIASES = new Set(["cleanup", "clean", "rm", "remove"]);
 
@@ -51,7 +46,6 @@ const VALUE_FLAGS: Record<string, keyof ParsedArgs | keyof CliOverrides> = {
   "--title": "title",
   "--lead": "lead",
   "--task": "task",
-  "--lead-mode": "leadMode",
   "--timeout": "handshakeTimeoutSec",
 };
 
@@ -60,6 +54,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
   const parsed: ParsedArgs = {
     mode: "setup",
     issues: [],
+    orchestrate: false,
     dryRun: false,
     overrides: {},
   };
@@ -72,6 +67,10 @@ export function parseArgs(argv: string[]): ParsedArgs {
   while (tokens.length > 0) {
     const token = tokens.shift() as string;
 
+    if (token === "--orchestrate") {
+      parsed.orchestrate = true;
+      continue;
+    }
     if (token === "--yolo") {
       parsed.overrides.yolo = true;
       continue;
@@ -135,16 +134,6 @@ function assign(
 ): void {
   if (target === "branch") {
     parsed.branch = value;
-    return;
-  }
-  if (target === "leadMode") {
-    // 黙って既定へ倒すと「指定したのに移譲されない」が発見できない
-    if (!LEAD_MODES.includes(value as LeadMode)) {
-      throw new Error(
-        `${flag} には ${LEAD_MODES.join(" か ")} を指定してください: ${value}`,
-      );
-    }
-    parsed.leadMode = value as LeadMode;
     return;
   }
   if (target === "workspace" || target === "path" || target === "title" ||

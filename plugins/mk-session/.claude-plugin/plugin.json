@@ -1,6 +1,6 @@
 {
   "name": "mk-session",
-  "description": "Issue 番号から git worktree・ターミナルタブ・コーディングエージェントを一括セットアップし、agmsg の疎通確認までを完了条件とするスキル。",
+  "description": "Issue 番号から git worktree・ターミナルタブ・コーディングエージェントを一括セットアップし、そのセッションに Issue を取得させて指示待ちで待機させるスキル。Epic 統括は --orchestrate で agmsg の疎通確認まで行う。",
   "version": "0.4.8",
   "author": {
     "name": "Yuki Masaki",
